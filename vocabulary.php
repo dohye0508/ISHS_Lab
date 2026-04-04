@@ -4,11 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vocabulary Studio</title>
-    <link rel="icon" type="image/jpeg" href="inticon.jpg">
-    <meta property="og:image" content="int.jpg">
-    <link rel="icon" type="image/jpeg" href="inticon.jpg">
-    <meta property="og:image" content="int.jpg">
-    <link rel="stylesheet" href="style.css?v=lab_final_v6">
+    <link rel="icon" type="image/jpeg" href="assets/images/inticon.jpg">
+    <meta property="og:image" content="assets/images/int.jpg">
+    <link rel="stylesheet" href="assets/css/style.css?v=lab_final_v6">
     
     <style>
         /* (Style overrides kept same) */
@@ -53,6 +51,90 @@
             background: #d32f2f !important; /* Darker Red */
             box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3) !important;
         }
+
+        /* Practice Cards Layout */
+        .practice-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            height: 100%;
+            width: 100%;
+            padding: 20px;
+            min-width: 400px;
+        }
+
+        .practice-card {
+            flex: 1;
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .practice-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        .practice-card-content {
+            text-align: center;
+        }
+
+        .practice-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+
+        .practice-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        .practice-desc {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .practice-start-btn {
+            width: 100%;
+            margin-top: 24px;
+        }
+
+        /* Make landing-right fill available space */
+        .landing-right {
+            flex: 1.2;
+            min-height: 400px;
+            min-width: 320px;
+            display: block !important;
+        }
+
+        /* Tablet layout for vocabulary */
+        @media screen and (max-width: 1199px) {
+            .landing-main {
+                flex-direction: column !important;
+            }
+            .landing-right {
+                width: 100%;
+                max-width: 580px;
+                margin: 20px auto 0;
+            }
+            .practice-cards {
+                flex-direction: row !important;
+                min-width: auto;
+            }
+            .practice-card {
+                flex: 1;
+                min-height: 280px;
+            }
+        }
     </style>
 
     <!-- ANTI-FOUC SCRIPT: Must be in HEAD -->
@@ -85,7 +167,7 @@
                     <div class="selection-card">
                         <div class="selection-container">
                             <!-- Placeholder for Wordbook Selection -->
-                            <button id="btn-toggle-collection" class="btn secondary" style="width: 100%; display: flex; justify-content: space-between; align-items: center; opacity: 0.7; cursor: default;">
+                            <button id="btn-toggle-collection" class="btn secondary" onclick="openWordbookModal()" style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
                                 <span id="current-collection-name">단어장 선택 (Select Wordbook)</span>
                                 <span class="status-indicator" style="font-size: 0.8em;">→</span>
                             </button>
@@ -110,13 +192,30 @@
                             </div>
                         </div>
 
-                        <button class="start-btn" onclick="alert('Vocabulary Studio는 현재 준비 중입니다.')">Get Started</button>
                     </div>
                 </div>
 
                 <div class="landing-right">
-                    <div class="hero-visual">
-                        <!-- Visual placeholder for consistency -->
+                    <div class="practice-cards">
+                        <!-- 단어 연습 카드 -->
+                        <div class="practice-card word-card">
+                            <div class="practice-card-content">
+                                <div class="practice-icon">📝</div>
+                                <h2 class="practice-title">단어 연습</h2>
+                                <p class="practice-desc">플래시카드와 주관식 테스트로<br>단어를 완벽하게 암기하세요.</p>
+                            </div>
+                            <button class="start-btn practice-start-btn" onclick="alert('단어 연습 기능은 현재 준비 중입니다.')">Start Word Practice</button>
+                        </div>
+                        
+                        <!-- 문장 연습 카드 -->
+                        <div class="practice-card sentence-card">
+                            <div class="practice-card-content">
+                                <div class="practice-icon">💬</div>
+                                <h2 class="practice-title">문장 연습</h2>
+                                <p class="practice-desc">문맥 속에서 단어를 활용하며<br>실전 영어 감각을 키우세요.</p>
+                            </div>
+                            <button class="start-btn practice-start-btn" onclick="alert('문장 연습 기능은 현재 준비 중입니다.')">Start Sentence Practice</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -149,6 +248,11 @@
     </style>
 
     <script>
+        // Wordbook Modal Function (placeholder)
+        function openWordbookModal() {
+            alert('단어장 선택 기능은 현재 준비 중입니다.');
+        }
+
         // Global Theme Toggle Script
         (function() {
             const toggleBtn = document.getElementById('theme-toggle');

@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Indefinite Integral Studio</title>
-    <link rel="icon" type="image/jpeg" href="inticon.jpg">
+    <link rel="icon" type="image/jpeg" href="assets/images/inticon.jpg">
     <!-- ... (meta tags omitted for brevity if unchanged) ... -->
     
-    <link rel="stylesheet" href="style.css?v=lab_final_v6">
+    <link rel="stylesheet" href="assets/css/style.css?v=lab_final_v6">
     <script src="https://unpkg.com/mathlive"></script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
@@ -151,7 +151,9 @@
                 <math-field id="math-input" placeholder="정답을 입력하세요" virtual-keyboard-mode="onfocus"></math-field>
                 <div class="action-bar">
                     <button id="btn-prev" class="btn secondary hidden" onclick="prevProblem()">← Previous</button>
-                    <div style="flex-grow: 1;"></div>
+                    <div style="flex-grow: 1; text-align: center;">
+                        <button id="btn-giveup" class="btn secondary hidden" onclick="giveUpProblem()">적포(적분 포기)</button>
+                    </div>
                     <button id="btn-next" class="btn primary" onclick="nextProblem()">Next →</button>
                     <button id="btn-finish" class="btn success hidden" onclick="finishTest()">Finish Test</button>
                 </div>
@@ -177,12 +179,11 @@
         </div>
     </div>
 
-    <script src="problems/loader.js?v=debug_v7"></script>
-    <script src="problems/collections.js?v=debug_v7"></script>
-    <script src="grader.js?v=debug_v7"></script>
-    <script src="logic.js?v=debug_v7"></script>
-    <script src="bg_funcs.js?v=debug_v7"></script>
-    <script src="bg_anim.js?v=debug_v7"></script>
+    <script src="data/math/collections.js?v=<?php echo time(); ?>"></script>
+    <script src="scripts/grader.js?v=debug_v7"></script>
+    <script src="scripts/logic.js?v=debug_v7"></script>
+    <script src="scripts/bg_funcs.js?v=debug_v7"></script>
+    <script src="scripts/bg_anim.js?v=debug_v7"></script>
     <!-- Global Theme Toggle (Top-Right) -->
     <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Dark Mode">
         <svg class="sun-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

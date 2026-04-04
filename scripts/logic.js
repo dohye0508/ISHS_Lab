@@ -6,7 +6,8 @@ let state = {
     currentIndex: 0,
     totalCount: 20,
     isProcessing: false,
-    strictC: true
+    strictC: true,
+    giveUpUnlocked: false // Track if Give Up button is unlocked
 };
 
 // --- Debug Logic ---
@@ -153,13 +154,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('theme') || 'light';
     
     // Apply theme immediately
-    document.body.setAttribute('data-theme', savedTheme);
+    document.documentElement.setAttribute('data-theme', savedTheme);
     
     if (darkChk) {
         darkChk.checked = (savedTheme === 'dark');
         darkChk.addEventListener('change', (e) => {
             const newTheme = e.target.checked ? 'dark' : 'light';
-            document.body.setAttribute('data-theme', newTheme);
+            document.documentElement.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
         });
     }
@@ -203,6 +204,7 @@ async function startGame() {
     }));
     state.totalCount = state.problems.length;
     state.currentIndex = 0;
+    state.giveUpUnlocked = false; // Reset unlock state
 
     document.getElementById('landing-view').style.display = 'none';
     document.getElementById('loading-view').style.display = 'block';
@@ -259,6 +261,19 @@ function updateNavButtons() {
     const last = state.currentIndex === state.totalCount - 1;
     document.getElementById('btn-next').classList.toggle('hidden', last);
     document.getElementById('btn-finish').classList.toggle('hidden', !last);
+    
+    // Show 'Give Up' button only for Level 3 problems
+    const currentProb = state.problems[state.currentIndex];
+    const isLevel3 = currentProb && currentProb.level >= 3;
+    document.getElementById('btn-giveup').classList.toggle('hidden', !isLevel3);
+}
+
+function giveUpProblem() {
+    // No confirmation as per user request
+    const input = document.getElementById('math-input');
+    input.value = "적포 "; // Added space to prevent Korean duplication bug as requested
+    saveAnswer();
+    input.focus();
 }
 
 async function finishTest() {
@@ -396,7 +411,7 @@ function toggleTheme() {
     const currentTheme = document.body.getAttribute('data-theme');
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
     
-    document.body.setAttribute('data-theme', newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('theme', newTheme);
     
     if (darkChk) darkChk.checked = (newTheme === 'dark');

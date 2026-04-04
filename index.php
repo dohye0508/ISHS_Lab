@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ISHS LAB</title>
-    <link rel="icon" type="image/jpeg" href="inticon.jpg">
-    <meta property="og:image" content="int.jpg">
+    <link rel="icon" type="image/jpeg" href="assets/images/inticon.jpg">
+    <meta property="og:image" content="assets/images/int.jpg">
     <!-- Use lab_final version to ensure proper caching -->
-    <link rel="stylesheet" href="style.css?v=lab_final_v6">
+    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo time(); ?>">
     
     <script>
         // Fix for "Cannot read properties of null (reading 'setAttribute')"
@@ -20,16 +20,31 @@
     </script>
     
     <style>
-        /* Centered Layout matching integral.php aesthetic */
+        :root {
+            --bg: #fcfdfe;
+            --text: #1f1f1f;
+            --primary: #1a73e8;       
+            --surface: #f8f9fa;       
+            --border: #dadce0;
+        }
+        [data-theme="dark"] {
+            --bg: #121212;
+            --text: #e0e0e0;
+            --primary: #669df6;
+            --surface: #1e1e1e;
+            --border: #333333;
+        }
         body {
             background: var(--bg);
+            color: var(--text);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             position: relative;
             margin: 0;
-            overflow-y: auto; /* Allow scrolling if height exceeds view */
+            overflow-y: auto;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         /* Side gradients - PURPLE/PINK Theme as requested */
@@ -412,7 +427,33 @@
         </svg>
     </button>
     <style>
-        /* Only Keep Page Specific Styles if any - Removing Toggle Button Styles as they are now global */
+        .theme-toggle-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            background: transparent;
+            border: none;
+            color: #9aa0a6;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .theme-toggle-btn:hover {
+            background-color: rgba(0,0,0,0.05);
+            color: var(--text);
+        }
+        [data-theme="dark"] .theme-toggle-btn:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        /* Icon Visibility Control: Force only one at a time */
+        .sun-icon, .moon-icon { display: none !important; } 
+        html:not([data-theme="dark"]) .sun-icon { display: block !important; }
+        html[data-theme="dark"] .moon-icon { display: block !important; }
     </style>
 
     <script>

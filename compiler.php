@@ -4,11 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compiler Studio</title>
-    <link rel="icon" type="image/jpeg" href="inticon.jpg">
-    <meta property="og:image" content="int.jpg">
-    <link rel="icon" type="image/jpeg" href="inticon.jpg">
-    <meta property="og:image" content="int.jpg">
-    <link rel="stylesheet" href="style.css?v=lab_final_v6">
+    <link rel="icon" type="image/jpeg" href="../assets/images/inticon.jpg">
+    <meta property="og:image" content="../assets/images/int.jpg">
+    <link rel="stylesheet" href="../assets/css/style.css?v=lab_final_v6">
 
     <style>
         /* (Style overrides kept same) */
@@ -65,7 +63,7 @@
 </head>
 <body>
     <!-- Go Home Button (Back Arrow) -->
-    <a href="index.php" class="home-btn-global" aria-label="Go Home">
+    <a href="../index.php" class="home-btn-global" aria-label="Go Home">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="19" y1="12" x2="5" y2="12"></line>
             <polyline points="12 19 5 12 12 5"></polyline>
