@@ -1,0 +1,14 @@
+# ISHS Lab Security Config
+Options -Indexes
+
+# Prevent access to sensitive files
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Protect PHP files from being listed
+<Files "*.php">
+    Order allow,deny
+    Allow from all
+</Files>

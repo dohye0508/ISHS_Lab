@@ -1,6 +1,8 @@
 <?php
-// ISHS Lab - Coding Test Viewer
-// Unifying with the project framework while preserving the original design.
+/**
+ * ISHS Lab - Coding Test Viewer
+ * 파이썬 핵심 알고리즘 라이브러리 및 코드 뷰어
+ */
 ?>
 <!DOCTYPE html>
 <html lang="ko" data-theme="light">

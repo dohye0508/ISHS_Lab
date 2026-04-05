@@ -45,16 +45,16 @@ def sync_algorithms():
                 "files": files_list
             })
 
-    # Write to data.js
+    # JSON 데이터로 저장
     try:
         os.makedirs(os.path.dirname(output_file), exist_ok=True)
         with open(output_file, 'w', encoding='utf-8') as f:
             f.write("const codeData = ")
             json.dump(code_data, f, ensure_ascii=False, indent=2)
             f.write(";")
-        print(f"Successfully generated {output_file} with {len(code_data)} categories.")
+        print(f"Success: {output_file} updated ({len(code_data)} categories).")
     except Exception as e:
-        print(f"Error writing to {output_file}: {e}")
+        print(f"Error: {e}")
 
 if __name__ == "__main__":
     sync_algorithms()

@@ -1,14 +1,33 @@
-
+# System Files
 .DS_Store
 Thumbs.db
+Icon?
+ehthumbs.db
 
-# Build artifacts
+# Build Artifacts
 build/
 dist/
 *.spec
 *.exe
 !Generate Problems.exe
 
-# Python cache
+# IDE/Editor Config
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Python Cache & Runtime
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+.env
+.venv/
+env/
+venv/
+ENV/
+
+# Temporary Files
+*.log
+*.tmp
+*.bak
