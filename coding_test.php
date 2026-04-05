@@ -108,6 +108,60 @@
             border: none;
         }
 
+        #sidebar-toggle {
+            position: fixed;
+            left: 20px;
+            bottom: 20px;
+            width: 48px;
+            height: 48px;
+            background: var(--accent-color);
+            color: white;
+            z-index: 2000; /* Extremely high to stay above everything */
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4);
+            padding: 0;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #sidebar-toggle:hover {
+            transform: scale(1.1);
+            background: var(--accent-hover);
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.5);
+        }
+
+        #sidebar-toggle svg {
+            transition: transform 0.4s;
+        }
+
+        .sidebar.collapsed #sidebar-toggle svg {
+            transform: rotate(180deg);
+        }
+
+        /* Update home button to avoid conflict */
+        .home-btn-global {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(10px);
+            color: var(--text-main);
+            z-index: 2000;
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px var(--shadow-color);
+        }
+
         .sidebar-header {
             padding: 60px 1.5rem 1.5rem; /* ADDED top padding for home button */
             border-bottom: 1px solid var(--border-color);
@@ -256,21 +310,39 @@
         }
 
         .copy-btn {
-            background: rgba(128, 128, 128, 0.08);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 0.4rem 1rem;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: 500;
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            z-index: 100;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 99px; /* Pill style */
+            font-size: 0.85rem;
+            font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s;
+            opacity: 0.9;
         }
 
         .copy-btn:hover {
-            background: rgba(128, 128, 128, 0.15);
+            opacity: 1;
+            transform: translateY(-2px);
+            background: var(--accent-hover);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .copy-btn svg {
+            transition: transform 0.2s;
+        }
+
+        .copy-btn:active svg {
+            transform: scale(0.8);
         }
 
         .code-container {
@@ -427,6 +499,14 @@
         }
     </style>
 
+    <button id="sidebar-toggle" title="Toggle Sidebar">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <polyline points="15 18 9 12 15 6"></polyline> <!-- Better chevron icon -->
+        </svg>
+    </button>
+
     <aside class="sidebar">
         <div class="sidebar-header">
             <h1>Algorithms</h1>
@@ -437,14 +517,6 @@
     <main class="main-content">
         <div class="topbar">
             <div style="display: flex; align-items: center; gap: 1rem;">
-                <button class="icon-btn" id="sidebar-toggle" title="Toggle Sidebar">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="3" y1="12" x2="21" y2="12"></line>
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <line x1="3" y1="18" x2="21" y2="18"></line>
-                    </svg>
-                </button>
                 <div class="current-file-path" id="file-path">파일을 선택해주세요</div>
             </div>
             <div class="topbar-actions">
@@ -453,17 +525,17 @@
                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     </svg>
                 </button>
-                <button class="copy-btn" id="copy-btn" style="display: none;">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                    </svg>
-                    Code
-                </button>
             </div>
         </div>
         <div class="code-container" id="code-container">
+            <button class="copy-btn" id="copy-btn" style="display: none;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                Copy Code
+            </button>
             <div class="empty-state" id="empty-state">
                 <div class="empty-icon">⌨️</div>
                 <h2 style="color: var(--text-main); font-weight: 600; margin-bottom: 0.5rem;">코딩 테스트 템플릿 뷰어</h2>
