@@ -108,34 +108,36 @@
             border: none;
         }
 
+        /* Handle Style Sidebar Toggle - Attached to the right edge */
         #sidebar-toggle {
-            position: fixed;
-            left: 20px;
-            bottom: 20px;
-            width: 48px;
-            height: 48px;
+            position: absolute;
+            right: -14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 28px;
+            height: 56px;
             background: var(--accent-color);
             color: white;
-            z-index: 2000; /* Extremely high to stay above everything */
-            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4);
-            padding: 0;
+            z-index: 2000;
             border: none;
-            border-radius: 50%;
+            border-radius: 0 12px 12px 0;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
         }
 
         #sidebar-toggle:hover {
-            transform: scale(1.1);
+            width: 34px;
+            right: -20px;
             background: var(--accent-hover);
-            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.5);
         }
 
         #sidebar-toggle svg {
             transition: transform 0.4s;
+            margin-left: 2px;
         }
 
         .sidebar.collapsed #sidebar-toggle svg {
@@ -145,10 +147,10 @@
         /* Update home button to avoid conflict */
         .home-btn-global {
             position: fixed;
-            top: 20px;
-            left: 20px;
-            width: 40px;
-            height: 40px;
+            top: 15px;
+            left: 15px;
+            width: 36px;
+            height: 36px;
             background: var(--sidebar-bg);
             backdrop-filter: blur(10px);
             color: var(--text-main);
@@ -311,30 +313,30 @@
 
         .copy-btn {
             position: absolute;
-            top: 2rem;
-            right: 2rem;
+            top: 1rem;
+            right: 1rem;
             z-index: 100;
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 99px; /* Pill style */
-            font-size: 0.85rem;
+            background: rgba(128, 128, 128, 0.1);
+            backdrop-filter: blur(8px);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
             font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            transition: all 0.2s;
-            opacity: 0.9;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .copy-btn:hover {
-            opacity: 1;
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
             transform: translateY(-2px);
-            background: var(--accent-hover);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
         }
 
         .copy-btn svg {
@@ -499,15 +501,14 @@
         }
     </style>
 
-    <button id="sidebar-toggle" title="Toggle Sidebar">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <polyline points="15 18 9 12 15 6"></polyline> <!-- Better chevron icon -->
-        </svg>
-    </button>
-
     <aside class="sidebar">
+        <!-- New Handle-style Toggle attached to edge -->
+        <button id="sidebar-toggle" title="Toggle Sidebar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
         <div class="sidebar-header">
             <h1>Algorithms</h1>
         </div>
@@ -528,14 +529,6 @@
             </div>
         </div>
         <div class="code-container" id="code-container">
-            <button class="copy-btn" id="copy-btn" style="display: none;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                </svg>
-                Copy Code
-            </button>
             <div class="empty-state" id="empty-state">
                 <div class="empty-icon">⌨️</div>
                 <h2 style="color: var(--text-main); font-weight: 600; margin-bottom: 0.5rem;">코딩 테스트 템플릿 뷰어</h2>
@@ -557,7 +550,17 @@
                 </div>
             </div>
 
-            <pre style="display: none;" id="code-block"><code class="language-python" id="code-display"></code></pre>
+            <div class="code-wrapper">
+                <button class="copy-btn" id="copy-btn" style="display: none;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                    Copy Code
+                </button>
+                <pre style="display: none;" id="code-block"><code class="language-python" id="code-display"></code></pre>
+            </div>
         </div>
     </main>
 
