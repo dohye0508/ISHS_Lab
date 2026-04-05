@@ -318,23 +318,21 @@
             color: var(--text-main);
         }
 
+        /* Copy button: lives in the topbar next to file-path */
         .copy-btn {
-            position: absolute;
-            top: 0.6rem;
-            right: 0.6rem;
-            z-index: 10;
-            background: rgba(128, 128, 128, 0.12);
+            background: transparent;
             color: var(--text-muted);
             border: 1px solid var(--border-color);
-            padding: 0.35rem 0.75rem;
+            padding: 0.3rem 0.75rem;
             border-radius: 6px;
-            font-size: 0.75rem;
+            font-size: 0.78rem;
             font-weight: 500;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 6px;
             transition: all 0.2s ease;
+            flex-shrink: 0;
         }
 
         .copy-btn:hover {
@@ -525,6 +523,15 @@
         <div class="topbar">
             <div style="display: flex; align-items: center; gap: 1rem;">
                 <div class="current-file-path" id="file-path">파일을 선택해주세요</div>
+                <!-- Copy button lives right next to the file path -->
+                <button class="copy-btn" id="copy-btn" style="display: none;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                    Copy
+                </button>
             </div>
             <div class="topbar-actions">
                 <button class="icon-btn" id="theme-toggle" title="Toggle Theme">
@@ -557,14 +564,6 @@
             </div>
 
             <div class="code-wrapper">
-                <button class="copy-btn" id="copy-btn" style="display: none;">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                    </svg>
-                    Copy Code
-                </button>
                 <pre style="display: none;" id="code-block"><code class="language-python" id="code-display"></code></pre>
             </div>
         </div>
@@ -729,6 +728,14 @@
                     if (currentSection === 'desc') desc += lines[i] + '\n';
                     else if (currentSection === 'in') inExample += lines[i] + '\n';
                     else if (currentSection === 'out') outExample += lines[i] + '\n';
+                }
+
+                // HTML-escape helper – prevents < > from being parsed as tags
+                function esc(str) {
+                    return str
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;');
                 }
 
                 docTitle.textContent = title;
