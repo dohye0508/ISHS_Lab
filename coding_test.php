@@ -85,9 +85,16 @@
             line-height: 1.6;
         }
 
+        /* Sidebar wrapper holds both the sidebar panel and its toggle tab */
+        .sidebar-wrapper {
+            position: relative;
+            display: flex;
+            flex-shrink: 0;
+            z-index: 100;
+        }
+
         .sidebar {
             width: 300px;
-            min-width: 300px;
             background: var(--sidebar-bg);
             backdrop-filter: blur(var(--glass-blur));
             border-right: 1px solid var(--border-color);
@@ -95,52 +102,52 @@
             flex-direction: column;
             padding: 1.5rem 0;
             overflow-y: auto;
-            z-index: 10;
             box-shadow: 4px 0 24px var(--shadow-color);
-            transition: transform 0.3s ease, width 0.3s ease, min-width 0.3s ease;
+            transition: width 0.35s ease, opacity 0.3s ease;
         }
 
         .sidebar.collapsed {
-            transform: translateX(-100%);
             width: 0;
             min-width: 0;
             padding: 0;
+            opacity: 0;
+            overflow: hidden;
             border: none;
         }
 
-        /* Handle Style Sidebar Toggle - Attached to the right edge */
+        /* Tab that sticks to the right edge of sidebar-wrapper, always visible */
         #sidebar-toggle {
             position: absolute;
-            right: -14px;
+            right: -22px;         /* peeks out right of the wrapper */
             top: 50%;
             transform: translateY(-50%);
-            width: 28px;
-            height: 56px;
-            background: var(--accent-color);
-            color: white;
-            z-index: 2000;
-            border: none;
-            border-radius: 0 12px 12px 0;
+            width: 22px;
+            height: 52px;
+            background: var(--sidebar-bg);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            border-left: none;
+            border-radius: 0 8px 8px 0;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
+            transition: background 0.2s, color 0.2s;
+            box-shadow: 3px 0 10px var(--shadow-color);
+            z-index: 200;
         }
 
         #sidebar-toggle:hover {
-            width: 34px;
-            right: -20px;
-            background: var(--accent-hover);
+            background: var(--io-bg);
+            color: var(--accent-color);
         }
 
         #sidebar-toggle svg {
-            transition: transform 0.4s;
-            margin-left: 2px;
+            transition: transform 0.35s;
         }
 
-        .sidebar.collapsed #sidebar-toggle svg {
+        /* When collapsed, flip chevron to point right */
+        .sidebar-wrapper.collapsed #sidebar-toggle svg {
             transform: rotate(180deg);
         }
 
@@ -313,30 +320,27 @@
 
         .copy-btn {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
-            z-index: 100;
-            background: rgba(128, 128, 128, 0.1);
-            backdrop-filter: blur(8px);
+            top: 0.6rem;
+            right: 0.6rem;
+            z-index: 10;
+            background: rgba(128, 128, 128, 0.12);
             color: var(--text-muted);
             border: 1px solid var(--border-color);
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: 600;
+            padding: 0.35rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 8px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            gap: 6px;
+            transition: all 0.2s ease;
         }
 
         .copy-btn:hover {
             background: var(--accent-color);
-            color: white;
+            color: #fff;
             border-color: var(--accent-color);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
         }
 
         .copy-btn svg {
@@ -501,19 +505,21 @@
         }
     </style>
 
-    <aside class="sidebar">
-        <!-- New Handle-style Toggle attached to edge -->
+    <div class="sidebar-wrapper" id="sidebar-wrapper">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h1>Algorithms</h1>
+            </div>
+            <div id="file-tree"></div>
+        </aside>
+        <!-- Tab handle attached to right edge of the wrapper -->
         <button id="sidebar-toggle" title="Toggle Sidebar">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
                 stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
         </button>
-        <div class="sidebar-header">
-            <h1>Algorithms</h1>
-        </div>
-        <div id="file-tree"></div>
-    </aside>
+    </div>
 
     <main class="main-content">
         <div class="topbar">
@@ -582,11 +588,13 @@
             };
 
             // Sidebar Toggle
-            const sidebar = document.querySelector('.sidebar');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarWrapper = document.getElementById('sidebar-wrapper');
             const sidebarToggleBtn = document.getElementById('sidebar-toggle');
 
             sidebarToggleBtn.onclick = () => {
                 sidebar.classList.toggle('collapsed');
+                sidebarWrapper.classList.toggle('collapsed'); // flips chevron
             };
 
             // Initialize Theme
