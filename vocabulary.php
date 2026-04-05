@@ -137,6 +137,10 @@
         }
     </style>
 
+    <!-- Data and Game Scripts -->
+    <script src="data/english/3221s_data.js"></script>
+    <script defer src="scripts/english_game.js?v=1"></script>
+
     <!-- ANTI-FOUC SCRIPT: Must be in HEAD -->
     <script>
         (function() {
@@ -214,13 +218,41 @@
                                 <h2 class="practice-title">문장 연습</h2>
                                 <p class="practice-desc">문맥 속에서 단어를 활용하며<br>실전 영어 감각을 키우세요.</p>
                             </div>
-                            <button class="start-btn practice-start-btn" onclick="alert('문장 연습 기능은 현재 준비 중입니다.')">Start Sentence Practice</button>
+                            <button class="start-btn practice-start-btn" onclick="startEnglishGame()">Start Sentence Practice</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         
+        <!-- English Game View -->
+        <div id="english-game-view" style="display: none; width: 100%; max-width: 800px; margin: 0 auto; padding: 20px;">
+            <div class="header">
+                <button class="btn-home" onclick="quitEnglishGame()" title="뒤로가기">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                </button>
+                <div class="badges">
+                    <span id="eng-mode-badge" class="badge">Sentence Ordering</span>
+                    <span id="eng-score-badge" class="badge progress">Score: 0</span>
+                </div>
+            </div>
+
+            <div id="eng-korean-hint" style="background:var(--surface); padding: 15px 20px; border-radius:12px; font-size:0.95rem; line-height:1.5; color:var(--text); margin-bottom: 20px; border:1px solid var(--border);">
+                <!-- Korean translation goes here -->
+            </div>
+
+            <div id="eng-play-area" style="min-height: 250px; display:flex; flex-direction:column; gap:20px; align-items:center; justify-content:center;">
+                <!-- Dynamically populated by JS based on game mode -->
+            </div>
+
+            <div class="action-bar" style="justify-content: center; margin-top: 30px;">
+                <button id="btn-eng-skip" class="btn secondary" onclick="nextEnglishQuestion()">Skip / Next →</button>
+            </div>
+        </div>
+
         <div class="footer">
             © 2026 ISHS 32nd - Developed by Dohye Lee. All rights reserved.
         </div>

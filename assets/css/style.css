@@ -56,7 +56,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 20px; /* Reduced gap */
+    gap: 15px; /* Reduced further from 20px */
     width: 100%;
 }
 
@@ -96,7 +96,7 @@ h1 {
 
 .hero-visual {
     position: relative;
-    height: 600px;
+    height: 480px; /* Reduced from 600px */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -135,7 +135,7 @@ h1 {
 .selection-container {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px; /* Reduced from 15px */
     width: 100%;
 }
 
@@ -211,14 +211,14 @@ h1 {
 
 /* Rules Section as a Memo */
 .rules-section {
-    background: #fff9c4; /* 밝은 노란색 메모지 */
-    padding: 15px 18px;
-    border-radius: 5px; /* 메모지답게 약간 덜 둥글게 */
+    background: #fff9c4;
+    padding: 12px 15px; /* Tighter padding */
+    border-radius: 5px;
     border: none;
     box-shadow: 3px 3px 10px rgba(0,0,0,0.1);
-    transform: rotate(-1deg); /* 살짝 기울여서 메모 느낌 강조 */
+    transform: rotate(-0.5deg); /* Less rotation to save vertical space */
     position: relative;
-    margin-top: 10px;
+    margin-top: 5px;
     margin-bottom: 5px;
 }
 
@@ -251,12 +251,12 @@ h1 {
 }
 
 .rules-list li {
-    font-size: 0.8rem;
+    font-size: 0.75rem; /* Scaled down even more */
     color: #795548;
-    line-height: 1.5;
+    line-height: 1.4;
     position: relative;
-    margin-bottom: 4px;
-    font-family: 'Comic Sans MS', 'Pretendard', cursive, sans-serif; /* 메모 느낌 폰트 시도 */
+    margin-bottom: 2px;
+    font-family: 'Comic Sans MS', 'Pretendard', cursive, sans-serif;
 }
 
 .rules-list li::before {
@@ -315,8 +315,8 @@ h1 {
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid var(--border);
-    padding-bottom: 20px;
-    margin-bottom: 40px;
+    padding-bottom: 14px; /* Reduced from 20px */
+    margin-bottom: 24px; /* Reduced from 40px */
 }
 
 .badge {
@@ -349,12 +349,12 @@ h1 {
 /* 수식 입력기 스타일 */
 math-field {
     width: 100%;
-    padding: 15px;
-    font-size: 1.4rem;
+    padding: 12px; /* Reduced from 15px */
+    font-size: 1.3rem; /* Scaled down from 1.4rem */
     border: 1px solid var(--border);
     border-radius: 8px;
     background: white;
-    margin-bottom: 40px;
+    margin-bottom: 24px; /* Reduced from 40px */
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
