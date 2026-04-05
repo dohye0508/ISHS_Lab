@@ -168,14 +168,14 @@
         .module-link[href="vocabulary.php"]:hover .module-title { color: #ea4335; }
         .module-link[href="vocabulary.php"]:hover .arrow { color: #ea4335; transform: translateX(5px); }
 
-        /* Compiler: Green */
-        .module-link[href="compiler.php"]:hover {
-            border-color: rgba(30, 142, 62, 0.5);
-            background: rgba(30, 142, 62, 0.04);
+        /* Coding Test: Teal/Cyan */
+        .module-link[href="coding_test/index.html"]:hover {
+            border-color: rgba(30, 215, 96, 0.5);
+            background: rgba(30, 215, 96, 0.04);
         }
-        .module-link[href="compiler.php"]:hover .module-icon { color: #1e8e3e; }
-        .module-link[href="compiler.php"]:hover .module-title { color: #1e8e3e; }
-        .module-link[href="compiler.php"]:hover .arrow { color: #1e8e3e; transform: translateX(5px); }
+        .module-link[href="coding_test/index.html"]:hover .module-icon { color: #1ed760; }
+        .module-link[href="coding_test/index.html"]:hover .module-title { color: #1ed760; }
+        .module-link[href="coding_test/index.html"]:hover .arrow { color: #1ed760; transform: translateX(5px); }
 
         /* Remove generic hover styles from style.css effectively for these specific items */
             margin-left: 6px;
@@ -275,10 +275,10 @@
             color: #ea4335;
         }
         
-        /* Compiler Icon style */
+        /* Coding Test Icon style */
         .module-link:nth-child(3) .module-icon {
-            background: linear-gradient(135deg, rgba(30, 142, 62, 0.08) 0%, rgba(52, 168, 83, 0.05) 100%);
-            color: #1e8e3e;
+            background: linear-gradient(135deg, rgba(30, 215, 96, 0.08) 0%, rgba(52, 168, 83, 0.05) 100%);
+            color: #1ed760;
         }
 
         .module-title {
@@ -388,16 +388,16 @@
                         플래시카드와 주관식 테스트로 완벽하게 암기할 수 있습니다.
                     </div>
                 </a>
-                <!-- Compiler Studio -->
-                <a href="compiler.php" class="module-link">
+                <!-- Coding Test -->
+                <a href="coding_test.php" class="module-link">
                     <div class="module-top">
-                        <div class="module-icon">&lt;/&gt;</div>
-                        <div class="module-title">Compiler Studio</div>
+                        <div class="module-icon">💻</div>
+                        <div class="module-title">Coding Test</div>
                         <div class="arrow">→</div>
                     </div>
                     <div class="module-desc">
-                        C, Python, Java 등 다양한 프로그래밍 언어를 웹에서 바로 실행하세요.<br>
-                        실시간 컴파일과 디버깅 환경을 경험할 수 있습니다.
+                        알고리즘 코딩 테스트 라이브러리 및 연습 환경입니다.<br>
+                        파이썬 주요 알고리즘 템플릿과 예제를 한눈에 확인하세요.
                     </div>
                 </a>
             </div>
