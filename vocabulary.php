@@ -56,18 +56,18 @@
         .practice-cards {
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            gap: 16px; /* Reduced from 24px */
             height: 100%;
             width: 100%;
-            padding: 20px;
+            padding: 10px; /* Reduced from 20px */
             min-width: 400px;
         }
 
         .practice-card {
             flex: 1;
             background: var(--surface);
-            border-radius: 20px;
-            padding: 32px;
+            border-radius: 16px;
+            padding: 24px; /* Reduced from 32px */
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -86,26 +86,26 @@
         }
 
         .practice-icon {
-            font-size: 3rem;
-            margin-bottom: 16px;
+            font-size: 2.4rem; /* Scaled down from 3rem */
+            margin-bottom: 12px;
         }
 
         .practice-title {
-            font-size: 1.8rem;
+            font-size: 1.5rem; /* Scaled down from 1.8rem */
             font-weight: 700;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             color: var(--text);
         }
 
         .practice-desc {
-            font-size: 1rem;
+            font-size: 0.88rem; /* Scaled down from 1rem */
             color: var(--text-secondary);
-            line-height: 1.6;
+            line-height: 1.5;
         }
 
         .practice-start-btn {
             width: 100%;
-            margin-top: 24px;
+            margin-top: 16px; /* Reduced from 24px */
         }
 
         /* Make landing-right fill available space */

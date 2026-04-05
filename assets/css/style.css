@@ -27,8 +27,8 @@ body {
 .container {
     width: 100%;
     max-width: 1200px;
-    min-height: auto; /* vh 제거하여 불필요한 공백 삭제 */
-    padding: 40px 40px 10px 40px; /* 하단 패딩 축소 */
+    min-height: auto; 
+    padding: 20px 40px 10px 40px; /* Reduced top padding */
     position: relative;
     display: flex;
     flex-direction: column;
@@ -53,10 +53,10 @@ body {
 
 .landing-main {
     display: flex;
-    flex-direction: column; /* 기본(모바일/태블릿)은 세로 배치 */
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 30px;
+    gap: 20px; /* Reduced gap */
     width: 100%;
 }
 
@@ -74,9 +74,9 @@ body {
 }
 
 h1 {
-    font-size: 3.8rem; /* 약간 더 키움 */
+    font-size: 2.8rem; /* Scaled down from 3.8rem */
     font-weight: 800;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
 /* 제목 칸 완전히 제거 (사용자 요청 반영: 없애라니까?) */
@@ -112,17 +112,17 @@ h1 {
 }
 
 h1 {
-    font-size: 3.5rem;
+    font-size: 2.8rem; /* Scaled down from 3.5rem */
     font-weight: 700;
-    letter-spacing: -0.03em;
-    margin-bottom: 10px;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
     line-height: 1.1;
 }
 
 .subtitle {
     color: #5f6368;
-    font-size: 1.2rem;
-    margin-bottom: 40px;
+    font-size: 1rem; /* Scaled down from 1.2rem */
+    margin-bottom: 25px; /* Reduced gap */
 }
 
 .section-title {
@@ -194,9 +194,9 @@ h1 {
     background: var(--primary);
     color: white;
     border: none;
-    padding: 16px 20px;
-    font-size: 1.1rem;
-    border-radius: 12px;
+    padding: 14px 20px; /* Tighter padding */
+    font-size: 1rem; /* Scaled down */
+    border-radius: 10px;
     cursor: pointer;
     font-weight: 700;
     width: 100%;
