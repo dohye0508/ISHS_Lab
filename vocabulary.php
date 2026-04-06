@@ -138,8 +138,8 @@
     </style>
 
     <!-- Data and Game Scripts -->
-    <script src="data/english/3221s_data.js"></script>
-    <script defer src="scripts/english_game.js?v=1"></script>
+    <script src="data/english/3221s_data.js?v=<?php echo time(); ?>"></script>
+    <script defer src="scripts/english_game.js?v=<?php echo time(); ?>"></script>
 
     <!-- ANTI-FOUC SCRIPT: Must be in HEAD -->
     <script>
