@@ -117,6 +117,270 @@
         }
 
         /* Tablet layout for vocabulary */
+        /* Mode Selector Styles */
+        .eng-mode-selector {
+            display: flex;
+            background: rgba(var(--primary-rgb), 0.05);
+            padding: 4px;
+            border-radius: 12px;
+            margin-top: 15px;
+            gap: 4px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 10px 12px;
+            border: none;
+            background: transparent;
+            color: var(--text);
+            opacity: 0.6;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            z-index: 10;
+            white-space: nowrap;
+        }
+
+        .mode-btn:hover {
+            opacity: 1;
+            background: rgba(var(--primary-rgb), 0.1);
+        }
+
+        .mode-btn.active {
+            background: var(--surface);
+            color: var(--primary);
+            opacity: 1;
+            box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.2);
+        }
+
+        /* Hint Toggle Styles */
+        .hint-section {
+            width: 100%;
+            margin-bottom: 25px;
+            z-index: 5;
+        }
+
+        .hint-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            color: var(--text);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .hint-btn:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+            background: rgba(var(--primary-rgb), 0.03);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+        }
+
+        .hint-btn svg {
+            transition: transform 0.3s;
+        }
+
+        .hint-btn.active svg {
+            transform: scale(1.2) rotate(180deg);
+            color: var(--primary);
+        }
+
+        .hint-content {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: var(--surface);
+            border: 1px solid transparent;
+            border-radius: 12px;
+            margin-top: 10px;
+        }
+
+        .hint-content.visible {
+            max-height: 200px;
+            opacity: 1;
+            padding: 12px 20px;
+            border-color: var(--border);
+            margin-top: 10px;
+        }
+
+        .hint-content p {
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: var(--text);
+        }
+
+        /* Premium Game View adjustments */
+        #english-game-view {
+            animation: fadeIn 0.5s ease;
+            transition: max-width 0.5s ease;
+        }
+
+        #eng-play-area {
+            background: rgba(var(--primary-rgb), 0.03);
+            border-radius: 24px;
+            padding: 25px; /* Reduced side padding slightly to avoid crunching */
+            border: 1px solid rgba(var(--primary-rgb), 0.1);
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.02);
+            width: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #eng-passage-badge {
+            display: none; /* Controlled by JS */
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 2px 8px rgba(var(--primary-rgb), 0.3);
+        }
+
+        /* Blank Input Styling */
+        .blank-input-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        #eng-blank-input {
+            flex: 1;
+            padding: 15px 20px;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+            background: var(--surface);
+            color: var(--text);
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        #eng-blank-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.1);
+            transform: translateY(-2px);
+        }
+
+        #eng-blank-input.error {
+            border-color: var(--error);
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .src-container, .tgt-container {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Passage Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+        .modal.visible { display: flex; }
+        .modal-content {
+            background: var(--surface);
+            width: 90%;
+            max-width: 500px;
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            border: 1px solid var(--border);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .modal-title { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
+        .close-modal { cursor: pointer; opacity: 0.5; transition: 0.2s; }
+        .close-modal:hover { opacity: 1; }
+
+        .passage-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .passage-item {
+            padding: 15px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .passage-item:hover {
+            border-color: var(--primary);
+            background: rgba(var(--primary-rgb), 0.05);
+            transform: translateX(5px);
+        }
+        .passage-item.active {
+            border-color: var(--primary);
+            background: rgba(var(--primary-rgb), 0.1);
+            font-weight: 700;
+        }
+
+        /* Dark Mode Specific Improvements */
+        [data-theme="dark"] .eng-mode-selector {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        [data-theme="dark"] .mode-btn.active {
+            background: #333;
+            color: var(--primary);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+        [data-theme="dark"] .hint-btn {
+            background: #1e1e1e;
+            border-color: #333;
+        }
+        [data-theme="dark"] .hint-btn:hover {
+            background: #252525;
+            border-color: var(--primary);
+        }
+        [data-theme="dark"] #eng-play-area {
+            background: rgba(255, 255, 255, 0.02);
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Tablet layout for vocabulary */
         @media screen and (max-width: 1199px) {
             .landing-main {
                 flex-direction: column !important;
@@ -138,7 +402,8 @@
     </style>
 
     <!-- Data and Game Scripts -->
-    <script src="data/english/3221s_data.js?v=<?php echo time(); ?>"></script>
+    <script src="data/english/english_3221m.js?v=<?php echo time(); ?>"></script>
+    <script src="data/english/english_3221m_vocab.js?v=<?php echo time(); ?>"></script>
     <script defer src="scripts/english_game.js?v=<?php echo time(); ?>"></script>
 
     <!-- ANTI-FOUC SCRIPT: Must be in HEAD -->
@@ -170,9 +435,9 @@
                     
                     <div class="selection-card">
                         <div class="selection-container">
-                            <!-- Placeholder for Wordbook Selection -->
-                            <button id="btn-toggle-collection" class="btn secondary" onclick="openWordbookModal()" style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
-                                <span id="current-collection-name">단어장 선택 (Select Wordbook)</span>
+                            <!-- Passage Selection -->
+                            <button id="btn-toggle-passage" class="btn secondary" onclick="openPassageModal()" style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                                <span id="current-passage-name">지문 선택 (Select Passage)</span>
                                 <span class="status-indicator" style="font-size: 0.8em;">→</span>
                             </button>
 
@@ -190,8 +455,8 @@
                         <div class="option-section">
                             <div class="option-item">
                                 <label class="checkbox-container">
-                                    <input type="checkbox" id="chk-tts" checked>
-                                    <span>TTS 발음 듣기 (Auto TTS)</span>
+                                    <input type="checkbox" id="chk-show-passage" checked>
+                                    <span>지문 번호 보기 (Show Passage Number)</span>
                                 </label>
                             </div>
                         </div>
@@ -206,9 +471,15 @@
                             <div class="practice-card-content">
                                 <div class="practice-icon">📝</div>
                                 <h2 class="practice-title">단어 연습</h2>
-                                <p class="practice-desc">플래시카드와 주관식 테스트로<br>단어를 완벽하게 암기하세요.</p>
+                                <p class="practice-desc">지문에 등장하는 어려운 단어들의<br>뜻을 완벽하게 숙지하세요.</p>
+                                
+                                <div class="eng-mode-selector" style="margin-top: 15px;">
+                                    <button class="mode-btn" id="btn-word-mode-memorize" onclick="setWordPracticeMode('memorize')" style="font-weight: 700;">외우기</button>
+                                    <button class="mode-btn active" id="btn-word-mode-10" onclick="setWordPracticeMode('quiz', 10)">10개</button>
+                                    <button class="mode-btn" id="btn-word-mode-50" onclick="setWordPracticeMode('quiz', 50)">50개</button>
+                                </div>
                             </div>
-                            <button class="start-btn practice-start-btn" onclick="alert('단어 연습 기능은 현재 준비 중입니다.')">Start Word Practice</button>
+                            <button class="start-btn practice-start-btn" onclick="handleStartWordPractice()">Start Word Practice</button>
                         </div>
                         
                         <!-- 문장 연습 카드 -->
@@ -217,6 +488,13 @@
                                 <div class="practice-icon">💬</div>
                                 <h2 class="practice-title">문장 연습</h2>
                                 <p class="practice-desc">문맥 속에서 단어를 활용하며<br>실전 영어 감각을 키우세요.</p>
+                                
+                                <div class="eng-mode-selector">
+                                    <button class="mode-btn active" data-mode="random" onclick="setEngMode('random')">무작위</button>
+                                    <button class="mode-btn" data-mode="order" onclick="setEngMode('order')">순서배열</button>
+                                    <button class="mode-btn" data-mode="blank_choice" onclick="setEngMode('blank_choice')">단어선택</button>
+                                    <button class="mode-btn" data-mode="blank_input" onclick="setEngMode('blank_input')">단어입력</button>
+                                </div>
                             </div>
                             <button class="start-btn practice-start-btn" onclick="startEnglishGame()">Start Sentence Practice</button>
                         </div>
@@ -226,26 +504,51 @@
         </div>
         
         <!-- English Game View -->
-        <div id="english-game-view" style="display: none; width: 100%; max-width: 800px; margin: 0 auto; padding: 20px;">
-            <div class="header">
-                <button class="btn-home" onclick="quitEnglishGame()" title="뒤로가기">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                    </svg>
-                </button>
+        <div id="english-game-view" style="display: none; width: 100%; max-width: 1000px; margin: 0 auto; padding: 10px 20px;">
+            <div class="header" style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <button class="btn-home" onclick="quitEnglishGame()" title="뒤로가기">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                    </button>
+                    <span id="eng-passage-badge" class="badge">#1</span>
+                </div>
                 <div class="badges">
                     <span id="eng-mode-badge" class="badge">Sentence Ordering</span>
                     <span id="eng-score-badge" class="badge progress">Score: 0</span>
                 </div>
             </div>
 
-            <div id="eng-korean-hint" style="background:var(--surface); padding: 15px 20px; border-radius:12px; font-size:0.95rem; line-height:1.5; color:var(--text); margin-bottom: 20px; border:1px solid var(--border);">
-                <!-- Korean translation goes here -->
+            <div class="hint-section" style="margin-bottom: 10px;">
+                <button id="btn-hint-toggle" class="hint-btn" onclick="toggleHint()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    <span>한글 해석 보기 (Show Hint)</span>
+                </button>
+                <div id="eng-korean-hint-container" class="hint-content">
+                    <p id="eng-korean-hint"></p>
+                </div>
             </div>
 
-            <div id="eng-play-area" style="min-height: 250px; display:flex; flex-direction:column; gap:20px; align-items:center; justify-content:center;">
+            <div id="eng-play-area">
                 <!-- Dynamically populated by JS based on game mode -->
+            </div>
+
+            <div class="hint-section" style="margin-top: 25px;">
+                <button id="btn-answer-toggle" class="hint-btn" onclick="toggleAnswer()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 11l3 3L22 4"></path>
+                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                    </svg>
+                    <span>정답 보기 (Show Answer)</span>
+                </button>
+                <div id="eng-answer-container" class="hint-content">
+                    <p id="eng-answer-text" style="color: var(--primary); font-weight: 700;"></p>
+                </div>
             </div>
 
             <div class="action-bar" style="justify-content: center; margin-top: 30px;">
@@ -279,10 +582,43 @@
         /* Page-specific styles only - Theme toggle styles now in global style.css */
     </style>
 
+    <!-- Passage Selection Modal -->
+    <div id="passage-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">📖 지문 선택</h2>
+                <span class="close-modal" onclick="closePassageModal()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </span>
+            </div>
+            <div class="passage-list">
+                <div class="passage-item active" onclick="selectPassage('3221m', '32기 2-1 중간')">
+                    <span>32기 2-1 중간</span>
+                    <span style="opacity:0.4; font-size:0.8em;">Now Playing</span>
+                </div>
+                <!-- Future collections go here -->
+                <div class="passage-item" style="opacity:0.5; cursor:not-allowed;">
+                    <span>(준비 중) 32기 2-1 기말</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Wordbook Modal Function (placeholder)
-        function openWordbookModal() {
-            alert('단어장 선택 기능은 현재 준비 중입니다.');
+        function openPassageModal() {
+            document.getElementById('passage-modal').classList.add('visible');
+        }
+        function closePassageModal() {
+            document.getElementById('passage-modal').classList.remove('visible');
+        }
+        function selectPassage(id, name) {
+            if (window.loadPassageCollection) {
+                window.loadPassageCollection(id, name);
+                closePassageModal();
+            }
         }
 
         // Global Theme Toggle Script
