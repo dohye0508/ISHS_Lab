@@ -101,17 +101,17 @@ class RiroAuth {
     }
 
     private function parseNormal($html, $user_id) {
-        // Simple regex parsing for speed and low memory usage on shared hosts
-        preg_match('/<span class="m_level[13]">(.*?)<\/span>/s', $html, $m_student);
-        preg_match_all('/<div class="input_disabled">(.*?)<\/div>/s', $html, $m_inputs);
+        // More robust regex allowing other attributes in the tags
+        preg_match('/<span[^>]*class="[^"]*m_level[13][^"]*"[^>]*>(.*?)<\/span>/s', $html, $m_student);
+        preg_match_all('/<div[^>]*class="[^"]*input_disabled[^"]*"[^>]*>(.*?)<\/div>/s', $html, $m_inputs);
 
         if (empty($m_student) || count($m_inputs[1]) < 2) {
             return ["status" => "error", "message" => "사용자 정보를 파싱할 수 없습니다."];
         }
 
-        $student = trim($m_student[1]);
-        $name = trim($m_inputs[1][0]);
-        $student_number_raw = trim($m_inputs[1][1]);
+        $student = trim(strip_tags($m_student[1]));
+        $name = trim(strip_tags($m_inputs[1][0]));
+        $student_number_raw = trim(strip_tags($m_inputs[1][1]));
 
         if (strlen($student_number_raw) >= 3) {
             $student_number = $student_number_raw[0] . substr($student_number_raw, 2);
@@ -134,19 +134,26 @@ class RiroAuth {
     }
 
     private function parseIntegrated($html, $user_id) {
-        preg_match('/<div class="elem_fix">(.*?)<\/div>/s', $html, $m_fix);
-        preg_match_all('/<div class="input_disabled">(.*?)<\/div>/s', $html, $m_inputs);
+        // More robust regex for integrated accounts
+        preg_match('/<div[^>]*class="[^"]*elem_fix[^"]*"[^>]*>(.*?)<\/div>/s', $html, $m_fix);
+        preg_match_all('/<div[^>]*class="[^"]*input_disabled[^"]*"[^>]*>(.*?)<\/div>/s', $html, $m_inputs);
 
         if (empty($m_fix) || count($m_inputs[1]) < 2) {
              return ["status" => "error", "message" => "통합계정 정보를 파싱할 수 없습니다."];
         }
 
-        $fix_text = trim($m_fix[1]);
+        $fix_text = trim(strip_tags($m_fix[1]));
         $riro_id = substr($fix_text, 0, 8);
-        $student = trim(explode('(', explode(')', $fix_text)[0])[1] ?? '');
+        
+        // Use a more robust split for the student type in parentheses
+        // Example: "20211234 (인천과학예술영재학교) 학생"
+        $student = '';
+        if (preg_match('/\((.*?)\)/', $fix_text, $m_paren)) {
+            $student = $m_paren[1];
+        }
 
-        $name = trim($m_inputs[1][0]);
-        $student_number_raw = trim($m_inputs[1][1]);
+        $name = trim(strip_tags($m_inputs[1][0]));
+        $student_number_raw = trim(strip_tags($m_inputs[1][1]));
         
         if (strlen($student_number_raw) >= 3) {
             $student_number = $student_number_raw[0] . substr($student_number_raw, 2);
