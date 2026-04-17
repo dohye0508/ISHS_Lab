@@ -441,7 +441,57 @@
     <div class="orb orb-2"></div>
     <div class="orb orb-3"></div>
 
-    <!-- Global Theme Toggle (Top-Right) - Using Standard class -->
+    <!-- Auth UI Elements -->
+    <div id="auth-header" style="position: fixed; top: 20px; right: 70px; z-index: 10000; display: flex; align-items: center; gap: 10px;">
+        <!-- Logged Out State -->
+        <button id="btn-login-open" class="btn secondary" onclick="openAuthModal()" style="padding: 8px 16px; font-size: 0.85rem; border-radius: 20px; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px);">로그인 / 가입</button>
+        
+        <!-- Logged In State (Hidden by default) -->
+        <div id="user-profile" style="display: none; align-items: center; gap: 10px; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); padding: 5px 15px; border-radius: 25px; border: 1px solid var(--border);">
+            <span id="user-nickname" style="font-weight: 700; font-size: 0.9rem;">Nickname</span>
+            <button onclick="handleLogout()" style="background: none; border: none; font-size: 0.75rem; color: #ea4335; cursor: pointer; padding: 0;">로그아웃</button>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(10px); z-index: 20000; align-items: center; justify-content: center;">
+        <div class="modal-content" style="background: var(--bg); width: 90%; max-width: 400px; padding: 35px; border-radius: 30px; border: 1px solid var(--border); box-shadow: 0 30px 60px rgba(0,0,0,0.12);">
+            <div id="modal-tab-header" style="display: flex; gap: 20px; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px;">
+                <h2 id="tab-login" class="auth-tab active" onclick="switchTab('login')" style="cursor: pointer; font-size: 1.3rem; margin: 0; opacity: 1;">로그인</h2>
+                <h2 id="tab-signup" class="auth-tab" onclick="switchTab('signup')" style="cursor: pointer; font-size: 1.3rem; margin: 0; opacity: 0.3;">회원가입</h2>
+                <div style="flex-grow: 1;"></div>
+                <span onclick="closeAuthModal()" style="cursor: pointer; opacity: 0.5;">✕</span>
+            </div>
+
+            <!-- Login Form -->
+            <form id="form-login" onsubmit="event.preventDefault(); submitLogin();" style="display: flex; flex-direction: column; gap: 15px;">
+                <div class="input-field">
+                    <label style="font-size: 0.8rem; opacity: 0.6; display: block; margin-bottom: 5px;">닉네임</label>
+                    <input type="text" id="login-nickname" placeholder="Nickname" required style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); box-sizing: border-box;">
+                </div>
+                <div class="input-field">
+                    <label style="font-size: 0.8rem; opacity: 0.6; display: block; margin-bottom: 5px;">비밀번호</label>
+                    <input type="password" id="login-password" placeholder="Password" required style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); box-sizing: border-box;">
+                </div>
+                <button type="submit" class="btn primary" style="width: 100%; padding: 14px; border-radius: 15px; margin-top: 10px;">로그인</button>
+            </form>
+
+            <!-- Signup Form (Hidden) -->
+            <form id="form-signup" onsubmit="event.preventDefault(); submitSignup();" style="display: none; flex-direction: column; gap: 12px;">
+                <div style="background: rgba(234, 67, 53, 0.05); padding: 12px; border-radius: 10px; font-size: 0.75rem; color: #ea4335; margin-bottom: 10px;">
+                    💡 리로스쿨 계정으로 본인 인증이 필요합니다.
+                </div>
+                <input type="text" id="signup-riro-id" placeholder="리로스쿨 아이디" required style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); box-sizing: border-box;">
+                <input type="password" id="signup-riro-pw" placeholder="리로스쿨 비밀번호" required style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); box-sizing: border-box;">
+                <hr style="border: none; border-top: 1px solid var(--border); margin: 5px 0;">
+                <input type="text" id="signup-nickname" placeholder="설정할 닉네임" required style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); box-sizing: border-box;">
+                <input type="password" id="signup-password" placeholder="설정할 비밀번호" required style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); box-sizing: border-box;">
+                <button type="submit" class="btn primary" style="width: 100%; padding: 14px; border-radius: 15px; margin-top: 10px; background: #34a853; box-shadow: 0 4px 12px rgba(52, 168, 83, 0.2);">인증 및 가입</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Theme Toggle and Scripts -->
     <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Dark Mode">
         <svg class="sun-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="5"></circle>
@@ -489,8 +539,87 @@
     </style>
 
     <script>
-        // Global Theme Toggle Script
-        // Script is placed at end of body to ensure DOM availability
+        // --- Authentication System Logic ---
+        const AUTH_API = 'api/user_system.php';
+
+        function openAuthModal() {
+            document.getElementById('auth-modal').style.display = 'flex';
+        }
+        function closeAuthModal() {
+            document.getElementById('auth-modal').style.display = 'none';
+        }
+        function switchTab(tab) {
+            const isLogin = tab === 'login';
+            document.getElementById('tab-login').style.opacity = isLogin ? '1' : '0.3';
+            document.getElementById('tab-signup').style.opacity = isLogin ? '0.3' : '1';
+            document.getElementById('form-login').style.display = isLogin ? 'flex' : 'none';
+            document.getElementById('form-signup').style.display = isLogin ? 'none' : 'flex';
+        }
+
+        async function updateAuthUI() {
+            try {
+                const res = await fetch(`${AUTH_API}?action=status`);
+                const data = await res.json();
+                if (data.logged_in) {
+                    document.getElementById('btn-login-open').style.display = 'none';
+                    document.getElementById('user-profile').style.display = 'flex';
+                    document.getElementById('user-nickname').textContent = data.user.nickname;
+                } else {
+                    document.getElementById('btn-login-open').style.display = 'block';
+                    document.getElementById('user-profile').style.display = 'none';
+                }
+            } catch (e) { console.error("Auth status error:", e); }
+        }
+
+        async function submitLogin() {
+            const nickname = document.getElementById('login-nickname').value;
+            const password = document.getElementById('login-password').value;
+            const res = await fetch(`${AUTH_API}?action=login`, {
+                method: 'POST',
+                body: JSON.stringify({ nickname, password })
+            });
+            const data = await res.json();
+            if (data.status === 'success') {
+                alert(data.message);
+                closeAuthModal();
+                updateAuthUI();
+            } else {
+                alert(data.message);
+            }
+        }
+
+        async function submitSignup() {
+            const riro_id = document.getElementById('signup-riro-id').value;
+            const riro_pw = document.getElementById('signup-riro-pw').value;
+            const nickname = document.getElementById('signup-nickname').value;
+            const password = document.getElementById('signup-password').value;
+            
+            // Show loading state?
+            const signBtn = document.querySelector('#form-signup btn');
+            if(signBtn) signBtn.textContent = '인증 중...';
+
+            const res = await fetch(`${AUTH_API}?action=signup`, {
+                method: 'POST',
+                body: JSON.stringify({ riro_id, riro_pw, nickname, password })
+            });
+            const data = await res.json();
+            if (data.status === 'success') {
+                alert(data.message);
+                switchTab('login');
+            } else {
+                alert(data.message);
+            }
+        }
+
+        async function handleLogout() {
+            await fetch(`${AUTH_API}?action=logout`, { method: 'POST' });
+            location.reload();
+        }
+
+        // Initialize UI
+        document.addEventListener('DOMContentLoaded', updateAuthUI);
+
+        // Global Theme Toggle Script (Preserved)
         (function() {
             const toggleBtn = document.getElementById('theme-toggle');
             

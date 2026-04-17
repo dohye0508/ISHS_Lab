@@ -606,6 +606,15 @@
             © 2026 ISHS 32nd - Developed by Dohye Lee. All rights reserved.
         </div>
     </div>
+    <!-- Auth UI Elements -->
+    <div id="auth-header" style="position: fixed; top: 20px; right: 70px; z-index: 10000; display: flex; align-items: center; gap: 10px;">
+        <button id="btn-login-open" class="btn secondary" onclick="location.href='index.php'" style="padding: 8px 16px; font-size: 0.85rem; border-radius: 20px; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px);">로그인 / 가입</button>
+        <div id="user-profile" style="display: none; align-items: center; gap: 10px; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); padding: 5px 15px; border-radius: 25px; border: 1px solid var(--border);">
+            <span id="user-nickname" style="font-weight: 700; font-size: 0.9rem;">Nickname</span>
+            <button onclick="handleLogout()" style="background: none; border: none; font-size: 0.75rem; color: #ea4335; cursor: pointer; padding: 0;">로그아웃</button>
+        </div>
+    </div>
+
     <!-- Global Theme Toggle (Top-Right) -->
     <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Dark Mode">
         <svg class="sun-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -666,6 +675,31 @@
                 closePassageModal();
             }
         }
+
+        // --- Authentication System Logic ---
+        const AUTH_API = 'api/user_system.php';
+
+        async function updateAuthUI() {
+            try {
+                const res = await fetch(`${AUTH_API}?action=status`);
+                const data = await res.json();
+                if (data.logged_in) {
+                    document.getElementById('btn-login-open').style.display = 'none';
+                    document.getElementById('user-profile').style.display = 'flex';
+                    document.getElementById('user-nickname').textContent = data.user.nickname;
+                } else {
+                    document.getElementById('btn-login-open').style.display = 'block';
+                    document.getElementById('user-profile').style.display = 'none';
+                }
+            } catch (e) { console.error("Auth status error:", e); }
+        }
+
+        async function handleLogout() {
+            await fetch(`${AUTH_API}?action=logout`, { method: 'POST' });
+            location.href = 'index.php';
+        }
+
+        document.addEventListener('DOMContentLoaded', updateAuthUI);
 
         // Global Theme Toggle Script
         (function() {
