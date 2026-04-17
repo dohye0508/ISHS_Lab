@@ -93,6 +93,10 @@ class RiroAuth {
     }
 
     private function parseUserInfo($html, $user_id) {
+        // Save for debugging if needed
+        $this->last_html = $html;
+        
+        // Detection: Check if it's an integrated account
         if (strpos($html, "통합아이디") !== false) {
             return $this->parseIntegrated($html, $user_id);
         } else {
@@ -100,18 +104,28 @@ class RiroAuth {
         }
     }
 
-    private function parseNormal($html, $user_id) {
-        // More robust regex allowing other attributes in the tags
-        preg_match('/<span[^>]*class="[^"]*m_level[13][^"]*"[^>]*>(.*?)<\/span>/s', $html, $m_student);
-        preg_match_all('/<div[^>]*class="[^"]*input_disabled[^"]*"[^>]*>(.*?)<\/div>/s', $html, $m_inputs);
+    private function getElementsByClass($xpath, $className) {
+        return $xpath->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' $className ')]");
+    }
 
-        if (empty($m_student) || count($m_inputs[1]) < 2) {
-            return ["status" => "error", "message" => "사용자 정보를 파싱할 수 없습니다."];
+    private function parseNormal($html, $user_id) {
+        $dom = new DOMDocument();
+        @$dom->loadHTML('<?xml encoding="UTF-8">' . $html);
+        $xpath = new DOMXPath($dom);
+
+        $m_student = $this->getElementsByClass($xpath, 'm_level1');
+        if ($m_student->length === 0) $m_student = $this->getElementsByClass($xpath, 'm_level3');
+        
+        $m_inputs = $this->getElementsByClass($xpath, 'input_disabled');
+
+        if ($m_student->length === 0 || $m_inputs->length < 2) {
+            file_put_contents('debug_riro_fail.html', $html); // Debug log
+            return ["status" => "error", "message" => "사용자 정보를 파싱할 수 없습니다. (debug_riro_fail.html 생성됨)"];
         }
 
-        $student = trim(strip_tags($m_student[1]));
-        $name = trim(strip_tags($m_inputs[1][0]));
-        $student_number_raw = trim(strip_tags($m_inputs[1][1]));
+        $student = trim($m_student->item(0)->textContent);
+        $name = trim($m_inputs->item(0)->textContent);
+        $student_number_raw = trim($m_inputs->item(1)->textContent);
 
         if (strlen($student_number_raw) >= 3) {
             $student_number = $student_number_raw[0] . substr($student_number_raw, 2);
@@ -134,26 +148,28 @@ class RiroAuth {
     }
 
     private function parseIntegrated($html, $user_id) {
-        // More robust regex for integrated accounts
-        preg_match('/<div[^>]*class="[^"]*elem_fix[^"]*"[^>]*>(.*?)<\/div>/s', $html, $m_fix);
-        preg_match_all('/<div[^>]*class="[^"]*input_disabled[^"]*"[^>]*>(.*?)<\/div>/s', $html, $m_inputs);
+        $dom = new DOMDocument();
+        @$dom->loadHTML('<?xml encoding="UTF-8">' . $html);
+        $xpath = new DOMXPath($dom);
 
-        if (empty($m_fix) || count($m_inputs[1]) < 2) {
-             return ["status" => "error", "message" => "통합계정 정보를 파싱할 수 없습니다."];
+        $m_fix = $this->getElementsByClass($xpath, 'elem_fix');
+        $m_inputs = $this->getElementsByClass($xpath, 'input_disabled');
+
+        if ($m_fix->length === 0 || $m_inputs->length < 2) {
+             file_put_contents('debug_riro_fail_integrated.html', $html); // Debug log
+             return ["status" => "error", "message" => "통합계정 정보를 파싱할 수 없습니다. (debug_fail_integrated.html 생성됨)"];
         }
 
-        $fix_text = trim(strip_tags($m_fix[1]));
+        $fix_text = trim($m_fix->item(0)->textContent);
         $riro_id = substr($fix_text, 0, 8);
         
-        // Use a more robust split for the student type in parentheses
-        // Example: "20211234 (인천과학예술영재학교) 학생"
         $student = '';
         if (preg_match('/\((.*?)\)/', $fix_text, $m_paren)) {
             $student = $m_paren[1];
         }
 
-        $name = trim(strip_tags($m_inputs[1][0]));
-        $student_number_raw = trim(strip_tags($m_inputs[1][1]));
+        $name = trim($m_inputs->item(0)->textContent);
+        $student_number_raw = trim($m_inputs->item(1)->textContent);
         
         if (strlen($student_number_raw) >= 3) {
             $student_number = $student_number_raw[0] . substr($student_number_raw, 2);
