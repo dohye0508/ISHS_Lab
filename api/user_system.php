@@ -37,6 +37,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 function handleSignup($data) {
     global $pdo;
+    
+    // Check if database is configured
+    if (!isset($pdo) || !$pdo) {
+        echo json_encode(["status" => "error", "message" => "데이터베이스가 구성되지 않았습니다. db_config.php를 확인해주세요."]);
+        return;
+    }
+
     $riro_id = $data['riro_id'] ?? '';
     $riro_pw = $data['riro_pw'] ?? '';
     $nickname = $data['nickname'] ?? '';
@@ -86,6 +93,12 @@ function handleSignup($data) {
 
 function handleLogin($data) {
     global $pdo;
+    
+    if (!isset($pdo)) {
+        echo json_encode(["status" => "error", "message" => "데이터베이스가 구성되지 않았습니다. db_config.php를 확인해주세요."]);
+        return;
+    }
+    
     $nickname = $data['nickname'] ?? '';
     $password = $data['password'] ?? '';
 

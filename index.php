@@ -574,17 +574,23 @@
         async function submitLogin() {
             const nickname = document.getElementById('login-nickname').value;
             const password = document.getElementById('login-password').value;
-            const res = await fetch(`${AUTH_API}?action=login`, {
-                method: 'POST',
-                body: JSON.stringify({ nickname, password })
-            });
-            const data = await res.json();
-            if (data.status === 'success') {
-                alert(data.message);
-                closeAuthModal();
-                updateAuthUI();
-            } else {
-                alert(data.message);
+            try {
+                const res = await fetch(`${AUTH_API}?action=login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nickname, password })
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    alert(data.message);
+                    closeAuthModal();
+                    updateAuthUI();
+                } else {
+                    alert(data.message);
+                }
+            } catch (e) {
+                console.error(e);
+                alert("로그인 중 오류가 발생했습니다. 서버 상태를 확인해주세요.");
             }
         }
 
@@ -594,20 +600,48 @@
             const nickname = document.getElementById('signup-nickname').value;
             const password = document.getElementById('signup-password').value;
             
-            // Show loading state?
-            const signBtn = document.querySelector('#form-signup btn');
-            if(signBtn) signBtn.textContent = '인증 중...';
+            const signBtn = document.querySelector('#form-signup button');
+            const originalText = signBtn ? signBtn.textContent : '';
+            if(signBtn) {
+                signBtn.textContent = '인증 및 가입 중...';
+                signBtn.disabled = true;
+            }
 
-            const res = await fetch(`${AUTH_API}?action=signup`, {
+            try {
+                const res = await fetch(`${AUTH_API}?action=signup`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ riro_id, riro_pw, nickname, password })
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    alert(data.message);
+                    // Auto login after signup
+                    await submitLoginDirect(nickname, password);
+                } else {
+                    alert(data.message);
+                }
+            } catch (e) {
+                console.error(e);
+                alert("가입 중 오류가 발생했습니다. 입력 정보를 확인하거나 잠시 후 다시 시도해주세요.");
+            } finally {
+                if(signBtn) {
+                    signBtn.textContent = originalText;
+                    signBtn.disabled = false;
+                }
+            }
+        }
+
+        async function submitLoginDirect(nickname, password) {
+            const res = await fetch(`${AUTH_API}?action=login`, {
                 method: 'POST',
-                body: JSON.stringify({ riro_id, riro_pw, nickname, password })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nickname, password })
             });
             const data = await res.json();
             if (data.status === 'success') {
-                alert(data.message);
-                switchTab('login');
-            } else {
-                alert(data.message);
+                closeAuthModal();
+                updateAuthUI();
             }
         }
 

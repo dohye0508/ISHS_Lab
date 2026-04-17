@@ -7,6 +7,7 @@
 class RiroAuth {
     private $session_id;
     private $cookie_file;
+    private $last_html;
 
     public function __construct() {
         // Create a unique cookie file for this session in the temporary directory
