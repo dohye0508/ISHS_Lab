@@ -535,6 +535,7 @@
                                 <p class="practice-desc">문맥 속에서 단어를 활용하며<br>실전 영어 감각을 키우세요.</p>
                                 
                                 <div class="eng-mode-selector">
+                                    <button class="mode-btn" data-mode="memorize" onclick="setEngMode('memorize')">외우기</button>
                                     <button class="mode-btn active" data-mode="random" onclick="setEngMode('random')">무작위</button>
                                     <button class="mode-btn" data-mode="order" onclick="setEngMode('order')">순서배열</button>
                                     <button class="mode-btn" data-mode="blank_choice" onclick="setEngMode('blank_choice')">단어선택</button>

@@ -13,6 +13,8 @@ window.wordPracticeQueue = [];
 window.wordPracticeCurrentIndex = 0;
 window.isWordPracticeMode = false;
 window.isMemorizeMode = false;
+window.isSentenceMemorizeMode = false;
+window.sentenceMemorizeIndex = 0;
 
 // Collection Management
 window.currentPassageData = typeof english_3221m !== 'undefined' ? english_3221m : [];
@@ -149,9 +151,125 @@ window.startEnglishGame = function() {
     }
     
     window.isWordPracticeMode = false;
+    window.isMemorizeMode = false;
+    window.isSentenceMemorizeMode = (window.engSelectedMode === 'memorize');
+
     window.applyHintVisibility();
     window.applyAnswerVisibility();
-    window.nextEnglishQuestion();
+    
+    if (window.isSentenceMemorizeMode) {
+        // UI Setup for Memorize Mode
+        const hintToggles = document.querySelectorAll('.hint-section');
+        hintToggles.forEach(el => el.style.display = 'none');
+        document.getElementById('btn-eng-skip').style.display = 'none';
+        if (scoreBadge) scoreBadge.style.display = 'none';
+
+        window.sentenceMemorizeIndex = 0;
+        window.nextSentenceMemorize();
+    } else {
+        // UI Setup for Quiz Mode
+        const hintToggles = document.querySelectorAll('.hint-section');
+        hintToggles.forEach(el => el.style.display = 'block');
+        document.getElementById('btn-eng-skip').style.display = 'inline-block';
+        if (scoreBadge) scoreBadge.style.display = 'inline-block';
+
+        window.nextEnglishQuestion();
+    }
+};
+
+window.nextSentenceMemorize = function() {
+    if (!window.currentPassageData || window.currentPassageData.length === 0) return;
+    
+    // Ensure index is within bounds (loop back to 0 if needed)
+    if (window.sentenceMemorizeIndex >= window.currentPassageData.length) {
+        window.sentenceMemorizeIndex = 0;
+    }
+
+    const passage = window.currentPassageData[window.sentenceMemorizeIndex];
+    const playArea = document.getElementById('eng-play-area');
+    const modeBadge = document.getElementById('eng-mode-badge');
+    const passageBadge = document.getElementById('eng-passage-badge');
+
+    if (modeBadge) modeBadge.textContent = "Passage Memorization (지문 외우기)";
+    if (passageBadge) {
+        passageBadge.textContent = `#${window.sentenceMemorizeIndex + 1} / ${window.currentPassageData.length}`;
+        passageBadge.style.display = 'inline-block';
+    }
+
+    if (!playArea) return;
+    playArea.innerHTML = '';
+
+    // Next Button at the top
+    const topNav = document.createElement('div');
+    topNav.style.width = '100%';
+    topNav.style.display = 'flex';
+    topNav.style.justifyContent = 'center';
+    topNav.style.marginBottom = '20px';
+
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'btn primary';
+    nextBtn.style.padding = '12px 60px';
+    nextBtn.style.fontSize = '1.1rem';
+    nextBtn.style.boxShadow = '0 4px 12px rgba(var(--primary-rgb), 0.3)';
+    nextBtn.innerHTML = '다음 지문으로 (Next) →';
+    nextBtn.onclick = () => {
+        window.sentenceMemorizeIndex++;
+        window.nextSentenceMemorize();
+        window.scrollTo(0, 0);
+    };
+    
+    topNav.appendChild(nextBtn);
+    playArea.appendChild(topNav);
+
+    // Render Sentences
+    const listContainer = document.createElement('div');
+    listContainer.className = 'sentence-memorize-list';
+    listContainer.style.width = '100%';
+    listContainer.style.display = 'flex';
+    listContainer.style.flexDirection = 'column';
+    listContainer.style.gap = '15px';
+
+    // Split logic
+    const enSents = getSentences(passage.en);
+    const koSents = getSentences(passage.ko);
+    
+    // Determine how many rows to show
+    const count = Math.max(enSents.length, koSents.length);
+    
+    for (let i = 0; i < count; i++) {
+        const row = document.createElement('div');
+        row.className = 'memorize-card'; // Reuse the card style
+        row.style.flexDirection = 'column';
+        row.style.alignItems = 'flex-start';
+        row.style.gap = '8px';
+        row.style.borderLeftWidth = '6px'; // Stronger accent for sentences
+
+        const eng = document.createElement('div');
+        eng.className = 'memorize-eng';
+        eng.style.fontSize = '1.15rem';
+        eng.style.lineHeight = '1.5';
+        eng.textContent = enSents[i] || "";
+
+        const kor = document.createElement('div');
+        kor.className = 'memorize-ko';
+        kor.style.fontSize = '1rem';
+        kor.style.lineHeight = '1.5';
+        kor.style.paddingTop = '4px';
+        kor.style.borderTop = '1px solid var(--border)';
+        kor.style.width = '100%';
+        kor.textContent = koSents[i] || "";
+
+        row.appendChild(eng);
+        row.appendChild(kor);
+        listContainer.appendChild(row);
+    }
+
+    playArea.appendChild(listContainer);
+
+    // Extra spacers if needed for scrolling
+    const footerSpacer = document.createElement('div');
+    footerSpacer.style.height = '40px';
+    playArea.appendChild(footerSpacer);
 };
 
 window.startMemorize = function() {
@@ -373,6 +491,7 @@ window.quitEnglishGame = function() {
 
     window.isWordPracticeMode = false;
     window.isMemorizeMode = false;
+    window.isSentenceMemorizeMode = false;
 };
 
 window.nextEnglishQuestion = function() {
