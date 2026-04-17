@@ -441,15 +441,18 @@
     <div class="orb orb-2"></div>
     <div class="orb orb-3"></div>
 
-    <!-- Auth UI Elements -->
-    <div id="auth-header" style="position: fixed; top: 20px; right: 70px; z-index: 10000; display: flex; align-items: center; gap: 10px;">
+    <!-- Auth UI Elements (Top-Left) -->
+    <div id="auth-header" style="position: fixed; top: 20px; left: 20px; z-index: 10000; display: flex; align-items: center; gap: 10px;">
         <!-- Logged Out State -->
-        <button id="btn-login-open" class="btn secondary" onclick="openAuthModal()" style="padding: 8px 16px; font-size: 0.85rem; border-radius: 20px; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px);">로그인 / 가입</button>
+        <button id="btn-login-open" class="btn secondary" onclick="openAuthModal()" style="padding: 8px 16px; font-size: 0.85rem; border-radius: 20px; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); color: var(--text); border: 1px solid var(--border);">로그인 / 가입</button>
         
         <!-- Logged In State (Hidden by default) -->
-        <div id="user-profile" style="display: none; align-items: center; gap: 10px; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); padding: 5px 15px; border-radius: 25px; border: 1px solid var(--border);">
-            <span id="user-nickname" style="font-weight: 700; font-size: 0.9rem;">Nickname</span>
-            <button onclick="handleLogout()" style="background: none; border: none; font-size: 0.75rem; color: #ea4335; cursor: pointer; padding: 0;">로그아웃</button>
+        <div id="user-profile" style="display: none; align-items: center; gap: 12px; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); padding: 5px 15px; border-radius: 25px; border: 1px solid var(--border);">
+            <span id="user-nickname" style="font-weight: 700; font-size: 0.9rem; color: var(--text);">Nickname</span>
+            <button onclick="handleLogout()" style="background: none; border: none; font-size: 1rem; color: #ea4335; cursor: pointer; padding: 0; display: flex; align-items: center; gap: 4px;" title="로그아웃">
+                <span style="font-size: 0.75rem; font-weight: 600;">나가기</span>
+                <span style="font-size: 1.1rem;">→</span>
+            </button>
         </div>
     </div>
 

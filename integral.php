@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: index.php?msg=login_required");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -22,35 +29,23 @@
 <body>
     <!-- Scripts calling body removed from top -->
 
-    <!-- Go Home Button (Back Arrow) -->
-    <a href="index.php" class="home-btn-global" aria-label="Go Home">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="19" y1="12" x2="5" y2="12"></line>
-            <polyline points="12 19 5 12 12 5"></polyline>
-        </svg>
-    </a>
-    <style>
-        .home-btn-global {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: transparent;
-            color: var(--text);
-            opacity: 0.6;
-            transition: all 0.2s;
-            padding: 10px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-        .home-btn-global:hover {
-            opacity: 1;
-            background: var(--surface);
-            transform: scale(1.1);
-        }
-    </style>
+    <!-- Auth UI Elements (Top-Left) -->
+    <div id="auth-header" style="position: fixed; top: 20px; left: 20px; z-index: 10000; display: flex; align-items: center; gap: 10px;">
+        <a href="index.php" style="background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); color: var(--text); padding: 8px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border);" title="홈으로">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+        </a>
+        
+        <div id="user-profile" style="display: none; align-items: center; gap: 12px; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); padding: 5px 15px; border-radius: 25px; border: 1px solid var(--border);">
+            <span id="user-nickname" style="font-weight: 700; font-size: 0.9rem; color: var(--text);">Nickname</span>
+            <button onclick="handleLogout()" style="background: none; border: none; font-size: 1rem; color: #ea4335; cursor: pointer; padding: 0; display: flex; align-items: center; gap: 4px;" title="로그아웃">
+                <span style="font-size: 0.75rem; font-weight: 600;">나가기</span>
+                <span style="font-size: 1.1rem;">→</span>
+            </button>
+        </div>
+    </div>
 
     <!-- Theme toggle moved to selection card -->
 
@@ -206,6 +201,29 @@
     </style>
 
     <script>
+        // --- Authentication System Logic ---
+        const AUTH_API = 'api/user_system.php';
+
+        async function updateAuthUI() {
+            try {
+                const res = await fetch(`${AUTH_API}?action=status`);
+                const data = await res.json();
+                if (data.logged_in) {
+                    document.getElementById('user-profile').style.display = 'flex';
+                    document.getElementById('user-nickname').textContent = data.user.nickname;
+                } else {
+                    document.getElementById('user-profile').style.display = 'none';
+                }
+            } catch (e) { console.error("Auth status error:", e); }
+        }
+
+        async function handleLogout() {
+            await fetch(`${AUTH_API}?action=logout`, { method: 'POST' });
+            location.href = 'index.php';
+        }
+
+        document.addEventListener('DOMContentLoaded', updateAuthUI);
+
         // Global Theme Toggle Script
         (function() {
             const toggleBtn = document.getElementById('theme-toggle');
