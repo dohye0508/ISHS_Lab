@@ -2,9 +2,9 @@
 // Database configuration for Dothome (Shared Hosting)
 
 $db_host = 'localhost';
-$db_user = 'YOUR_DOTHOME_ID'; // 보통 아이디와 동일
-$db_pass = 'YOUR_DB_PASSWORD';
-$db_name = 'YOUR_DOTHOME_ID'; // 보통 아이디와 동일
+$db_user = 'ishslab'; // 보통 아이디와 동일
+$db_pass = 'z1860my18!';
+$db_name = 'ishslab'; // 보통 아이디와 동일
 
 try {
     $pdo = new PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8mb4", $db_user, $db_pass);

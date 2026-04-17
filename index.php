@@ -392,7 +392,7 @@
 
             <div class="lab-selection-card">
                 <!-- Integral Studio -->
-                <a href="integral.php" class="module-link">
+                <div onclick="enterModule('integral.php')" class="module-link" style="cursor: pointer;">
                     <div class="module-top">
                         <div class="module-icon">∫</div>
                         <div class="module-title">Integral Studio</div>
@@ -402,10 +402,10 @@
                         부정적분 계산 능력을 극대화하기 위한 트레이닝 모듈입니다.<br>
                         무한히 생성되는 문제와 즉각적인 피드백을 경험해보세요.
                     </div>
-                </a>
+                </div>
 
                 <!-- Vocabulary Studio -->
-                <a href="vocabulary.php" class="module-link">
+                <div onclick="enterModule('vocabulary.php')" class="module-link" style="cursor: pointer;">
                     <div class="module-top">
                         <div class="module-icon">Aa</div>
                         <div class="module-title">Vocabulary Studio</div>
@@ -415,9 +415,9 @@
                         나만의 단어장을 만들고 체계적으로 관리하세요.<br>
                         플래시카드와 주관식 테스트로 완벽하게 암기할 수 있습니다.
                     </div>
-                </a>
+                </div>
                 <!-- Coding Test -->
-                <a href="coding_test.php" class="module-link">
+                <div onclick="enterModule('coding_test.php')" class="module-link" style="cursor: pointer;">
                     <div class="module-top">
                         <div class="module-icon">💻</div>
                         <div class="module-title">Coding Test</div>
@@ -427,7 +427,7 @@
                         파이썬 주요 알고리즘 템플릿과 예제 모음입니다.<br>
                         코딩 테스트 준비를 위한 핵심 로직을 한눈에 확인하세요.
                     </div>
-                </a>
+                </div>
             </div>
             
             <footer class="lab-footer" style="margin-top: 20px; opacity: 0.5; font-size: 0.8rem; text-align: center;">
@@ -454,40 +454,39 @@
     </div>
 
     <!-- Auth Modal -->
-    <div id="auth-modal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(10px); z-index: 20000; align-items: center; justify-content: center;">
-        <div class="modal-content" style="background: var(--bg); width: 90%; max-width: 400px; padding: 35px; border-radius: 30px; border: 1px solid var(--border); box-shadow: 0 30px 60px rgba(0,0,0,0.12);">
-            <div id="modal-tab-header" style="display: flex; gap: 20px; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px;">
-                <h2 id="tab-login" class="auth-tab active" onclick="switchTab('login')" style="cursor: pointer; font-size: 1.3rem; margin: 0; opacity: 1;">로그인</h2>
-                <h2 id="tab-signup" class="auth-tab" onclick="switchTab('signup')" style="cursor: pointer; font-size: 1.3rem; margin: 0; opacity: 0.3;">회원가입</h2>
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999999; align-items: center; justify-content: center;">
+        <div class="modal-content" onclick="event.stopPropagation()" style="background: var(--bg); width: 95%; max-width: 380px; padding: 30px; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 25px 50px rgba(0,0,0,0.5); position: relative; pointer-events: auto;">
+            <div id="modal-tab-header" style="display: flex; gap: 20px; margin-bottom: 25px; border-bottom: 2px solid var(--border); padding-bottom: 12px; position: relative; z-index: 10;">
+                <h2 id="tab-login" class="auth-tab" onclick="switchTab('login')" style="cursor: pointer; font-size: 1.25rem; margin: 0; opacity: 1; transition: 0.2s; color: var(--text); font-weight: 700;">로그인</h2>
+                <h2 id="tab-signup" class="auth-tab" onclick="switchTab('signup')" style="cursor: pointer; font-size: 1.25rem; margin: 0; opacity: 0.3; transition: 0.2s; color: var(--text); font-weight: 700;">회원가입</h2>
                 <div style="flex-grow: 1;"></div>
-                <span onclick="closeAuthModal()" style="cursor: pointer; opacity: 0.5;">✕</span>
+                <span onclick="closeAuthModal()" style="cursor: pointer; opacity: 0.6; font-size: 1.6rem; line-height: 1;">×</span>
             </div>
 
             <!-- Login Form -->
-            <form id="form-login" onsubmit="event.preventDefault(); submitLogin();" style="display: flex; flex-direction: column; gap: 15px;">
-                <div class="input-field">
-                    <label style="font-size: 0.8rem; opacity: 0.6; display: block; margin-bottom: 5px;">닉네임</label>
-                    <input type="text" id="login-nickname" placeholder="Nickname" required style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); box-sizing: border-box;">
-                </div>
-                <div class="input-field">
-                    <label style="font-size: 0.8rem; opacity: 0.6; display: block; margin-bottom: 5px;">비밀번호</label>
-                    <input type="password" id="login-password" placeholder="Password" required style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); box-sizing: border-box;">
-                </div>
-                <button type="submit" class="btn primary" style="width: 100%; padding: 14px; border-radius: 15px; margin-top: 10px;">로그인</button>
-            </form>
+            <div id="form-login-container" style="display: block;">
+                <form id="form-login" onsubmit="event.preventDefault(); submitLogin();" style="display: flex; flex-direction: column; gap: 12px;">
+                    <input type="text" id="login-nickname" placeholder="닉네임" required style="width: 100%; padding: 14px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); box-sizing: border-box; font-size: 1rem; position: relative; z-index: 20; pointer-events: auto;">
+                    <input type="password" id="login-password" placeholder="비밀번호" required style="width: 100%; padding: 14px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); box-sizing: border-box; font-size: 1rem; position: relative; z-index: 20; pointer-events: auto;">
+                    <button type="submit" class="btn primary" style="width: 100%; padding: 14px; border-radius: 10px; margin-top: 5px; cursor: pointer; font-weight: 600; font-size: 1rem; position: relative; z-index: 20;">로그인</button>
+                </form>
+            </div>
 
             <!-- Signup Form (Hidden) -->
-            <form id="form-signup" onsubmit="event.preventDefault(); submitSignup();" style="display: none; flex-direction: column; gap: 12px;">
-                <div style="background: rgba(234, 67, 53, 0.05); padding: 12px; border-radius: 10px; font-size: 0.75rem; color: #ea4335; margin-bottom: 10px;">
-                    💡 리로스쿨 계정으로 본인 인증이 필요합니다.
-                </div>
-                <input type="text" id="signup-riro-id" placeholder="리로스쿨 아이디" required style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); box-sizing: border-box;">
-                <input type="password" id="signup-riro-pw" placeholder="리로스쿨 비밀번호" required style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); box-sizing: border-box;">
-                <hr style="border: none; border-top: 1px solid var(--border); margin: 5px 0;">
-                <input type="text" id="signup-nickname" placeholder="설정할 닉네임" required style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); box-sizing: border-box;">
-                <input type="password" id="signup-password" placeholder="설정할 비밀번호" required style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); box-sizing: border-box;">
-                <button type="submit" class="btn primary" style="width: 100%; padding: 14px; border-radius: 15px; margin-top: 10px; background: #34a853; box-shadow: 0 4px 12px rgba(52, 168, 83, 0.2);">인증 및 가입</button>
-            </form>
+            <div id="form-signup-container" style="display: none;">
+                <form id="form-signup" onsubmit="event.preventDefault(); submitSignup();" style="display: flex; flex-direction: column; gap: 10px;">
+                    <div style="background: rgba(234, 67, 53, 0.1); padding: 12px; border-radius: 10px; font-size: 0.8rem; color: #ea4335; margin-bottom: 5px; line-height: 1.4; border-left: 4px solid #ea4335;">
+                        학번 조회를 위해 리로스쿨 계정이 필요합니다.
+                    </div>
+                    <input type="text" id="signup-riro-id" placeholder="리로스쿨 ID" required style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); box-sizing: border-box; font-size: 0.95rem; position: relative; z-index: 20; pointer-events: auto;">
+                    <input type="password" id="signup-riro-pw" placeholder="리로스쿨 PW" required style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); box-sizing: border-box; font-size: 0.95rem; position: relative; z-index: 20; pointer-events: auto;">
+                    <div style="height: 1px; background: var(--border); margin: 5px 0;"></div>
+                    <input type="text" id="signup-nickname" placeholder="사용할 닉네임" required style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); box-sizing: border-box; font-size: 0.95rem; position: relative; z-index: 20; pointer-events: auto;">
+                    <input type="password" id="signup-password" placeholder="사용할 비밀번호" required style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); box-sizing: border-box; font-size: 0.95rem; position: relative; z-index: 20; pointer-events: auto;">
+                    <button type="submit" class="btn primary" style="width: 100%; padding: 14px; border-radius: 10px; margin-top: 5px; background: #34a853; border: none; color: white; cursor: pointer; font-weight: 600; font-size: 1rem; position: relative; z-index: 20;">인증 및 가입하기</button>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -552,23 +551,47 @@
             const isLogin = tab === 'login';
             document.getElementById('tab-login').style.opacity = isLogin ? '1' : '0.3';
             document.getElementById('tab-signup').style.opacity = isLogin ? '0.3' : '1';
-            document.getElementById('form-login').style.display = isLogin ? 'flex' : 'none';
-            document.getElementById('form-signup').style.display = isLogin ? 'none' : 'flex';
+            
+            const loginSection = document.getElementById('form-login-container');
+            const signupSection = document.getElementById('form-signup-container');
+            
+            if (isLogin) {
+                loginSection.style.display = 'block';
+                signupSection.style.display = 'none';
+                document.getElementById('login-nickname').focus();
+            } else {
+                loginSection.style.display = 'none';
+                signupSection.style.display = 'block';
+                document.getElementById('signup-riro-id').focus();
+            }
         }
+
+        let isUserLoggedIn = false;
 
         async function updateAuthUI() {
             try {
                 const res = await fetch(`${AUTH_API}?action=status`);
                 const data = await res.json();
                 if (data.logged_in) {
+                    isUserLoggedIn = true;
                     document.getElementById('btn-login-open').style.display = 'none';
                     document.getElementById('user-profile').style.display = 'flex';
                     document.getElementById('user-nickname').textContent = data.user.nickname;
                 } else {
+                    isUserLoggedIn = false;
                     document.getElementById('btn-login-open').style.display = 'block';
                     document.getElementById('user-profile').style.display = 'none';
                 }
             } catch (e) { console.error("Auth status error:", e); }
+        }
+
+        function enterModule(url) {
+            if (isUserLoggedIn) {
+                location.href = url;
+            } else {
+                alert("이 모듈을 이용하려면 로그인이 필요합니다.");
+                openAuthModal();
+            }
         }
 
         async function submitLogin() {
@@ -615,7 +638,7 @@
                 });
                 const data = await res.json();
                 if (data.status === 'success') {
-                    alert(data.message);
+                    alert("회원가입과 인증이 완료되었습니다! 환영합니다.");
                     // Auto login after signup
                     await submitLoginDirect(nickname, password);
                 } else {
@@ -651,7 +674,18 @@
         }
 
         // Initialize UI
-        document.addEventListener('DOMContentLoaded', updateAuthUI);
+        document.addEventListener('DOMContentLoaded', () => {
+            updateAuthUI();
+            
+            // Check for login_required message from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('msg') === 'login_required') {
+                setTimeout(() => {
+                    alert("이 서비스를 이용하려면 먼저 로그인해주세요.");
+                    openAuthModal();
+                }, 500);
+            }
+        });
 
         // Global Theme Toggle Script (Preserved)
         (function() {
