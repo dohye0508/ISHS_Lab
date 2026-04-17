@@ -221,51 +221,44 @@ window.nextSentenceMemorize = function() {
     topNav.appendChild(nextBtn);
     playArea.appendChild(topNav);
 
-    // Render Sentences
+    // Render Blocks
     const listContainer = document.createElement('div');
-    listContainer.className = 'sentence-memorize-list';
+    listContainer.className = 'sentence-memorize-container';
     listContainer.style.width = '100%';
     listContainer.style.display = 'flex';
     listContainer.style.flexDirection = 'column';
-    listContainer.style.gap = '15px';
+    listContainer.style.gap = '30px';
+    listContainer.style.padding = '10px 20px';
+    listContainer.style.boxSizing = 'border-box';
 
-    // Split logic
-    const enSents = getSentences(passage.en);
-    const koSents = getSentences(passage.ko);
-    
-    // Determine how many rows to show
-    const count = Math.max(enSents.length, koSents.length);
-    
-    for (let i = 0; i < count; i++) {
-        const row = document.createElement('div');
-        row.style.padding = '10px 15px';
-        row.style.display = 'flex';
-        row.style.flexDirection = 'column';
-        row.style.gap = '6px';
+    // English Block
+    const engBlock = document.createElement('div');
+    engBlock.style.fontSize = '1.25rem';
+    engBlock.style.lineHeight = '1.8';
+    engBlock.style.color = '#000'; // Plain black as requested
+    engBlock.style.fontWeight = '400';
+    engBlock.style.whiteSpace = 'pre-wrap';
+    engBlock.textContent = passage.en;
 
-        const eng = document.createElement('div');
-        eng.className = 'memorize-eng';
-        eng.style.fontSize = '1.2rem';
-        eng.style.lineHeight = '1.6';
-        eng.style.color = 'var(--primary)';
-        eng.style.fontWeight = '700';
-        eng.textContent = enSents[i] || "";
+    // Divider or just gap? Let's use a subtle gap and a thin line
+    const divider = document.createElement('hr');
+    divider.style.border = 'none';
+    divider.style.borderTop = '1px solid var(--border)';
+    divider.style.margin = '10px 0';
+    divider.style.opacity = '0.5';
 
-        const kor = document.createElement('div');
-        kor.className = 'memorize-ko';
-        kor.style.fontSize = '1.05rem';
-        kor.style.lineHeight = '1.5';
-        kor.style.color = 'var(--text)';
-        kor.style.opacity = '0.7';
-        kor.style.fontWeight = '500';
-        kor.style.paddingLeft = '5px';
-        kor.textContent = koSents[i] || "";
+    // Korean Block
+    const koBlock = document.createElement('div');
+    koBlock.style.fontSize = '1.15rem';
+    koBlock.style.lineHeight = '1.7';
+    koBlock.style.color = '#000'; // Plain black as requested
+    koBlock.style.fontWeight = '400';
+    koBlock.style.whiteSpace = 'pre-wrap';
+    koBlock.textContent = passage.ko;
 
-        row.appendChild(eng);
-        row.appendChild(kor);
-        listContainer.appendChild(row);
-    }
-
+    listContainer.appendChild(engBlock);
+    listContainer.appendChild(divider);
+    listContainer.appendChild(koBlock);
     playArea.appendChild(listContainer);
 
     // Extra spacers if needed for scrolling
