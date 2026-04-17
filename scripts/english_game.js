@@ -2,12 +2,12 @@
 window.engScore = 0;
 window.currentMode = ''; 
 window.currentAnswer = null; 
-window.engSelectedMode = 'random';
+window.engSelectedMode = 'memorize';
 window.isHintVisible = false;
 window.isAnswerVisible = false;
 
 // Word Practice State
-window.wordPracticeSelectedMainMode = 'quiz'; // 'quiz' or 'memorize'
+window.wordPracticeSelectedMainMode = 'memorize'; // 'quiz' or 'memorize'
 window.wordPracticeSelectedCount = 10;
 window.wordPracticeQueue = [];
 window.wordPracticeCurrentIndex = 0;

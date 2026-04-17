@@ -482,7 +482,7 @@
                         <div class="selection-container">
                             <!-- Passage Selection -->
                             <button id="btn-toggle-passage" class="btn secondary" onclick="openPassageModal()" style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
-                                <span id="current-passage-name">지문 선택 (Select Passage)</span>
+                                <span id="current-passage-name">32기 2-1 중간</span>
                                 <span class="status-indicator" style="font-size: 0.8em;">→</span>
                             </button>
 
@@ -519,8 +519,8 @@
                                 <p class="practice-desc">지문에 등장하는 어려운 단어들의<br>뜻을 완벽하게 숙지하세요.</p>
                                 
                                 <div class="eng-mode-selector" style="margin-top: 15px;">
-                                    <button class="mode-btn" id="btn-word-mode-memorize" onclick="setWordPracticeMode('memorize')" style="font-weight: 700;">외우기</button>
-                                    <button class="mode-btn active" id="btn-word-mode-10" onclick="setWordPracticeMode('quiz', 10)">10개</button>
+                                    <button class="mode-btn active" id="btn-word-mode-memorize" onclick="setWordPracticeMode('memorize')" style="font-weight: 700;">외우기</button>
+                                    <button class="mode-btn" id="btn-word-mode-10" onclick="setWordPracticeMode('quiz', 10)">10개</button>
                                     <button class="mode-btn" id="btn-word-mode-50" onclick="setWordPracticeMode('quiz', 50)">50개</button>
                                 </div>
                             </div>
@@ -535,8 +535,8 @@
                                 <p class="practice-desc">문맥 속에서 단어를 활용하며<br>실전 영어 감각을 키우세요.</p>
                                 
                                 <div class="eng-mode-selector">
-                                    <button class="mode-btn" data-mode="memorize" onclick="setEngMode('memorize')">외우기</button>
-                                    <button class="mode-btn active" data-mode="random" onclick="setEngMode('random')">무작위</button>
+                                    <button class="mode-btn active" data-mode="memorize" onclick="setEngMode('memorize')">외우기</button>
+                                    <button class="mode-btn" data-mode="random" onclick="setEngMode('random')">무작위</button>
                                     <button class="mode-btn" data-mode="order" onclick="setEngMode('order')">순서배열</button>
                                     <button class="mode-btn" data-mode="blank_choice" onclick="setEngMode('blank_choice')">단어선택</button>
                                     <button class="mode-btn" data-mode="blank_input" onclick="setEngMode('blank_input')">단어입력</button>
