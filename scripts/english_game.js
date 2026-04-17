@@ -238,25 +238,27 @@ window.nextSentenceMemorize = function() {
     
     for (let i = 0; i < count; i++) {
         const row = document.createElement('div');
-        row.className = 'memorize-card'; // Reuse the card style
+        row.style.padding = '10px 15px';
+        row.style.display = 'flex';
         row.style.flexDirection = 'column';
-        row.style.alignItems = 'flex-start';
-        row.style.gap = '8px';
-        row.style.borderLeftWidth = '6px'; // Stronger accent for sentences
+        row.style.gap = '6px';
 
         const eng = document.createElement('div');
         eng.className = 'memorize-eng';
-        eng.style.fontSize = '1.15rem';
-        eng.style.lineHeight = '1.5';
+        eng.style.fontSize = '1.2rem';
+        eng.style.lineHeight = '1.6';
+        eng.style.color = 'var(--primary)';
+        eng.style.fontWeight = '700';
         eng.textContent = enSents[i] || "";
 
         const kor = document.createElement('div');
         kor.className = 'memorize-ko';
-        kor.style.fontSize = '1rem';
+        kor.style.fontSize = '1.05rem';
         kor.style.lineHeight = '1.5';
-        kor.style.paddingTop = '4px';
-        kor.style.borderTop = '1px solid var(--border)';
-        kor.style.width = '100%';
+        kor.style.color = 'var(--text)';
+        kor.style.opacity = '0.7';
+        kor.style.fontWeight = '500';
+        kor.style.paddingLeft = '5px';
         kor.textContent = koSents[i] || "";
 
         row.appendChild(eng);
@@ -542,7 +544,7 @@ window.nextEnglishQuestion = function() {
 
 // Helpers (Internal to script)
 function getSentences(text) {
-    const sentences = text.match(/.*?[.!?](?:\s+|$)(?=[A-Z0-9"']|$)/g);
+    const sentences = text.match(/.*?[.!?](?:\s+|$)/g);
     if (!sentences) return [text];
     return sentences.map(s => s.trim()).filter(s => s.length > 0);
 }
