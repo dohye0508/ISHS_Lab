@@ -66,6 +66,24 @@
             opacity: 0.8;
         }
 
+        /* Decorative Side Orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(60px);
+            z-index: -1;
+            opacity: 0.15;
+            animation: float 20s infinite alternate ease-in-out;
+        }
+        .orb-1 { width: 400px; height: 400px; background: #8e44ad; top: 10%; left: -100px; }
+        .orb-2 { width: 350px; height: 350px; background: #e91e63; bottom: 10%; right: -100px; animation-delay: -5s; }
+        .orb-3 { width: 250px; height: 250px; background: #1a73e8; top: 50%; left: 15%; animation-delay: -10s; opacity: 0.05; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 30px) scale(1.1); }
+        }
+
         /* ... (container styles same) */
         .lab-wrapper {
             width: 100%;
@@ -180,9 +198,11 @@
         .module-link[href="coding_test/index.html"]:hover .arrow { color: #1ed760; transform: translateX(5px); }
 
         /* Remove generic hover styles from style.css effectively for these specific items */
+        .module-link .arrow { 
             margin-left: 6px;
             color: #1a73e8;
-            opacity: 1;
+            opacity: 0.3;
+            transition: all 0.3s ease;
         }
 
         .lab-header .subtitle {
@@ -197,10 +217,10 @@
             text-align: center;
             color: var(--text);
             opacity: 0.7;
-            font-size: 0.85rem; /* Scaled down from 0.9rem */
-            line-height: 1.5;
+            font-size: 0.88rem;
+            line-height: 1.35; /* Reduced line-height */
             max-width: 440px;
-            margin: 5px auto;
+            margin: 0 auto; /* Removed extra margin */
         }
 
         .lab-selection-card {
@@ -417,6 +437,9 @@
     </div>
     
     <div class="mesh-bg"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
 
     <!-- Global Theme Toggle (Top-Right) - Using Standard class -->
     <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Dark Mode">
