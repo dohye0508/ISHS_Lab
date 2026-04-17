@@ -1,7 +1,7 @@
 '''
-CCW (Counter Clockwise) 
-세 점 A, B, C가 주어졌을 때 이 세 점의 방향성(반시계, 시계, 일직선)을 판별하는 기하학 핵심 알고리즘.
-신발끈 공식(외적)을 사용하여 양수면 반시계 방향, 음수면 시계 방향, 0이면 일직선 상에 있음을 의미합니다.
+[문제 제목]: CCW (Counter Clockwise)
+- 문제 설명: 평면 위에 놓인 세 점의 방향 관계를 결정합니다. 세 점 A, B, C가 순서대로 있을 때 반시계 방향이면 1, 시계 방향이면 -1, 일직선이면 0을 반환합니다.
+- 시간 복잡도: O(1)
 
 [입력 예시]
 1 1
@@ -12,20 +12,21 @@ CCW (Counter Clockwise)
 -1
 '''
 import sys
+input = sys.stdin.readline
 
+# 데이터 입력
+x1, y1 = map(int, input().split())
+x2, y2 = map(int, input().split())
+x3, y3 = map(int, input().split())
+
+# 문제 해결 로직
 def ccw(x1, y1, x2, y2, x3, y3):
-    return (x1 * y2 + x2 * y3 + x3 * y1) - (x2 * y1 + x3 * y2 + x1 * y3)
+    res = (x1 * y2 + x2 * y3 + x3 * y1) - (y1 * x2 + y2 * x3 + y3 * x1)
+    if res > 0: return 1
+    elif res < 0: return -1
+    else: return 0
 
-lines = []
-for _ in range(3):
-    lines.append(list(map(int, sys.stdin.readline().split())))
+result = ccw(x1, y1, x2, y2, x3, y3)
 
-p1, p2, p3 = lines[0], lines[1], lines[2]
-result = ccw(p1[0], p1[1], p2[0], p2[1], p3[0], p3[1])
-
-if result > 0:
-    print("1 (반시계 방향)")
-elif result < 0:
-    print("-1 (시계 방향)")
-else:
-    print("0 (일직선)")
+# 결과 출력
+print(result)

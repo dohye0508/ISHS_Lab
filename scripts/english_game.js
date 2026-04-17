@@ -187,45 +187,18 @@ window.startMemorize = function() {
     // Render List
     const listContainer = document.createElement('div');
     listContainer.className = 'memorize-list';
-    listContainer.style.display = 'grid';
-    listContainer.style.gridTemplateColumns = 'repeat(2, 1fr)'; // Explicitly two columns
-    listContainer.style.gap = '20px';
-    listContainer.style.padding = '20px 0';
 
     window.currentVocabData.forEach(item => {
         const card = document.createElement('div');
         card.className = 'memorize-card';
-        card.style.background = 'var(--surface)';
-        card.style.padding = '20px';
-        card.style.borderRadius = '16px';
-        card.style.border = '1px solid var(--border)';
-        card.style.display = 'flex';
-        card.style.justifyContent = 'space-between';
-        card.style.alignItems = 'center';
-        card.style.boxShadow = '0 4px 15px rgba(0,0,0,var(--shadow-opacity, 0.05))';
-        card.style.transition = 'transform 0.2s ease, border-color 0.2s ease';
-        
-        card.onmouseover = () => {
-            card.style.transform = 'translateY(-3px)';
-            card.style.borderColor = 'var(--primary)';
-        };
-        card.onmouseout = () => {
-            card.style.transform = 'translateY(0)';
-            card.style.borderColor = 'var(--border)';
-        };
 
         const engText = document.createElement('span');
+        engText.className = 'memorize-eng';
         engText.textContent = item.en;
-        engText.style.fontSize = '1.3rem';
-        engText.style.fontWeight = '800';
-        engText.style.color = 'var(--primary)';
 
         const koText = document.createElement('span');
+        koText.className = 'memorize-ko';
         koText.textContent = item.ko;
-        koText.style.fontSize = '1.1rem';
-        koText.style.fontWeight = '600';
-        koText.style.color = 'var(--text)';
-        koText.style.opacity = '0.8';
 
         card.appendChild(engText);
         card.appendChild(koText);

@@ -13,6 +13,12 @@
         :root {
             --primary: #ea4335;       /* Google Red */
             --primary-rgb: 234, 67, 53;
+            --surface-variant: #fdf2f2; /* Very light red tint for alternating rows */
+            --accent-blue: #4285f4;
+            --accent-green: #34a853;
+        }
+        [data-theme="dark"] :root {
+            --surface-variant: #2d1a1a;
         }
         .btn.primary {
             background: linear-gradient(135deg, #ea4335 0%, #f28b82 100%);
@@ -398,6 +404,45 @@
                 flex: 1;
                 min-height: 280px;
             }
+        }
+
+        /* Memorize List Enhancements */
+        .memorize-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 20px 0;
+        }
+        .memorize-card {
+            background: var(--surface);
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+            border-left: 4px solid var(--primary); /* Accent bar */
+        }
+        .memorize-card:nth-child(even) {
+            background: var(--surface-variant);
+        }
+        .memorize-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        .memorize-eng {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+        .memorize-ko {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+            opacity: 0.8;
         }
     </style>
 
