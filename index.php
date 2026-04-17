@@ -38,33 +38,32 @@
             background: var(--bg);
             color: var(--text);
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            position: relative;
             margin: 0;
-            overflow-y: auto;
-            transition: background-color 0.3s, color 0.3s;
+            padding: 40px 20px;
+            box-sizing: border-box;
+            overflow-x: hidden;
+            font-family: 'Pretendard', sans-serif;
         }
 
-        /* Side gradients - PURPLE/PINK Theme as requested */
-        body::before {
-            content: '';
+        /* Modern Mesh Gradient Background */
+        .mesh-bg {
             position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            /* Purple & Pink gradients */
-            background: linear-gradient(90deg, 
-                rgba(142, 68, 173, 0.08) 0%, 
-                rgba(233, 30, 99, 0.02) 25%, 
-                transparent 50%, 
-                rgba(233, 30, 99, 0.02) 75%, 
-                rgba(142, 68, 173, 0.08) 100%
-            );
-            pointer-events: none;
-            z-index: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-color: var(--bg);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(142, 68, 173, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(233, 30, 99, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(26, 115, 232, 0.1) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(30, 215, 96, 0.05) 0px, transparent 50%);
+            filter: blur(80px);
+            opacity: 0.8;
         }
 
         /* ... (container styles same) */
@@ -81,19 +80,22 @@
 
         /* ... (outer card styles same) */
         .lab-outer-card {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 24px 30px; /* Scaled down further */
-            box-shadow: 0 10px 40px rgba(0,0,0,0.06);
-            border: 1px solid rgba(0,0,0,0.04);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 32px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+            border: 1px solid rgba(255, 255, 255, 0.4);
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 25px;
         }
+
         [data-theme="dark"] .lab-outer-card {
-            background: #202124;
-            border-color: #3c4043;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            background: rgba(30, 31, 34, 0.75);
+            border-color: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
 
         .lab-header {
@@ -209,15 +211,22 @@
 
         .module-link {
             display: block;
-            background: var(--surface);
+            background: rgba(var(--surface-rgb, 255, 255, 255), 0.5);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 15px 20px; /* Reduced from 20px 22px */
+            border-radius: 18px;
+            padding: 20px 24px;
             text-decoration: none;
             color: var(--text);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
+        }
+
+        .module-link:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+            background: var(--surface);
         }
 
         .module-link:hover::before {
@@ -401,12 +410,13 @@
                 </a>
             </div>
             
+            <footer class="lab-footer" style="margin-top: 20px; opacity: 0.5; font-size: 0.8rem; text-align: center;">
+                © 2026 ISHS 32nd - Developed by Dohye Lee. All rights reserved.
+            </footer>
         </div>
     </div>
     
-    <div class="footer">
-        © 2026 ISHS 32nd - Developed by Dohye Lee. All rights reserved.
-    </div>
+    <div class="mesh-bg"></div>
 
     <!-- Global Theme Toggle (Top-Right) - Using Standard class -->
     <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Dark Mode">
