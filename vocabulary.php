@@ -122,32 +122,47 @@ if (!isset($_SESSION['user_id'])) {
         }
 
         .landing-left {
-            flex: 1.1;
-            min-width: 450px;
+            flex: 1;
+            min-width: 480px;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center content for balance */
+            text-align: center;
         }
 
         /* Make landing-right fill available space */
         .landing-right {
-            flex: 1.3;
+            flex: 1.4;
             min-height: 400px;
-            min-width: 320px;
-            display: block !important;
+            min-width: 400px;
+            display: flex !important;
+            align-items: center;
+        }
+
+        .selection-card {
+            width: 100%;
         }
 
         .option-section {
+            width: 100%;
             margin-top: 25px;
-            padding: 20px;
-            background: rgba(var(--primary-rgb), 0.03);
-            border-radius: 16px;
-            border: 1px dashed rgba(var(--primary-rgb), 0.2);
+            padding: 24px;
+            background: var(--surface);
+            border-radius: 20px;
+            border: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            text-align: left;
         }
         
         .option-item .checkbox-container {
             margin-top: 0;
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text);
         }
 
         /* Tablet layout for vocabulary */
