@@ -121,12 +121,33 @@ if (!isset($_SESSION['user_id'])) {
             margin-top: 16px; /* Reduced from 24px */
         }
 
+        .landing-left {
+            flex: 1.1;
+            min-width: 450px;
+        }
+
         /* Make landing-right fill available space */
         .landing-right {
-            flex: 1.2;
+            flex: 1.3;
             min-height: 400px;
             min-width: 320px;
             display: block !important;
+        }
+
+        .option-section {
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(var(--primary-rgb), 0.03);
+            border-radius: 16px;
+            border: 1px dashed rgba(var(--primary-rgb), 0.2);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .option-item .checkbox-container {
+            margin-top: 0;
+            font-weight: 500;
         }
 
         /* Tablet layout for vocabulary */
@@ -573,6 +594,7 @@ if (!isset($_SESSION['user_id'])) {
                             </div>
                         </div>
 
+                        <div class="option-section">
                             <div class="option-item">
                                 <label class="checkbox-container">
                                     <input type="checkbox" id="chk-show-passage" checked>
