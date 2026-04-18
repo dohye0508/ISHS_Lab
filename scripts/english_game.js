@@ -15,6 +15,8 @@ window.isWordPracticeMode = false;
 window.isMemorizeMode = false;
 window.isSentenceMemorizeMode = false;
 window.sentenceMemorizeIndex = 0;
+window.showEnglishText = true;
+window.showVocabHighlights = true;
 
 // Collection Management
 window.currentPassageData = typeof english_3221m !== 'undefined' ? english_3221m : [];
@@ -179,7 +181,7 @@ window.startEnglishGame = function() {
 
 // Highlight vocabulary words in a text passage
 function highlightVocabulary(text, vocabList) {
-    if (!vocabList || vocabList.length === 0) return text;
+    if (!vocabList || vocabList.length === 0 || !window.showVocabHighlights) return text;
 
     // 1. Sort by length descending to match longer words/phrases first
     const sortedVocab = [...vocabList].sort((a, b) => b.en.length - a.en.length);
@@ -222,27 +224,42 @@ window.nextSentenceMemorize = function() {
     if (!playArea) return;
     playArea.innerHTML = '';
 
-    // Next Button at the top
-    const topNav = document.createElement('div');
-    topNav.style.width = '100%';
-    topNav.style.display = 'flex';
-    topNav.style.justifyContent = 'center';
-    topNav.style.marginBottom = '20px';
+    // Navigation Buttons
+    const navContainer = document.createElement('div');
+    navContainer.style.width = '100%';
+    navContainer.style.display = 'flex';
+    navContainer.style.justifyContent = 'center';
+    navContainer.style.gap = '15px';
+    navContainer.style.marginBottom = '25px';
+
+    const prevBtn = document.createElement('button');
+    prevBtn.className = 'btn secondary';
+    prevBtn.style.padding = '12px 30px';
+    prevBtn.innerHTML = '← 이전 (Prev)';
+    prevBtn.disabled = window.sentenceMemorizeIndex === 0;
+    prevBtn.onclick = () => {
+        if (window.sentenceMemorizeIndex > 0) {
+            window.sentenceMemorizeIndex--;
+            window.nextSentenceMemorize();
+            window.scrollTo(0, 0);
+        }
+    };
 
     const nextBtn = document.createElement('button');
     nextBtn.className = 'btn primary';
-    nextBtn.style.padding = '12px 60px';
+    nextBtn.style.padding = '12px 40px';
     nextBtn.style.fontSize = '1.1rem';
     nextBtn.style.boxShadow = '0 4px 12px rgba(var(--primary-rgb), 0.3)';
-    nextBtn.innerHTML = '다음 지문으로 (Next) →';
+    nextBtn.innerHTML = '다음 (Next) →';
     nextBtn.onclick = () => {
         window.sentenceMemorizeIndex++;
         window.nextSentenceMemorize();
         window.scrollTo(0, 0);
     };
     
-    topNav.appendChild(nextBtn);
-    playArea.appendChild(topNav);
+    navContainer.appendChild(prevBtn);
+    navContainer.appendChild(nextBtn);
+    playArea.appendChild(navContainer);
 
     // Render Blocks
     const listContainer = document.createElement('div');
@@ -258,9 +275,10 @@ window.nextSentenceMemorize = function() {
     const engBlock = document.createElement('div');
     engBlock.style.fontSize = '1.25rem';
     engBlock.style.lineHeight = '1.8';
-    engBlock.style.color = '#000'; // Plain black as requested
+    engBlock.style.color = '#000';
     engBlock.style.fontWeight = '400';
     engBlock.style.whiteSpace = 'pre-wrap';
+    engBlock.style.display = window.showEnglishText ? 'block' : 'none';
     
     // Highlight vocabulary words
     const highlightedHtml = highlightVocabulary(passage.en, window.currentVocabData);

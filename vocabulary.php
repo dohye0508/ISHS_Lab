@@ -551,7 +551,7 @@ if (!isset($_SESSION['user_id'])) {
                 <div class="landing-left">
                     <div class="landing-header">
                         <h1>Vocabulary<br>Studio</h1>
-                        <p class="subtitle">나만의 영단어 암기 및 테스트 플랫폼</p>
+                        <p class="subtitle">인곽 영어 단어 및 지문 암기 플랫폼</p>
                     </div>
                     
                     <div class="selection-card">
@@ -573,11 +573,22 @@ if (!isset($_SESSION['user_id'])) {
                             </div>
                         </div>
 
-                        <div class="option-section">
                             <div class="option-item">
                                 <label class="checkbox-container">
                                     <input type="checkbox" id="chk-show-passage" checked>
                                     <span>지문 번호 보기 (Show Passage Number)</span>
+                                </label>
+                            </div>
+                            <div class="option-item">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="chk-show-eng-text" checked onchange="window.showEnglishText = this.checked; if(window.isSentenceMemorizeMode) window.nextSentenceMemorize();">
+                                    <span>지문 영어 문장 보기 (Show English Text)</span>
+                                </label>
+                            </div>
+                            <div class="option-item">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="chk-show-vocab-high" checked onchange="window.showVocabHighlights = this.checked; if(window.isSentenceMemorizeMode) window.nextSentenceMemorize();">
+                                    <span>단어 강조 및 뜻 보기 (Show Highlights & Meanings)</span>
                                 </label>
                             </div>
                         </div>
