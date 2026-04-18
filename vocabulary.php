@@ -451,6 +451,75 @@ if (!isset($_SESSION['user_id'])) {
             color: var(--text);
             opacity: 0.8;
         }
+
+        /* Vocab Highlight & Tooltip */
+        .vocab-highlight {
+            color: var(--primary);
+            font-weight: 700;
+            border-bottom: 2px dashed rgba(var(--primary-rgb), 0.4);
+            cursor: help;
+            position: relative;
+            display: inline-block;
+            transition: all 0.2s;
+        }
+        .vocab-highlight:hover {
+            background: rgba(var(--primary-rgb), 0.1);
+            border-bottom-color: var(--primary);
+        }
+        .vocab-highlight::after {
+            content: attr(data-meaning);
+            position: absolute;
+            bottom: 110%;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background: #333;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            pointer-events: none;
+        }
+        .vocab-highlight:hover::after {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+        /* Triangle for tooltip */
+        .vocab-highlight::before {
+            content: '';
+            position: absolute;
+            bottom: 110%;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            border-width: 6px 6px 0 6px;
+            border-style: solid;
+            border-color: #333 transparent transparent transparent;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+            pointer-events: none;
+        }
+        .vocab-highlight:hover::before {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(7px);
+        }
+
+        [data-theme="dark"] .vocab-highlight::after {
+            background: #eee;
+            color: #111;
+        }
+        [data-theme="dark"] .vocab-highlight::before {
+            border-top-color: #eee;
+        }
     </style>
 
     <!-- Data and Game Scripts -->

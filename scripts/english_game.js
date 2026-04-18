@@ -177,6 +177,29 @@ window.startEnglishGame = function() {
     }
 };
 
+// Highlight vocabulary words in a text passage
+function highlightVocabulary(text, vocabList) {
+    if (!vocabList || vocabList.length === 0) return text;
+
+    // 1. Sort by length descending to match longer words/phrases first
+    const sortedVocab = [...vocabList].sort((a, b) => b.en.length - a.en.length);
+
+    // 2. Escape regex characters and join into a single pattern
+    const patterns = sortedVocab.map(v => v.en.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+    
+    // 3. Create a regex that matches whole words only
+    const regex = new RegExp(`\\b(${patterns})\\b`, 'gi');
+
+    // 4. Perform replacement
+    return text.replace(regex, (match) => {
+        // Find the matching vocab item (case-insensitive)
+        const item = vocabList.find(v => v.en.toLowerCase() === match.toLowerCase());
+        if (!item) return match;
+        
+        return `<span class="vocab-highlight" data-meaning="${item.ko}">${match}</span>`;
+    });
+}
+
 window.nextSentenceMemorize = function() {
     if (!window.currentPassageData || window.currentPassageData.length === 0) return;
     
@@ -238,7 +261,10 @@ window.nextSentenceMemorize = function() {
     engBlock.style.color = '#000'; // Plain black as requested
     engBlock.style.fontWeight = '400';
     engBlock.style.whiteSpace = 'pre-wrap';
-    engBlock.textContent = passage.en;
+    
+    // Highlight vocabulary words
+    const highlightedHtml = highlightVocabulary(passage.en, window.currentVocabData);
+    engBlock.innerHTML = highlightedHtml;
 
     // Divider or just gap? Let's use a subtle gap and a thin line
     const divider = document.createElement('hr');
