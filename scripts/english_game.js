@@ -272,19 +272,47 @@ window.nextSentenceMemorize = function() {
     listContainer.style.boxSizing = 'border-box';
 
     // English Block
+    const engWrapper = document.createElement('div');
+    engWrapper.style.position = 'relative';
+    engWrapper.style.width = '100%';
+
     const engBlock = document.createElement('div');
     engBlock.style.fontSize = '1.25rem';
     engBlock.style.lineHeight = '1.8';
     engBlock.style.color = '#000';
     engBlock.style.fontWeight = '400';
     engBlock.style.whiteSpace = 'pre-wrap';
+    engBlock.style.paddingRight = '35px';
     engBlock.style.display = window.showEnglishText ? 'block' : 'none';
     
     // Highlight vocabulary words
     const highlightedHtml = highlightVocabulary(passage.en, window.currentVocabData);
     engBlock.innerHTML = highlightedHtml;
 
-    // Divider or just gap? Let's use a subtle gap and a thin line
+    // Helper to create copy button
+    const createCopyButton = (text) => {
+        const btn = document.createElement('div');
+        btn.className = 'copy-btn-wrapper';
+        btn.innerHTML = `
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+        `;
+        btn.onclick = () => {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = '<span style="font-size: 10px; color: #34a853; font-weight: bold;">✓</span>';
+                setTimeout(() => { btn.innerHTML = originalHtml; }, 1500);
+            });
+        };
+        return btn;
+    };
+
+    engWrapper.appendChild(engBlock);
+    engWrapper.appendChild(createCopyButton(passage.en));
+
+    // Divider
     const divider = document.createElement('hr');
     divider.style.border = 'none';
     divider.style.borderTop = '1px solid var(--border)';
@@ -292,17 +320,25 @@ window.nextSentenceMemorize = function() {
     divider.style.opacity = '0.5';
 
     // Korean Block
+    const koWrapper = document.createElement('div');
+    koWrapper.style.position = 'relative';
+    koWrapper.style.width = '100%';
+
     const koBlock = document.createElement('div');
     koBlock.style.fontSize = '1.15rem';
     koBlock.style.lineHeight = '1.7';
-    koBlock.style.color = '#000'; // Plain black as requested
+    koBlock.style.color = '#000';
     koBlock.style.fontWeight = '400';
     koBlock.style.whiteSpace = 'pre-wrap';
+    koBlock.style.paddingRight = '35px';
     koBlock.textContent = passage.ko;
 
-    listContainer.appendChild(engBlock);
+    koWrapper.appendChild(koBlock);
+    koWrapper.appendChild(createCopyButton(passage.ko));
+
+    listContainer.appendChild(engWrapper);
     listContainer.appendChild(divider);
-    listContainer.appendChild(koBlock);
+    listContainer.appendChild(koWrapper);
     playArea.appendChild(listContainer);
 
     // Extra spacers if needed for scrolling

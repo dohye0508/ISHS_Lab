@@ -146,23 +146,40 @@ if (!isset($_SESSION['user_id'])) {
 
         .option-section {
             width: 100%;
-            margin-top: 25px;
-            padding: 24px;
-            background: var(--surface);
-            border-radius: 20px;
-            border: 1px solid var(--border);
+            margin-top: 20px;
+            padding: 5px 0;
             display: flex;
             flex-direction: column;
-            gap: 16px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            gap: 10px;
             text-align: left;
         }
         
         .option-item .checkbox-container {
             margin-top: 0;
-            font-weight: 600;
-            font-size: 1rem;
-            color: var(--text);
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        /* Copy Button Styles */
+        .copy-btn-wrapper {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            opacity: 0.3;
+            transition: opacity 0.2s;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 6px;
+        }
+
+        .copy-btn-wrapper:hover {
+            opacity: 1;
+            background: rgba(0,0,0,0.05);
+        }
+
+        .copy-btn-wrapper:active {
+            transform: scale(0.9);
         }
 
         /* Tablet layout for vocabulary */
