@@ -302,7 +302,7 @@ window.nextSentenceMemorize = function() {
         btn.onclick = () => {
             navigator.clipboard.writeText(text).then(() => {
                 const originalHtml = btn.innerHTML;
-                btn.innerHTML = '<span style="font-size: 10px; color: #34a853; font-weight: bold;">✓</span>';
+                btn.innerHTML = '<span style="font-size: 20px; color: #34a853; font-weight: bold;">✓</span>';
                 setTimeout(() => { btn.innerHTML = originalHtml; }, 1500);
             });
         };

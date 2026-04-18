@@ -142,6 +142,7 @@ if (!isset($_SESSION['user_id'])) {
 
         .selection-card {
             width: 100%;
+            text-align: left !important; /* Force left alignment for internal text */
         }
 
         .option-section {
