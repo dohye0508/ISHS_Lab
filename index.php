@@ -450,7 +450,7 @@
         <div id="user-profile" style="display: none; align-items: center; gap: 12px; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); padding: 5px 15px; border-radius: 25px; border: 1px solid var(--border);">
             <span id="user-nickname" style="font-weight: 700; font-size: 0.9rem; color: var(--text);">Nickname</span>
             <button onclick="handleLogout()" style="background: none; border: none; font-size: 1rem; color: #ea4335; cursor: pointer; padding: 0; display: flex; align-items: center; gap: 4px;" title="로그아웃">
-                <span style="font-size: 0.75rem; font-weight: 600;">나가기</span>
+                <span style="font-size: 0.75rem; font-weight: 600;">로그아웃</span>
                 <span style="font-size: 1.1rem;">→</span>
             </button>
         </div>
@@ -608,7 +608,6 @@
                 });
                 const data = await res.json();
                 if (data.status === 'success') {
-                    alert(data.message);
                     closeAuthModal();
                     updateAuthUI();
                 } else {
