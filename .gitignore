@@ -31,3 +31,5 @@ ENV/
 *.log
 *.tmp
 *.bak
+# Database Credentials
+db_config.php

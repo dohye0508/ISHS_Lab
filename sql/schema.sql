@@ -5,6 +5,8 @@ CREATE TABLE IF NOT EXISTS users (
     nickname VARCHAR(50) NOT NULL UNIQUE,     -- Local Nickname
     password VARCHAR(255) NOT NULL,           -- Hashed Local Password
     riro_name VARCHAR(50),                    -- Real name from Riro
+    school_name VARCHAR(100),                 -- School name from Riro
+    grade INT,                                -- Grade/Year
     student_number VARCHAR(10),               -- Student number from Riro
     generation INT,                           -- Generation from Riro
     student_type VARCHAR(50),                 -- Type (e.g. Student)

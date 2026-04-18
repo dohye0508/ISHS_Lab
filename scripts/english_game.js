@@ -785,7 +785,7 @@ function buildBlankChoice(text, playArea) {
     const allWords = window.currentPassageData.map(p => p.en.split(/\s+/)).flat().map(w => w.replace(/[^a-zA-Z]/g, '')).filter(w => w.length >= 5);
     const distractors = [];
     let attempts = 0;
-    while(distractors.length < 3 && attempts < 100) {
+    while(distractors.length < 7 && attempts < 100) {
         let randW = allWords[Math.floor(Math.random()*allWords.length)];
         if (randW && randW.toLowerCase() !== targetWordClean.toLowerCase() && !distractors.includes(randW)) {
             distractors.push(randW);

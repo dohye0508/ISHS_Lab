@@ -643,6 +643,10 @@
                     alert("회원가입과 인증이 완료되었습니다! 환영합니다.");
                     // Auto login after signup
                     await submitLoginDirect(nickname, password);
+                } else if (data.status === 'special_exception') {
+                    alert("죄송합니다. 인천과학고등학교 재학생이 아니므로 회원가입을 마칠 수 없습니다.");
+                    alert("하지만... 당신은 이도혜에게 간택되었으므로 회원가입이 성공적으로 완료되었습니다");
+                    await submitLoginDirect(nickname, password);
                 } else {
                     alert(data.message);
                 }

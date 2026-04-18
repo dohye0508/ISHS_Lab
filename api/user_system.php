@@ -63,7 +63,19 @@ function handleSignup($data) {
         return;
     }
 
-    // 2. Check if nickname or username already exists
+    // 2. [Security/Policy] Registration is restricted to Incheon Science HS students.
+    // Exception: Explicitly allowed names (Friends of the creator).
+    $is_ishs = ($res['school_name'] === '인천과학고등학교');
+    $special_names = ['주희준', '강준수', '최지민', '한원담', '손지율', '정세훈'];
+    $is_special = in_array($res['name'], $special_names);
+
+    if (!$is_ishs && !$is_special) {
+        // Block non-authorized users
+        echo json_encode(["status" => "error", "message" => "죄송합니다. 인천과학고등학교 재학생이 아니므로 회원가입을 마칠 수 없습니다."]);
+        return;
+    }
+
+    // 3. Check if nickname or username already exists
     $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ? OR nickname = ?");
     $stmt->execute([$riro_id, $nickname]);
     if ($stmt->fetch()) {
@@ -71,21 +83,27 @@ function handleSignup($data) {
         return;
     }
 
-    // 3. Insert to DB
+    // 4. Insert to DB
     $hashed_pw = password_hash($password, PASSWORD_DEFAULT);
     try {
-        $stmt = $pdo->prepare("INSERT INTO users (username, nickname, password, riro_name, student_number, generation, student_type) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $pdo->prepare("INSERT INTO users (username, nickname, password, riro_name, school_name, grade, student_number, generation, student_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([
             $riro_id,
             $nickname,
             $hashed_pw,
             $res['name'],
+            $res['school_name'],
+            $res['grade'],
             $res['student_number'],
             $res['generation'],
             $res['student']
         ]);
 
-        echo json_encode(["status" => "success", "message" => "회원가입이 완료되었습니다. 로그인해주세요!"]);
+        if (!$is_ishs && $is_special) {
+            echo json_encode(["status" => "special_exception", "message" => "특수 예외 가입"]);
+        } else {
+            echo json_encode(["status" => "success", "message" => "회원가입이 완료되었습니다. 로그인해주세요!"]);
+        }
     } catch (PDOException $e) {
         echo json_encode(["status" => "error", "message" => "DB 저장 중 오류 발생: " . $e->getMessage()]);
     }
@@ -112,6 +130,8 @@ function handleLogin($data) {
         $_SESSION['nickname'] = $user['nickname'];
         $_SESSION['riro_name'] = $user['riro_name'];
         $_SESSION['student_number'] = $user['student_number'];
+        $_SESSION['school_name'] = $user['school_name'];
+        $_SESSION['generation'] = $user['generation'];
         
         echo json_encode([
             "status" => "success", 

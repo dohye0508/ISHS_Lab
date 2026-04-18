@@ -142,6 +142,8 @@ class RiroAuth {
         return [
             "status" => "success",
             "name" => $name,
+            "school_name" => "인천과학고등학교", // Default for this domain
+            "grade" => (strlen($student_number_raw) > 0 && is_numeric($student_number_raw[0])) ? (int)$student_number_raw[0] : 0,
             "student_number" => $student_number,
             "generation" => $generation,
             "student" => $student
@@ -186,6 +188,8 @@ class RiroAuth {
         return [
             "status" => "success",
             "name" => $name,
+            "school_name" => "인천과학고등학교", // Default for this domain
+            "grade" => (strlen($student_number_raw) > 0 && is_numeric($student_number_raw[0])) ? (int)$student_number_raw[0] : 0,
             "student_number" => $student_number,
             "generation" => $generation,
             "student" => $student
