@@ -20,14 +20,16 @@ class RiroAuth {
         }
     }
 
-    public function checkLogin($id, $pw) {
+    public function checkLogin($id, $pw, $subdomain = 'iscience') {
         $headers = [
             "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome",
             "Content-Type: application/x-www-form-urlencoded"
         ];
 
+        $baseUrl = "https://{$subdomain}.riroschool.kr";
+
         // 1. Logout first to be clean
-        $this->curlPost("https://iscience.riroschool.kr/user.php?action=user_logout", [], $headers);
+        $this->curlPost("{$baseUrl}/user.php?action=user_logout", [], $headers);
 
         // 2. Login attempt to ajax.php
         $loginData = [
@@ -40,11 +42,11 @@ class RiroAuth {
             "redirect_link" => ""
         ];
 
-        $response = $this->curlPost("https://iscience.riroschool.kr/ajax.php", $loginData, $headers);
+        $response = $this->curlPost("{$baseUrl}/ajax.php", $loginData, $headers);
         $json = json_decode($response, true);
 
         if (!$json) {
-            return ["status" => "error", "message" => "인증 서버 응답 분석 실패"];
+            return ["status" => "error", "message" => "인증 서버 응답 분석 실패 ($subdomain)"];
         }
 
         $code = (string)($json['code'] ?? '');
@@ -52,7 +54,7 @@ class RiroAuth {
             return ["status" => "error", "message" => "아이디 또는 비밀번호가 틀렸습니다."];
         }
         if ($code !== "000") {
-            return ["status" => "error", "message" => "로그인 실패 (Code: $code)"];
+            return ["status" => "not_found", "message" => "로그인 실패 (Code: $code)"];
         }
 
         $token = $json['token'] ?? '';
@@ -61,12 +63,11 @@ class RiroAuth {
         }
 
         // 3. Access user.php with token cookie to get user details
-        // Note: The token is often sent as a cookie named 'cookie_token'
         $this->setCookie("cookie_token", $token);
         
-        $userInfoResponse = $this->curlPost("https://iscience.riroschool.kr/user.php", ["pw" => $pw], $headers);
+        $userInfoResponse = $this->curlPost("{$baseUrl}/user.php", ["pw" => $pw], $headers);
         
-        return $this->parseUserInfo($userInfoResponse, $id);
+        return $this->parseUserInfo($userInfoResponse, $id, $subdomain);
     }
 
     private function curlPost($url, $data, $headers) {
@@ -93,15 +94,15 @@ class RiroAuth {
         file_put_contents($this->cookie_file, $content, FILE_APPEND);
     }
 
-    private function parseUserInfo($html, $user_id) {
+    private function parseUserInfo($html, $user_id, $subdomain) {
         // Save for debugging if needed
         $this->last_html = $html;
         
         // Detection: Check if it's an integrated account
         if (strpos($html, "통합아이디") !== false) {
-            return $this->parseIntegrated($html, $user_id);
+            return $this->parseIntegrated($html, $user_id, $subdomain);
         } else {
-            return $this->parseNormal($html, $user_id);
+            return $this->parseNormal($html, $user_id, $subdomain);
         }
     }
 
@@ -109,7 +110,7 @@ class RiroAuth {
         return $xpath->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' $className ')]");
     }
 
-    private function parseNormal($html, $user_id) {
+    private function parseNormal($html, $user_id, $subdomain) {
         $dom = new DOMDocument();
         @$dom->loadHTML('<?xml encoding="UTF-8">' . $html);
         $xpath = new DOMXPath($dom);
@@ -139,10 +140,19 @@ class RiroAuth {
             $generation = (int)("20" . substr($user_id, 0, 2)) - 1994 + 1;
         }
 
+        // Map subdomain to School Name
+        $school_map = [
+            'iscience' => '인천과학고등학교',
+            'seonin' => '선인고등학교',
+            'jphs' => '제물포고등학교',
+            'inchon' => '인천고등학교'
+        ];
+        $school_name = $school_map[$subdomain] ?? $subdomain;
+
         return [
             "status" => "success",
             "name" => $name,
-            "school_name" => "인천과학고등학교", // Default for this domain
+            "school_name" => $school_name,
             "grade" => (strlen($student_number_raw) > 0 && is_numeric($student_number_raw[0])) ? (int)$student_number_raw[0] : 0,
             "student_number" => $student_number,
             "generation" => $generation,
@@ -150,7 +160,7 @@ class RiroAuth {
         ];
     }
 
-    private function parseIntegrated($html, $user_id) {
+    private function parseIntegrated($html, $user_id, $subdomain) {
         $dom = new DOMDocument();
         @$dom->loadHTML('<?xml encoding="UTF-8">' . $html);
         $xpath = new DOMXPath($dom);
@@ -185,10 +195,19 @@ class RiroAuth {
             $generation = (int)("20" . substr($riro_id, 0, 2)) - 1994 + 1;
         }
 
+        // Map subdomain to School Name
+        $school_map = [
+            'iscience' => '인천과학고등학교',
+            'seonin' => '선인고등학교',
+            'jphs' => '제물포고등학교',
+            'inchon' => '인천고등학교'
+        ];
+        $school_name = $school_map[$subdomain] ?? $subdomain;
+
         return [
             "status" => "success",
             "name" => $name,
-            "school_name" => "인천과학고등학교", // Default for this domain
+            "school_name" => $school_name,
             "grade" => (strlen($student_number_raw) > 0 && is_numeric($student_number_raw[0])) ? (int)$student_number_raw[0] : 0,
             "student_number" => $student_number,
             "generation" => $generation,

@@ -642,6 +642,19 @@ math-field:focus-within {
     color: #e0e0e0;
 }
 
+[data-theme="dark"] .rules-section {
+    background-color: #2d2a15 !important;
+    box-shadow: 3px 3px 10px rgba(0,0,0,0.3);
+}
+
+[data-theme="dark"] .rules-title {
+    color: #e6c27a;
+}
+
+[data-theme="dark"] .rules-list li {
+    color: #d7ccc8;
+}
+
 [data-theme="dark"] .checkbox-container {
     color: #e0e0e0;
 }

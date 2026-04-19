@@ -15,7 +15,7 @@ window.isWordPracticeMode = false;
 window.isMemorizeMode = false;
 window.isSentenceMemorizeMode = false;
 window.sentenceMemorizeIndex = 0;
-window.showEnglishText = true;
+window.showKoreanText = true;
 window.showVocabHighlights = true;
 
 // Collection Management
@@ -218,7 +218,8 @@ window.nextSentenceMemorize = function() {
     if (modeBadge) modeBadge.textContent = "Passage Memorization (지문 외우기)";
     if (passageBadge) {
         passageBadge.textContent = `#${window.sentenceMemorizeIndex + 1} / ${window.currentPassageData.length}`;
-        passageBadge.style.display = 'inline-block';
+        const chkShowPassage = document.getElementById('chk-show-passage');
+        passageBadge.style.display = (chkShowPassage && chkShowPassage.checked) ? 'inline-block' : 'none';
     }
 
     if (!playArea) return;
@@ -279,11 +280,10 @@ window.nextSentenceMemorize = function() {
     const engBlock = document.createElement('div');
     engBlock.style.fontSize = '1.25rem';
     engBlock.style.lineHeight = '1.8';
-    engBlock.style.color = '#000';
     engBlock.style.fontWeight = '400';
     engBlock.style.whiteSpace = 'pre-wrap';
     engBlock.style.paddingRight = '35px';
-    engBlock.style.display = window.showEnglishText ? 'block' : 'none';
+    engBlock.style.display = 'block';
     
     // Highlight vocabulary words
     const highlightedHtml = highlightVocabulary(passage.en, window.currentVocabData);
@@ -318,6 +318,7 @@ window.nextSentenceMemorize = function() {
     divider.style.borderTop = '1px solid var(--border)';
     divider.style.margin = '10px 0';
     divider.style.opacity = '0.5';
+    divider.style.display = window.showKoreanText ? 'block' : 'none';
 
     // Korean Block
     const koWrapper = document.createElement('div');
@@ -327,11 +328,11 @@ window.nextSentenceMemorize = function() {
     const koBlock = document.createElement('div');
     koBlock.style.fontSize = '1.15rem';
     koBlock.style.lineHeight = '1.7';
-    koBlock.style.color = '#000';
     koBlock.style.fontWeight = '400';
     koBlock.style.whiteSpace = 'pre-wrap';
     koBlock.style.paddingRight = '35px';
     koBlock.textContent = passage.ko;
+    koBlock.style.display = window.showKoreanText ? 'block' : 'none';
 
     koWrapper.appendChild(koBlock);
     koWrapper.appendChild(createCopyButton(passage.ko));

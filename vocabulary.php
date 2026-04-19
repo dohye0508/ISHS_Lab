@@ -7,6 +7,7 @@ if (!isset($_SESSION['user_id'])) {
 ?>
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,29 +15,36 @@ if (!isset($_SESSION['user_id'])) {
     <link rel="icon" type="image/jpeg" href="assets/images/inticon.jpg">
     <meta property="og:image" content="assets/images/int.jpg">
     <link rel="stylesheet" href="assets/css/style.css?v=lab_final_v6">
-    
+
     <style>
         /* (Style overrides kept same) */
         :root {
-            --primary: #ea4335;       /* Google Red */
+            --primary: #ea4335;
+            /* Google Red */
             --primary-rgb: 234, 67, 53;
-            --surface-variant: #fdf2f2; /* Very light red tint for alternating rows */
+            --surface-variant: #fdf2f2;
+            /* Very light red tint for alternating rows */
             --accent-blue: #4285f4;
             --accent-green: #34a853;
         }
+
         [data-theme="dark"] :root {
             --surface-variant: #2d1a1a;
         }
+
         .btn.primary {
             background: linear-gradient(135deg, #ea4335 0%, #f28b82 100%);
             box-shadow: 0 4px 12px rgba(234, 67, 53, 0.25);
         }
+
         .btn.primary:hover {
             box-shadow: 0 6px 16px rgba(234, 67, 53, 0.35);
         }
+
         .loader-spinner {
             border-top-color: var(--primary);
         }
+
         /* Home Button Style inline */
         .home-btn-global {
             position: fixed;
@@ -53,15 +61,17 @@ if (!isset($_SESSION['user_id'])) {
             justify-content: center;
             z-index: 1000;
         }
+
         .home-btn-global:hover {
             opacity: 1;
             background: var(--surface);
             transform: scale(1.1);
         }
-        
+
         /* Override Start Button Hover to Red */
         .start-btn:hover {
-            background: #d32f2f !important; /* Darker Red */
+            background: #d32f2f !important;
+            /* Darker Red */
             box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3) !important;
         }
 
@@ -69,10 +79,12 @@ if (!isset($_SESSION['user_id'])) {
         .practice-cards {
             display: flex;
             flex-direction: column;
-            gap: 16px; /* Reduced from 24px */
+            gap: 16px;
+            /* Reduced from 24px */
             height: 100%;
             width: 100%;
-            padding: 10px; /* Reduced from 20px */
+            padding: 10px;
+            /* Reduced from 20px */
             min-width: 400px;
         }
 
@@ -80,7 +92,8 @@ if (!isset($_SESSION['user_id'])) {
             flex: 1;
             background: var(--surface);
             border-radius: 16px;
-            padding: 24px; /* Reduced from 32px */
+            padding: 24px;
+            /* Reduced from 32px */
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -99,26 +112,30 @@ if (!isset($_SESSION['user_id'])) {
         }
 
         .practice-icon {
-            font-size: 2.4rem; /* Scaled down from 3rem */
+            font-size: 2.4rem;
+            /* Scaled down from 3rem */
             margin-bottom: 12px;
         }
 
         .practice-title {
-            font-size: 1.5rem; /* Scaled down from 1.8rem */
+            font-size: 1.5rem;
+            /* Scaled down from 1.8rem */
             font-weight: 700;
             margin-bottom: 10px;
             color: var(--text);
         }
 
         .practice-desc {
-            font-size: 0.88rem; /* Scaled down from 1rem */
+            font-size: 0.88rem;
+            /* Scaled down from 1rem */
             color: var(--text-secondary);
             line-height: 1.5;
         }
 
         .practice-start-btn {
             width: 100%;
-            margin-top: 16px; /* Reduced from 24px */
+            margin-top: 16px;
+            /* Reduced from 24px */
         }
 
         .landing-left {
@@ -142,7 +159,8 @@ if (!isset($_SESSION['user_id'])) {
 
         .selection-card {
             width: 100%;
-            text-align: left !important; /* Force left alignment for internal text */
+            text-align: left !important;
+            /* Force left alignment for internal text */
         }
 
         .option-section {
@@ -154,7 +172,7 @@ if (!isset($_SESSION['user_id'])) {
             gap: 10px;
             text-align: left;
         }
-        
+
         .option-item .checkbox-container {
             margin-top: 0;
             font-weight: 500;
@@ -176,7 +194,7 @@ if (!isset($_SESSION['user_id'])) {
 
         .copy-btn-wrapper:hover {
             opacity: 1;
-            background: rgba(0,0,0,0.05);
+            background: rgba(0, 0, 0, 0.05);
         }
 
         .copy-btn-wrapper:active {
@@ -250,7 +268,7 @@ if (!isset($_SESSION['user_id'])) {
             transform: translateY(-2px);
             border-color: var(--primary);
             background: rgba(var(--primary-rgb), 0.03);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
         }
 
         .hint-btn svg {
@@ -297,7 +315,8 @@ if (!isset($_SESSION['user_id'])) {
         #eng-play-area {
             background: rgba(var(--primary-rgb), 0.03);
             border-radius: 24px;
-            padding: 25px; /* Reduced side padding slightly to avoid crunching */
+            padding: 25px;
+            /* Reduced side padding slightly to avoid crunching */
             border: 1px solid rgba(var(--primary-rgb), 0.1);
             box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.02);
             width: 100%;
@@ -308,7 +327,8 @@ if (!isset($_SESSION['user_id'])) {
         }
 
         #eng-passage-badge {
-            display: none; /* Controlled by JS */
+            display: none;
+            /* Controlled by JS */
             background: var(--primary);
             color: white;
             box-shadow: 0 2px 8px rgba(var(--primary-rgb), 0.3);
@@ -357,12 +377,23 @@ if (!isset($_SESSION['user_id'])) {
         }
 
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
         }
 
-        .src-container, .tgt-container {
+        .src-container,
+        .tgt-container {
             width: 100%;
             box-sizing: border-box;
         }
@@ -371,39 +402,61 @@ if (!isset($_SESSION['user_id'])) {
         .modal {
             display: none;
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(8px);
             z-index: 2000;
             align-items: center;
             justify-content: center;
             animation: fadeIn 0.3s ease;
         }
-        .modal.visible { display: flex; }
+
+        .modal.visible {
+            display: flex;
+        }
+
         .modal-content {
             background: var(--surface);
             width: 90%;
             max-width: 500px;
             border-radius: 24px;
             padding: 30px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
             border: 1px solid var(--border);
         }
+
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
         }
-        .modal-title { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
-        .close-modal { cursor: pointer; opacity: 0.5; transition: 0.2s; }
-        .close-modal:hover { opacity: 1; }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .close-modal {
+            cursor: pointer;
+            opacity: 0.5;
+            transition: 0.2s;
+        }
+
+        .close-modal:hover {
+            opacity: 1;
+        }
 
         .passage-list {
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
+
         .passage-item {
             padding: 15px 20px;
             border-radius: 12px;
@@ -414,11 +467,13 @@ if (!isset($_SESSION['user_id'])) {
             justify-content: space-between;
             align-items: center;
         }
+
         .passage-item:hover {
             border-color: var(--primary);
             background: rgba(var(--primary-rgb), 0.05);
             transform: translateX(5px);
         }
+
         .passage-item.active {
             border-color: var(--primary);
             background: rgba(var(--primary-rgb), 0.1);
@@ -429,19 +484,23 @@ if (!isset($_SESSION['user_id'])) {
         [data-theme="dark"] .eng-mode-selector {
             background: rgba(255, 255, 255, 0.05);
         }
+
         [data-theme="dark"] .mode-btn.active {
             background: #333;
             color: var(--primary);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
         }
+
         [data-theme="dark"] .hint-btn {
             background: #1e1e1e;
             border-color: #333;
         }
+
         [data-theme="dark"] .hint-btn:hover {
             background: #252525;
             border-color: var(--primary);
         }
+
         [data-theme="dark"] #eng-play-area {
             background: rgba(255, 255, 255, 0.02);
             border-color: rgba(255, 255, 255, 0.05);
@@ -452,15 +511,18 @@ if (!isset($_SESSION['user_id'])) {
             .landing-main {
                 flex-direction: column !important;
             }
+
             .landing-right {
                 width: 100%;
                 max-width: 580px;
                 margin: 20px auto 0;
             }
+
             .practice-cards {
                 flex-direction: row !important;
                 min-width: auto;
             }
+
             .practice-card {
                 flex: 1;
                 min-height: 280px;
@@ -474,6 +536,7 @@ if (!isset($_SESSION['user_id'])) {
             gap: 20px;
             padding: 20px 0;
         }
+
         .memorize-card {
             background: var(--surface);
             padding: 20px;
@@ -482,23 +545,43 @@ if (!isset($_SESSION['user_id'])) {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            transition: all 0.2s ease;
-            border-left: 4px solid var(--primary); /* Accent bar */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-left: 4px solid var(--primary);
+            /* Accent bar */
         }
+
+        [data-theme="dark"] .memorize-card {
+            background: #1a1b1e;
+            border-color: #2d2f34;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
         .memorize-card:nth-child(even) {
             background: var(--surface-variant);
         }
-        .memorize-card:hover {
-            transform: translateY(-3px);
-            border-color: var(--primary);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+
+        [data-theme="dark"] .memorize-card:nth-child(even) {
+            background: #212226;
         }
+
+        .memorize-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            border-color: var(--primary);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        [data-theme="dark"] .memorize-card:hover {
+            background: #25272b;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+        }
+
         .memorize-eng {
             font-size: 1.3rem;
             font-weight: 800;
             color: var(--primary);
         }
+
         .memorize-ko {
             font-size: 1.1rem;
             font-weight: 600;
@@ -516,10 +599,12 @@ if (!isset($_SESSION['user_id'])) {
             display: inline-block;
             transition: all 0.2s;
         }
+
         .vocab-highlight:hover {
             background: rgba(var(--primary-rgb), 0.1);
             border-bottom-color: var(--primary);
         }
+
         .vocab-highlight::after {
             content: attr(data-meaning);
             position: absolute;
@@ -537,14 +622,16 @@ if (!isset($_SESSION['user_id'])) {
             visibility: hidden;
             transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 1000;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             pointer-events: none;
         }
+
         .vocab-highlight:hover::after {
             opacity: 1;
             visibility: visible;
             transform: translateX(-50%) translateY(0);
         }
+
         /* Triangle for tooltip */
         .vocab-highlight::before {
             content: '';
@@ -561,6 +648,7 @@ if (!isset($_SESSION['user_id'])) {
             z-index: 1000;
             pointer-events: none;
         }
+
         .vocab-highlight:hover::before {
             opacity: 1;
             visibility: visible;
@@ -571,6 +659,7 @@ if (!isset($_SESSION['user_id'])) {
             background: #eee;
             color: #111;
         }
+
         [data-theme="dark"] .vocab-highlight::before {
             border-top-color: #eee;
         }
@@ -583,13 +672,15 @@ if (!isset($_SESSION['user_id'])) {
 
     <!-- ANTI-FOUC SCRIPT: Must be in HEAD -->
     <script>
-        (function() {
+        (function () {
             var theme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', theme);
         })();
     </script>
 </head>
+
 <body>
+
     <!-- Go Home Button (Back Arrow) -->
     <a href="index.php" class="home-btn-global" aria-label="Go Home">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -607,11 +698,12 @@ if (!isset($_SESSION['user_id'])) {
                         <h1>Vocabulary<br>Studio</h1>
                         <p class="subtitle">인곽 영어 단어 및 지문 암기 플랫폼</p>
                     </div>
-                    
+
                     <div class="selection-card">
                         <div class="selection-container">
                             <!-- Passage Selection -->
-                            <button id="btn-toggle-passage" class="btn secondary" onclick="openPassageModal()" style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                            <button id="btn-toggle-passage" class="btn secondary" onclick="openPassageModal()"
+                                style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
                                 <span id="current-passage-name">32기 2-1 중간</span>
                                 <span class="status-indicator" style="font-size: 0.8em;">→</span>
                             </button>
@@ -636,13 +728,15 @@ if (!isset($_SESSION['user_id'])) {
                             </div>
                             <div class="option-item">
                                 <label class="checkbox-container">
-                                    <input type="checkbox" id="chk-show-eng-text" checked onchange="window.showEnglishText = this.checked; if(window.isSentenceMemorizeMode) window.nextSentenceMemorize();">
-                                    <span>지문 영어 문장 보기 (Show English Text)</span>
+                                    <input type="checkbox" id="chk-show-ko-text" checked
+                                        onchange="window.showKoreanText = this.checked; if(window.isSentenceMemorizeMode) window.nextSentenceMemorize();">
+                                    <span>지문 한글 해석 보기 (Show Korean Meaning)</span>
                                 </label>
                             </div>
                             <div class="option-item">
                                 <label class="checkbox-container">
-                                    <input type="checkbox" id="chk-show-vocab-high" checked onchange="window.showVocabHighlights = this.checked; if(window.isSentenceMemorizeMode) window.nextSentenceMemorize();">
+                                    <input type="checkbox" id="chk-show-vocab-high" checked
+                                        onchange="window.showVocabHighlights = this.checked; if(window.isSentenceMemorizeMode) window.nextSentenceMemorize();">
                                     <span>단어 강조 및 뜻 보기 (Show Highlights & Meanings)</span>
                                 </label>
                             </div>
@@ -659,44 +753,56 @@ if (!isset($_SESSION['user_id'])) {
                                 <div class="practice-icon">📝</div>
                                 <h2 class="practice-title">단어 연습</h2>
                                 <p class="practice-desc">지문에 등장하는 어려운 단어들의<br>뜻을 완벽하게 숙지하세요.</p>
-                                
+
                                 <div class="eng-mode-selector" style="margin-top: 15px;">
-                                    <button class="mode-btn active" id="btn-word-mode-memorize" onclick="setWordPracticeMode('memorize')" style="font-weight: 700;">외우기</button>
-                                    <button class="mode-btn" id="btn-word-mode-10" onclick="setWordPracticeMode('quiz', 10)">10개</button>
-                                    <button class="mode-btn" id="btn-word-mode-50" onclick="setWordPracticeMode('quiz', 50)">50개</button>
+                                    <button class="mode-btn active" id="btn-word-mode-memorize"
+                                        onclick="setWordPracticeMode('memorize')" style="font-weight: 700;">외우기</button>
+                                    <button class="mode-btn" id="btn-word-mode-10"
+                                        onclick="setWordPracticeMode('quiz', 10)">10개</button>
+                                    <button class="mode-btn" id="btn-word-mode-50"
+                                        onclick="setWordPracticeMode('quiz', 50)">50개</button>
                                 </div>
                             </div>
-                            <button class="start-btn practice-start-btn" onclick="handleStartWordPractice()">Start Word Practice</button>
+                            <button class="start-btn practice-start-btn" onclick="handleStartWordPractice()">Start Word
+                                Practice</button>
                         </div>
-                        
+
                         <!-- 문장 연습 카드 -->
                         <div class="practice-card sentence-card">
                             <div class="practice-card-content">
                                 <div class="practice-icon">💬</div>
                                 <h2 class="practice-title">문장 연습</h2>
                                 <p class="practice-desc">문맥 속에서 단어를 활용하며<br>실전 영어 감각을 키우세요.</p>
-                                
+
                                 <div class="eng-mode-selector">
-                                    <button class="mode-btn active" data-mode="memorize" onclick="setEngMode('memorize')">외우기</button>
-                                    <button class="mode-btn" data-mode="random" onclick="setEngMode('random')">무작위</button>
-                                    <button class="mode-btn" data-mode="order" onclick="setEngMode('order')">순서배열</button>
-                                    <button class="mode-btn" data-mode="blank_choice" onclick="setEngMode('blank_choice')">단어선택</button>
-                                    <button class="mode-btn" data-mode="blank_input" onclick="setEngMode('blank_input')">단어입력</button>
+                                    <button class="mode-btn active" data-mode="memorize"
+                                        onclick="setEngMode('memorize')">외우기</button>
+                                    <button class="mode-btn" data-mode="random"
+                                        onclick="setEngMode('random')">무작위</button>
+                                    <button class="mode-btn" data-mode="order"
+                                        onclick="setEngMode('order')">순서배열</button>
+                                    <button class="mode-btn" data-mode="blank_choice"
+                                        onclick="setEngMode('blank_choice')">단어선택</button>
+                                    <button class="mode-btn" data-mode="blank_input"
+                                        onclick="setEngMode('blank_input')">단어입력</button>
                                 </div>
                             </div>
-                            <button class="start-btn practice-start-btn" onclick="startEnglishGame()">Start Sentence Practice</button>
+                            <button class="start-btn practice-start-btn" onclick="startEnglishGame()">Start Sentence
+                                Practice</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <!-- English Game View -->
-        <div id="english-game-view" style="display: none; width: 100%; max-width: 1000px; margin: 0 auto; padding: 10px 20px;">
+        <div id="english-game-view"
+            style="display: none; width: 100%; max-width: 1000px; margin: 0 auto; padding: 10px 20px;">
             <div class="header" style="display: flex; align-items: center; justify-content: space-between;">
                 <div style="display: flex; align-items: center; gap: 15px;">
                     <button class="btn-home" onclick="quitEnglishGame()" title="뒤로가기">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
                             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                             <polyline points="9 22 9 12 15 12 15 22"></polyline>
                         </svg>
@@ -749,17 +855,23 @@ if (!isset($_SESSION['user_id'])) {
         </div>
     </div>
     <!-- Auth UI Elements (Top-Left) -->
-    <div id="auth-header" style="position: fixed; top: 20px; left: 20px; z-index: 10000; display: flex; align-items: center; gap: 10px;">
-        <a href="index.php" style="background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); color: var(--text); padding: 8px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border);" title="홈으로">
+    <div id="auth-header"
+        style="position: fixed; top: 20px; left: 20px; z-index: 10000; display: flex; align-items: center; gap: 10px;">
+        <a href="index.php"
+            style="background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); color: var(--text); padding: 8px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border);"
+            title="홈으로">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                 <polyline points="9 22 9 12 15 12 15 22"></polyline>
             </svg>
         </a>
-        
-        <div id="user-profile" style="display: none; align-items: center; gap: 12px; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); padding: 5px 15px; border-radius: 25px; border: 1px solid var(--border);">
+
+        <div id="user-profile"
+            style="display: none; align-items: center; gap: 12px; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); padding: 5px 15px; border-radius: 25px; border: 1px solid var(--border);">
             <span id="user-nickname" style="font-weight: 700; font-size: 0.9rem; color: var(--text);">Nickname</span>
-            <button onclick="handleLogout()" style="background: none; border: none; font-size: 1rem; color: #ea4335; cursor: pointer; padding: 0; display: flex; align-items: center; gap: 4px;" title="로그아웃">
+            <button onclick="handleLogout()"
+                style="background: none; border: none; font-size: 1rem; color: #ea4335; cursor: pointer; padding: 0; display: flex; align-items: center; gap: 4px;"
+                title="로그아웃">
                 <span style="font-size: 0.75rem; font-weight: 600;">로그아웃</span>
                 <span style="font-size: 1.1rem;">→</span>
             </button>
@@ -768,7 +880,8 @@ if (!isset($_SESSION['user_id'])) {
 
     <!-- Global Theme Toggle (Top-Right) -->
     <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Dark Mode">
-        <svg class="sun-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg class="sun-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
             <circle cx="12" cy="12" r="5"></circle>
             <line x1="12" y1="1" x2="12" y2="3"></line>
             <line x1="12" y1="21" x2="12" y2="23"></line>
@@ -779,7 +892,8 @@ if (!isset($_SESSION['user_id'])) {
             <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
             <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
         </svg>
-        <svg class="moon-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg class="moon-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
         </svg>
     </button>
@@ -852,10 +966,10 @@ if (!isset($_SESSION['user_id'])) {
         document.addEventListener('DOMContentLoaded', updateAuthUI);
 
         // Global Theme Toggle Script
-        (function() {
+        (function () {
             const toggleBtn = document.getElementById('theme-toggle');
-            if(toggleBtn) {
-                toggleBtn.addEventListener('click', function() {
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', function () {
                     const currentTheme = document.documentElement.getAttribute('data-theme');
                     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
                     document.documentElement.setAttribute('data-theme', newTheme);
@@ -865,4 +979,5 @@ if (!isset($_SESSION['user_id'])) {
         })();
     </script>
 </body>
+
 </html>

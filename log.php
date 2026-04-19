@@ -6,15 +6,11 @@
 session_start();
 require_once 'db_config.php';
 
-// Access Control: Only "인천과학고등학교 32기 이도혜" can view this page
-$is_admin = (
-    isset($_SESSION['school_name']) && $_SESSION['school_name'] === '인천과학고등학교' &&
-    isset($_SESSION['generation']) && $_SESSION['generation'] == 32 &&
-    isset($_SESSION['riro_name']) && $_SESSION['riro_name'] === '이도혜'
-);
+// Access Control: Only users with the 'admin' role can view this page
+$is_admin = (isset($_SESSION['role']) && $_SESSION['role'] === 'admin');
 
 if (!$is_admin) {
-    die("<div style='text-align:center; margin-top:100px;'><h2>🚫 접근 권한이 없습니다.</h2><p>이 페이지는 관리자만 접근할 수 있습니다.</p><a href='index.php'>홈으로 돌아가기</a></div>");
+    exit(); // Just show a blank screen as requested
 }
 
 // Fetch users
@@ -22,7 +18,7 @@ try {
     $stmt = $pdo->query("SELECT * FROM users ORDER BY created_at DESC");
     $users = $stmt->fetchAll();
 } catch (PDOException $e) {
-    die("DB 오류: " . $e->getMessage());
+    die(""); // Silent error for database issues as well
 }
 ?>
 <!DOCTYPE html>
@@ -31,12 +27,12 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Log | ISHS LAB</title>
+    <title>Account Log</title>
     <link rel="stylesheet" href="assets/css/style.css?v=<?php echo time(); ?>">
     <style>
         .log-container {
             width: 95%;
-            max-width: 1200px;
+            max-width: 1300px;
             margin: 40px auto;
             background: rgba(var(--surface-rgb, 255, 255, 255), 0.7);
             backdrop-filter: blur(20px);
@@ -99,14 +95,15 @@ try {
             background: rgba(var(--primary-rgb, 26, 115, 232), 0.03);
         }
 
-        .badge-type {
-            padding: 4px 8px;
-            border-radius: 6px;
+        .role-badge {
+            padding: 2px 6px;
+            border-radius: 4px;
             font-size: 0.75rem;
-            font-weight: 700;
-            background: var(--primary);
-            color: white;
+            font-weight: 800;
+            text-transform: uppercase;
         }
+        .role-admin { background: #ea4335; color: white; }
+        .role-user { background: #eee; color: #666; }
 
         [data-theme="dark"] .log-container {
             background: rgba(30, 31, 34, 0.8);
@@ -128,6 +125,7 @@ try {
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>Role</th>
                         <th>Nickname</th>
                         <th>Real Name</th>
                         <th>School</th>
@@ -142,13 +140,18 @@ try {
                 <tbody>
                     <?php if (empty($users)): ?>
                         <tr>
-                            <td colspan="10" style="text-align: center; padding: 40px; opacity: 0.5;">가입된 사용자가 없습니다.</td>
+                            <td colspan="11" style="text-align: center; padding: 40px; opacity: 0.5;">가입된 사용자가 없습니다.</td>
                         </tr>
                     <?php else: ?>
                         <?php foreach ($users as $user): ?>
                             <tr>
                                 <td>
                                     <?php echo $user['id']; ?>
+                                </td>
+                                <td>
+                                    <span class="role-badge <?php echo ($user['role'] === 'admin') ? 'role-admin' : 'role-user'; ?>">
+                                        <?php echo htmlspecialchars($user['role']); ?>
+                                    </span>
                                 </td>
                                 <td style="font-weight: 700;">
                                     <?php echo htmlspecialchars($user['nickname']); ?>

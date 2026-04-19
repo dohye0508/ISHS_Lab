@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
     riro_name VARCHAR(50),                    -- Real name from Riro
     school_name VARCHAR(100),                 -- School name from Riro
     grade INT,                                -- Grade/Year
+    role VARCHAR(20) DEFAULT 'user',          -- Role (admin/user)
     student_number VARCHAR(10),               -- Student number from Riro
     generation INT,                           -- Generation from Riro
     student_type VARCHAR(50),                 -- Type (e.g. Student)

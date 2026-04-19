@@ -56,17 +56,39 @@ function handleSignup($data) {
 
     // 1. Verify via Riro
     $riro = new RiroAuth();
-    $res = $riro->checkLogin($riro_id, $riro_pw);
 
-    if ($res['status'] !== 'success') {
-        echo json_encode($res);
+    // 1 & 2. Riro Authentication with Auto-School Detection
+    $schools = [
+        'iscience' => '인천과학고등학교',
+        'seonin' => '선인고등학교',
+        'jphs' => '제물포고등학교',
+        'inchon' => '인천고등학교'
+    ];
+
+    $res = ["status" => "error", "message" => "아이디 또는 비밀번호가 틀렸습니다."];
+    $final_school = "";
+    $login_success = false;
+
+    foreach ($schools as $subdomain => $formal_name) {
+        $attempt = $riro->checkLogin($riro_id, $riro_pw, $subdomain);
+        
+        if ($attempt['status'] === 'success') {
+            $res = $attempt;
+            $final_school = $formal_name;
+            $login_success = true;
+            break;
+        }
+    }
+
+    if (!$login_success) {
+        echo json_encode(["status" => "error", "message" => "로그인 정보를 찾을 수 없습니다. (인곽/선인/제고/인고)"]);
         return;
     }
 
-    // 2. [Security/Policy] Registration is restricted to Incheon Science HS students.
+    // [Security/Policy] Registration is restricted to Incheon Science HS students.
     // Exception: Explicitly allowed names (Friends of the creator).
-    $is_ishs = ($res['school_name'] === '인천과학고등학교');
-    $special_names = ['주희준', '강준수', '최지민', '한원담', '손지율', '정세훈'];
+    $is_ishs = ($final_school === '인천과학고등학교');
+    $special_names = ['주희준', '강준수', '최지민', '한원담', '정세훈'];
     $is_special = in_array($res['name'], $special_names);
 
     if (!$is_ishs && !$is_special) {
@@ -85,15 +107,18 @@ function handleSignup($data) {
 
     // 4. Insert to DB
     $hashed_pw = password_hash($password, PASSWORD_DEFAULT);
+    $role = ($nickname === '09') ? 'admin' : 'user'; // Assign admin role to '09'
+    
     try {
-        $stmt = $pdo->prepare("INSERT INTO users (username, nickname, password, riro_name, school_name, grade, student_number, generation, student_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $pdo->prepare("INSERT INTO users (username, nickname, password, riro_name, school_name, grade, role, student_number, generation, student_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([
             $riro_id,
             $nickname,
             $hashed_pw,
             $res['name'],
-            $res['school_name'],
+            $final_school,
             $res['grade'],
+            $role,
             $res['student_number'],
             $res['generation'],
             $res['student']
@@ -132,6 +157,7 @@ function handleLogin($data) {
         $_SESSION['student_number'] = $user['student_number'];
         $_SESSION['school_name'] = $user['school_name'];
         $_SESSION['generation'] = $user['generation'];
+        $_SESSION['role'] = $user['role'];
         
         echo json_encode([
             "status" => "success", 

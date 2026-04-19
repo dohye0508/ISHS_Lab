@@ -28,11 +28,11 @@
             --border: #dadce0;
         }
         [data-theme="dark"] {
-            --bg: #121212;
-            --text: #e0e0e0;
+            --bg: #0a0a0c;
+            --text: #e2e2e2;
             --primary: #669df6;
-            --surface: #1e1e1e;
-            --border: #333333;
+            --surface: #16181d;
+            --border: #2d3139;
         }
         body {
             background: var(--bg);
@@ -64,6 +64,11 @@
                 radial-gradient(at 0% 100%, rgba(30, 215, 96, 0.05) 0px, transparent 50%);
             filter: blur(80px);
             opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+        
+        [data-theme="dark"] .mesh-bg {
+            opacity: 0.4; /* Reduce opacity in dark mode for deeper blacks */
         }
 
         /* Decorative Side Orbs */
@@ -111,9 +116,10 @@
         }
 
         [data-theme="dark"] .lab-outer-card {
-            background: rgba(30, 31, 34, 0.75);
-            border-color: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            background: rgba(18, 19, 21, 0.85);
+            border-color: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 20px 80px rgba(0,0,0,0.6);
+            backdrop-filter: blur(30px);
         }
 
         .lab-header {
