@@ -4,6 +4,10 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: index.php?msg=login_required");
     exit();
 }
+// Banned users see a blank page
+if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="ko">
@@ -15,6 +19,9 @@ if (!isset($_SESSION['user_id'])) {
     <link rel="icon" type="image/jpeg" href="assets/images/inticon.jpg">
     <meta property="og:image" content="assets/images/int.jpg">
     <link rel="stylesheet" href="assets/css/style.css?v=lab_final_v6">
+    <script>
+        window.userRole = '<?php echo $_SESSION['role'] ?? 'user'; ?>';
+    </script>
 
     <style>
         /* (Style overrides kept same) */
@@ -85,7 +92,8 @@ if (!isset($_SESSION['user_id'])) {
             width: 100%;
             padding: 10px;
             /* Reduced from 20px */
-            min-width: 400px;
+            min-width: 0;
+            /* Remove fixed min-width to allow proper flex shrinking */
         }
 
         .practice-card {
@@ -144,7 +152,8 @@ if (!isset($_SESSION['user_id'])) {
             max-width: 600px;
             display: flex;
             flex-direction: column;
-            align-items: center; /* Center content for balance */
+            align-items: center;
+            /* Center content for balance */
             text-align: center;
         }
 
@@ -152,7 +161,8 @@ if (!isset($_SESSION['user_id'])) {
         .landing-right {
             flex: 1.4;
             min-height: 400px;
-            min-width: 400px;
+            min-width: 0;
+            /* Remove fixed min-width to allow proper flex shrinking */
             display: flex !important;
             align-items: center;
         }
@@ -477,7 +487,6 @@ if (!isset($_SESSION['user_id'])) {
         .passage-item.active {
             border-color: var(--primary);
             background: rgba(var(--primary-rgb), 0.1);
-            font-weight: 700;
         }
 
         /* Dark Mode Specific Improvements */
@@ -529,12 +538,49 @@ if (!isset($_SESSION['user_id'])) {
             }
         }
 
+        /* iPad / Tablet specific: stack cards vertically when two columns are too cramped */
+        @media screen and (max-width: 1024px) {
+            .landing-left {
+                min-width: 0;
+                max-width: 100%;
+                width: 100%;
+            }
+
+            .landing-right {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .practice-cards {
+                flex-direction: row !important;
+                width: 100%;
+                padding: 5px;
+            }
+
+            .practice-card {
+                flex: 1;
+                min-width: 0;
+                min-height: 260px;
+                padding: 16px;
+            }
+
+            .practice-title {
+                font-size: 1.2rem;
+            }
+
+            .mode-btn {
+                padding: 8px 6px;
+                font-size: 0.75rem;
+            }
+        }
+
         /* Memorize List Enhancements */
         .memorize-list {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 20px;
             padding: 20px 0;
+            width: 100%;
         }
 
         .memorize-card {
@@ -548,6 +594,8 @@ if (!isset($_SESSION['user_id'])) {
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             border-left: 4px solid var(--primary);
+            width: 100%;
+            box-sizing: border-box;
             /* Accent bar */
         }
 
@@ -668,6 +716,8 @@ if (!isset($_SESSION['user_id'])) {
     <!-- Data and Game Scripts -->
     <script src="data/english/english_3221m.js?v=<?php echo time(); ?>"></script>
     <script src="data/english/english_3221m_vocab.js?v=<?php echo time(); ?>"></script>
+    <script src="data/english/english_3222s.js?v=<?php echo time(); ?>"></script>
+    <script src="data/english/english_3222s_vocab.js?v=<?php echo time(); ?>"></script>
     <script defer src="scripts/english_game.js?v=<?php echo time(); ?>"></script>
 
     <!-- ANTI-FOUC SCRIPT: Must be in HEAD -->
@@ -704,17 +754,17 @@ if (!isset($_SESSION['user_id'])) {
                             <!-- Passage Selection -->
                             <button id="btn-toggle-passage" class="btn secondary" onclick="openPassageModal()"
                                 style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
-                                <span id="current-passage-name">32기 2-1 중간</span>
+                                <span id="current-passage-name">32기 2-1 기말</span>
                                 <span class="status-indicator" style="font-size: 0.8em;">→</span>
                             </button>
 
                             <div class="rules-section">
                                 <h3 class="rules-title">💡 이용 가이드</h3>
                                 <ul class="rules-list">
-                                    <li>나만의 단어장을 만들고 체계적으로 관리하세요.</li>
-                                    <li><strong>플래시카드</strong> 모드와 <strong>주관식 테스트</strong> 모드를 지원합니다.</li>
-                                    <li>틀린 단어는 자동으로 <strong>오답노트</strong>에 저장됩니다.</li>
-                                    <li>(준비중) 엑셀 파일 가져오기/내보내기 기능이 곧 추가됩니다.</li>
+                                    <li>인곽인을 위한 영어 단어 및 지문 암기 최적화 플랫폼입니다.</li>
+                                    <li><strong>단어 연습</strong>: 외우기 및 퀴즈 모드로 효율적인 어휘 학습이 가능합니다.</li>
+                                    <li><strong>문장 연습</strong>: 외우기, ABC 순서배열, 접속사 빈칸 채우기 등 다양한 모드를 제공합니다.</li>
+                                    <li><strong>커스텀 설정</strong>: 지문 번호, 한글 해석, 단어 강조, 주제 표시 등을 취향껏 설정하세요.</li>
                                 </ul>
                             </div>
                         </div>
@@ -739,6 +789,28 @@ if (!isset($_SESSION['user_id'])) {
                                         onchange="window.showVocabHighlights = this.checked; if(window.isSentenceMemorizeMode) window.nextSentenceMemorize();">
                                     <span>단어 강조 및 뜻 보기 (Show Highlights & Meanings)</span>
                                 </label>
+                            </div>
+                            <div class="option-item">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="chk-show-subject" checked
+                                        onchange="window.showSubject = this.checked; if(window.isSentenceMemorizeMode) window.nextSentenceMemorize();">
+                                    <span>지문 주제 보기 (Show Subject)</span>
+                                </label>
+                            </div>
+                            <div class="option-item">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="chk-memorize-one-by-one"
+                                        onchange="window.memorizeOneByOne = this.checked; if(window.isSentenceMemorizeMode) { window.sentenceOneByOneIndex = 0; window.nextSentenceMemorize(); }">
+                                    <span>외우기 하나씩 보기 (Memorize One by One)</span>
+                                </label>
+                            </div>
+                            <div class="option-item"
+                                style="margin-top: 5px; border-top: 1px dashed var(--border); padding-top: 10px;">
+                                <div style="display: flex; align-items: center; gap: 15px;">
+                                    <span style="font-weight: 600; color: var(--text);">학습 범위 (1~N)</span>
+                                    <input type="number" id="input-passage-range" min="1" placeholder="전체"
+                                        style="width: 60px; padding: 4px; border: 1px solid var(--border); border-radius: 6px; text-align: center; background: var(--surface); color: var(--text);">
+                                </div>
                             </div>
                         </div>
 
@@ -777,14 +849,15 @@ if (!isset($_SESSION['user_id'])) {
                                 <div class="eng-mode-selector">
                                     <button class="mode-btn active" data-mode="memorize"
                                         onclick="setEngMode('memorize')">외우기</button>
-                                    <button class="mode-btn" data-mode="random"
-                                        onclick="setEngMode('random')">무작위</button>
+                                    <button class="mode-btn" data-mode="abc" onclick="setEngMode('abc')">ABC</button>
                                     <button class="mode-btn" data-mode="order"
                                         onclick="setEngMode('order')">순서배열</button>
                                     <button class="mode-btn" data-mode="blank_choice"
                                         onclick="setEngMode('blank_choice')">단어선택</button>
                                     <button class="mode-btn" data-mode="blank_input"
                                         onclick="setEngMode('blank_input')">단어입력</button>
+                                    <button class="mode-btn" data-mode="conjunction"
+                                        onclick="setEngMode('conjunction')">접속사</button>
                                 </div>
                             </div>
                             <button class="start-btn practice-start-btn" onclick="startEnglishGame()">Start Sentence
@@ -797,7 +870,7 @@ if (!isset($_SESSION['user_id'])) {
 
         <!-- English Game View -->
         <div id="english-game-view"
-            style="display: none; width: 100%; max-width: 1000px; margin: 0 auto; padding: 10px 20px;">
+            style="display: none; width: 100%; max-width: 1200px; margin: 0 auto; padding: 10px 30px;">
             <div class="header" style="display: flex; align-items: center; justify-content: space-between;">
                 <div style="display: flex; align-items: center; gap: 15px;">
                     <button class="btn-home" onclick="quitEnglishGame()" title="뒤로가기">
@@ -858,7 +931,7 @@ if (!isset($_SESSION['user_id'])) {
     <div id="auth-header"
         style="position: fixed; top: 20px; left: 20px; z-index: 10000; display: flex; align-items: center; gap: 10px;">
         <a href="index.php"
-            style="background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); color: var(--text); padding: 8px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border);"
+            style="background: var(--surface); backdrop-filter: blur(10px); color: var(--text); padding: 8px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05);"
             title="홈으로">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
@@ -867,7 +940,7 @@ if (!isset($_SESSION['user_id'])) {
         </a>
 
         <div id="user-profile"
-            style="display: none; align-items: center; gap: 12px; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); padding: 5px 15px; border-radius: 25px; border: 1px solid var(--border);">
+            style="display: none; align-items: center; gap: 12px; background: var(--surface); backdrop-filter: blur(10px); padding: 5px 15px; border-radius: 25px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
             <span id="user-nickname" style="font-weight: 700; font-size: 0.9rem; color: var(--text);">Nickname</span>
             <button onclick="handleLogout()"
                 style="background: none; border: none; font-size: 1rem; color: #ea4335; cursor: pointer; padding: 0; display: flex; align-items: center; gap: 4px;"
@@ -915,13 +988,16 @@ if (!isset($_SESSION['user_id'])) {
                 </span>
             </div>
             <div class="passage-list">
-                <div class="passage-item active" onclick="selectPassage('3221m', '32기 2-1 중간')">
-                    <span>32기 2-1 중간</span>
-                    <span style="opacity:0.4; font-size:0.8em;">Now Playing</span>
+                <div class="passage-item active" onclick="selectPassage('3222s', '32기 2-1 기말', this)">
+                    <span>32기 2-1 기말</span>
+                    <span
+                        style="display:inline-block; opacity:0.4; font-size:0.8em; min-width:80px; text-align:right;">Now
+                        Playing</span>
                 </div>
-                <!-- Future collections go here -->
-                <div class="passage-item" style="opacity:0.5; cursor:not-allowed;">
-                    <span>(준비 중) 32기 2-1 기말</span>
+                <div class="passage-item" onclick="selectPassage('3221m', '32기 2-1 중간', this)">
+                    <span>32기 2-1 중간</span>
+                    <span
+                        style="display:inline-block; opacity:0.4; font-size:0.8em; min-width:80px; text-align:right;"></span>
                 </div>
             </div>
         </div>
@@ -934,10 +1010,20 @@ if (!isset($_SESSION['user_id'])) {
         function closePassageModal() {
             document.getElementById('passage-modal').classList.remove('visible');
         }
-        function selectPassage(id, name) {
+        function selectPassage(id, name, el) {
             if (window.loadPassageCollection) {
                 window.loadPassageCollection(id, name);
                 closePassageModal();
+                if (el) {
+                    document.querySelectorAll('.passage-item').forEach(item => {
+                        item.classList.remove('active');
+                        const span = item.querySelector('span:nth-child(2)');
+                        if (span) span.textContent = '';
+                    });
+                    el.classList.add('active');
+                    const activeSpan = el.querySelector('span:nth-child(2)');
+                    if (activeSpan) activeSpan.textContent = 'Now Playing';
+                }
             }
         }
 

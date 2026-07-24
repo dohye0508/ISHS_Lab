@@ -1,0 +1,8 @@
+# 이미지 파일만 허용, PHP 실행 금지
+<FilesMatch "\.(php|php3|php4|php5|phtml|pl|py|cgi|sh)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# 디렉터리 인덱싱 비활성화
+Options -Indexes

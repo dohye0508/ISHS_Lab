@@ -142,10 +142,7 @@ class RiroAuth {
 
         // Map subdomain to School Name
         $school_map = [
-            'iscience' => '인천과학고등학교',
-            'seonin' => '선인고등학교',
-            'jphs' => '제물포고등학교',
-            'inchon' => '인천고등학교'
+            'iscience' => '인천과학고등학교'
         ];
         $school_name = $school_map[$subdomain] ?? $subdomain;
 
@@ -197,10 +194,7 @@ class RiroAuth {
 
         // Map subdomain to School Name
         $school_map = [
-            'iscience' => '인천과학고등학교',
-            'seonin' => '선인고등학교',
-            'jphs' => '제물포고등학교',
-            'inchon' => '인천고등학교'
+            'iscience' => '인천과학고등학교'
         ];
         $school_name = $school_map[$subdomain] ?? $subdomain;
 

@@ -3,11 +3,23 @@
 :root {
     --bg: #fcfdfe;
     --text: #1f1f1f;
-    --primary: #1a73e8;       
-    --surface: #f8f9fa;       
+    --primary: #5aaa00;
+    --primary-rgb: 90, 170, 0;
+    --surface: #f8f9fa;
+    --surface-rgb: 248, 249, 250;
     --border: #dadce0;
     --error: #d93025;
     --success: #1e8e3e;
+}
+
+[data-theme="dark"] {
+    --bg: #0f1410;
+    --text: #e2e8e0;
+    --primary: #7ed321;
+    --primary-rgb: 126, 211, 33;
+    --surface: #181f14;
+    --surface-rgb: 24, 31, 20;
+    --border: #2a3825;
 }
 
 body {
@@ -33,7 +45,18 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    box-sizing: border-box; /* padding을 포함한 크기 계산 */
 }
+
+/* iPad / Tablet Viewport Spacing (768px ~ 1024px) */
+@media screen and (min-width: 601px) and (max-width: 1024px) {
+    .container {
+        padding: 40px 60px 20px 60px !important; /* 양옆 여백을 60px로 여유 있게 배치 */
+        max-width: 90%;
+        margin: 0 auto;
+    }
+}
+
 
 /* Footer Standardization */
 .footer {
@@ -601,6 +624,7 @@ math-field:focus-within {
     --text: #e0e0e0;
     --primary: #669df6;
     --surface: #1e1e1e;
+    --surface-rgb: 30, 30, 30;
     --border: #333333;
     --success: #81c784;
     --error: #e57373;

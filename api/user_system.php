@@ -1,7 +1,7 @@
 <?php
 /**
  * User System Router (PHP)
- * Handles Signup, Login, and Session Management
+ * Handles Signup, Login, Session Management, and Role Management
  */
 session_start();
 require_once __DIR__ . '/../db_config.php';
@@ -23,6 +23,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             break;
         case 'logout':
             handleLogout();
+            break;
+        case 'update_role':
+            handleUpdateRole($data);
             break;
         default:
             echo json_encode(["status" => "error", "message" => "잘못된 접근입니다."]);
@@ -59,10 +62,7 @@ function handleSignup($data) {
 
     // 1 & 2. Riro Authentication with Auto-School Detection
     $schools = [
-        'iscience' => '인천과학고등학교',
-        'seonin' => '선인고등학교',
-        'jphs' => '제물포고등학교',
-        'inchon' => '인천고등학교'
+        'iscience' => '인천과학고등학교'
     ];
 
     $res = ["status" => "error", "message" => "아이디 또는 비밀번호가 틀렸습니다."];
@@ -81,21 +81,11 @@ function handleSignup($data) {
     }
 
     if (!$login_success) {
-        echo json_encode(["status" => "error", "message" => "로그인 정보를 찾을 수 없습니다. (인곽/선인/제고/인고)"]);
+        echo json_encode(["status" => "error", "message" => "로그인 정보를 찾을 수 없습니다. (인천과학고 리로스쿨 계정 전용)"]);
         return;
     }
 
-    // [Security/Policy] Registration is restricted to Incheon Science HS students.
-    // Exception: Explicitly allowed names (Friends of the creator).
-    $is_ishs = ($final_school === '인천과학고등학교');
-    $special_names = ['주희준', '강준수', '최지민', '한원담', '정세훈'];
-    $is_special = in_array($res['name'], $special_names);
-
-    if (!$is_ishs && !$is_special) {
-        // Block non-authorized users
-        echo json_encode(["status" => "error", "message" => "죄송합니다. 인천과학고등학교 재학생이 아니므로 회원가입을 마칠 수 없습니다."]);
-        return;
-    }
+    // $login_success 이미 체크됨. iscience 서브도메인 전용이므로 별도 학교 확인 불필요.
 
     // 3. Check if nickname or username already exists
     $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ? OR nickname = ?");
@@ -124,11 +114,7 @@ function handleSignup($data) {
             $res['student']
         ]);
 
-        if (!$is_ishs && $is_special) {
-            echo json_encode(["status" => "special_exception", "message" => "특수 예외 가입"]);
-        } else {
-            echo json_encode(["status" => "success", "message" => "회원가입이 완료되었습니다. 로그인해주세요!"]);
-        }
+        echo json_encode(["status" => "success", "message" => "회원가입이 완료되었습니다. 로그인해주세요!"]);
     } catch (PDOException $e) {
         echo json_encode(["status" => "error", "message" => "DB 저장 중 오류 발생: " . $e->getMessage()]);
     }
@@ -159,6 +145,10 @@ function handleLogin($data) {
         $_SESSION['generation'] = $user['generation'];
         $_SESSION['role'] = $user['role'];
         
+        try {
+            $pdo->prepare("UPDATE users SET last_active = NOW() WHERE id = ?")->execute([$user['id']]);
+        } catch (Exception $e) {}
+        
         echo json_encode([
             "status" => "success", 
             "message" => "로그인 성공!",
@@ -179,6 +169,13 @@ function handleLogout() {
 
 function handleStatus() {
     if (isset($_SESSION['user_id'])) {
+        try {
+            global $pdo;
+            if (isset($pdo)) {
+                $pdo->prepare("UPDATE users SET last_active = NOW() WHERE id = ?")->execute([$_SESSION['user_id']]);
+            }
+        } catch (Exception $e) {}
+
         echo json_encode([
             "status" => "success",
             "logged_in" => true,
@@ -189,6 +186,39 @@ function handleStatus() {
         ]);
     } else {
         echo json_encode(["status" => "success", "logged_in" => false]);
+    }
+}
+
+function handleUpdateRole($data) {
+    global $pdo;
+
+    // Only admin can change roles
+    if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+        echo json_encode(["status" => "error", "message" => "권한이 없습니다."]);
+        return;
+    }
+
+    $target_id = (int)($data['user_id'] ?? 0);
+    $new_role   = $data['role'] ?? '';
+
+    $allowed_roles = ['admin', 'sub_admin', 'user', 'banned'];
+    if (!in_array($new_role, $allowed_roles)) {
+        echo json_encode(["status" => "error", "message" => "유효하지 않은 역할입니다."]);
+        return;
+    }
+
+    // Cannot change own role
+    if ($target_id === (int)$_SESSION['user_id']) {
+        echo json_encode(["status" => "error", "message" => "자신의 역할은 변경할 수 없습니다."]);
+        return;
+    }
+
+    try {
+        $stmt = $pdo->prepare("UPDATE users SET role = ? WHERE id = ?");
+        $stmt->execute([$new_role, $target_id]);
+        echo json_encode(["status" => "success", "message" => "역할이 변경되었습니다."]);
+    } catch (PDOException $e) {
+        echo json_encode(["status" => "error", "message" => "DB 오류: " . $e->getMessage()]);
     }
 }
 ?>

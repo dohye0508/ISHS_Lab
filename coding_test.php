@@ -4,7 +4,12 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: index.php?msg=login_required");
     exit();
 }
+// Banned users see a blank page
+if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
+    exit();
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="ko" data-theme="light">
 
@@ -474,14 +479,14 @@ if (!isset($_SESSION['user_id'])) {
 
     <!-- Auth UI Elements (Top-Left) -->
     <div id="auth-header" style="position: fixed; top: 12px; left: 12px; z-index: 10000; display: flex; align-items: center; gap: 10px;">
-        <a href="index.php" style="background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); color: var(--text-main); padding: 8px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-color);" title="홈으로">
+        <a href="index.php" style="background: var(--sidebar-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text-main); padding: 8px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-color); box-shadow: 0 4px 12px var(--shadow-color);" title="홈으로">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                 <polyline points="9 22 9 12 15 12 15 22"></polyline>
             </svg>
         </a>
         
-        <div id="user-profile" style="display: none; align-items: center; gap: 12px; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); padding: 5px 15px; border-radius: 25px; border: 1px solid var(--border-color);">
+        <div id="user-profile" style="display: none; align-items: center; gap: 12px; background: var(--sidebar-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 5px 15px; border-radius: 25px; border: 1px solid var(--border-color); box-shadow: 0 4px 12px var(--shadow-color);">
             <span id="user-nickname" style="font-weight: 700; font-size: 0.9rem; color: var(--text-main);">Nickname</span>
             <button onclick="handleLogout()" style="background: none; border: none; font-size: 1rem; color: #ea4335; cursor: pointer; padding: 0; display: flex; align-items: center; gap: 4px;" title="로그아웃">
                 <span style="font-size: 0.75rem; font-weight: 600;">로그아웃</span>
