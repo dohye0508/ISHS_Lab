@@ -581,84 +581,63 @@ for i, k in enumerate(range(1, 11)):
     polar_raw.append({'level': 6, 'template': 'plength_arch', 'latex': f'\\text{{극곡선 }} r = {tc(k)}\\theta \\text{{ 의 }} 0 \\le \\theta \\le {frac_pi(Tm,Td)} \\text{{ 구간의 길이}}', 'solution': spiral_len_latex(k, Tm, Td)})
 
 
-# --- Banded Assembly Algorithm ---
+# --- Flat Assembly Algorithm ---
 #
-# Chunking straight through a sorted-by-level list (the old approach) means any level
-# with few templates but many k-values (e.g. a level with only 1-3 templates x 10-15 k's)
-# produces 20-question collections that repeat the same template 5-10 times -- exactly the
-# "same problem over and over, just the number changed" complaint. Fix: merge consecutive
-# levels into a "band" until the band has enough distinct templates that a 20-question
-# round robin across the whole band rarely repeats any one template, then chunk within the
-# band. Sorting each resulting chunk by level (stable, so the round-robin spacing survives
-# among same-level items) also means every collection itself ramps from its easiest content
-# up to its hardest -- satisfying "difficulty should increase as you go" inside each set,
-# on top of later bands (and so later collections) covering harder levels overall.
+# An earlier version grouped consecutive levels into a "band" (merging levels until the
+# band held >= 10 distinct templates) before round-robining within just that band. That
+# meant a pool whose easiest 1-2 levels already had >= 10 templates on their own (true for
+# every pool here) stopped banding right there -- so entire collections ended up built
+# ENTIRELY from the easiest 1-2 levels, with harder levels segregated into their own
+# separate, entirely-hard collections. That's what produced whole collections that read as
+# "too easy" or repetitive-feeling, even with zero literal duplicate templates: every
+# problem in the collection was drawn from the same narrow difficulty slice.
+#
+# Fix: don't band by level at all. Round-robin across every template in the WHOLE pool at
+# once, so a single pass -- and so a single collection -- always draws one problem from
+# every difficulty tier that exists (easiest to hardest), never just one tier. Sorting each
+# resulting chunk by level still makes each collection itself ramp from easy to hard.
 
-MIN_TEMPLATES_PER_BAND = 10
 CHUNK_SIZE = 20
 
 def assemble_collections(raw_problems, id_prefix, name_fn):
-    by_level = {}
+    by_template = {}
     for p in raw_problems:
-        by_level.setdefault(p['level'], []).append(p)
-    levels_sorted = sorted(by_level.keys())
-
-    # 1. Group consecutive levels into bands with >= MIN_TEMPLATES_PER_BAND distinct templates.
-    bands = []
-    cur_levels, cur_templates = [], set()
-    for lvl in levels_sorted:
-        cur_levels.append(lvl)
-        cur_templates.update(p['template'] for p in by_level[lvl])
-        if len(cur_templates) >= MIN_TEMPLATES_PER_BAND:
-            bands.append(cur_levels)
-            cur_levels, cur_templates = [], set()
-    if cur_levels:
-        # Leftover levels didn't reach the threshold on their own -- fold them into the
-        # previous (harder-leaning) band rather than shipping a low-diversity band alone.
-        if bands:
-            bands[-1] = bands[-1] + cur_levels
-        else:
-            bands.append(cur_levels)
+        by_template.setdefault(p['template'], []).append(p)
+    for tmpl in by_template:
+        random.shuffle(by_template[tmpl])
+    template_keys = list(by_template.keys())
+    random.shuffle(template_keys)
 
     collections = []
     idx = 1
-    for band_levels in bands:
-        band_problems = []
-        for lvl in band_levels:
-            band_problems.extend(by_level[lvl])
+    # Each "pass" pulls at most one problem per template that still has content -- a
+    # single pass therefore can NEVER contain the same template twice (the "same problem,
+    # just the number changed" complaint), and since it draws from every template in the
+    # pool regardless of level, it always spans the pool's full difficulty range. Passes
+    # are never merged into a bigger CHUNK_SIZE-sized collection, even when that leaves a
+    # collection short of 20 questions -- a shorter, fully diverse collection beats a
+    # padded, repetitive (or difficulty-homogeneous) one.
+    while any(by_template[t] for t in template_keys):
+        pass_items = []
+        for t in template_keys:
+            if by_template[t]:
+                pass_items.append(by_template[t].pop(0))
+        # Reshuffle per pass so, when a pool has more than CHUNK_SIZE templates (polar and
+        # the hyperbolic-only pool both do), the same subset of templates doesn't land in
+        # the same sub-chunk every single time -- varies which templates pair up together.
+        random.shuffle(pass_items)
 
-        by_template = {}
-        for p in band_problems:
-            by_template.setdefault(p['template'], []).append(p)
-        for tmpl in by_template:
-            random.shuffle(by_template[tmpl])
-        template_keys = list(by_template.keys())
-        random.shuffle(template_keys)
-
-        # 2. Each "pass" pulls at most one problem per template that still has content --
-        # a single pass therefore can NEVER contain the same template twice, which is
-        # exactly the "same problem, just the number changed" complaint. Passes are never
-        # merged together into a bigger CHUNK_SIZE-sized collection (the old behavior),
-        # even when that leaves a collection short of 20 questions -- a shorter, fully
-        # diverse collection beats a padded, repetitive one.
-        while any(by_template[t] for t in template_keys):
-            pass_items = []
-            for t in template_keys:
-                if by_template[t]:
-                    pass_items.append(by_template[t].pop(0))
-
-            # 3. Split a single pass at CHUNK_SIZE if the band has more distinct templates
-            # than that (not needed at current pool sizes, but safe either way) -- slicing
-            # inside one pass can't introduce a duplicate since the source has none. Each
-            # resulting chunk is sorted by level so difficulty ramps up within it.
-            for i in range(0, len(pass_items), CHUNK_SIZE):
-                chunk = sorted(pass_items[i:i + CHUNK_SIZE], key=lambda p: p['level'])
-                collections.append({
-                    "id": f"{id_prefix}_{idx}",
-                    "name": name_fn(idx),
-                    "problems": chunk
-                })
-                idx += 1
+        # Split a single pass at CHUNK_SIZE if the pool has more distinct templates than
+        # that -- slicing inside one pass can't introduce a duplicate since the source has
+        # none. Each resulting chunk is sorted by level so difficulty ramps up within it.
+        for i in range(0, len(pass_items), CHUNK_SIZE):
+            chunk = sorted(pass_items[i:i + CHUNK_SIZE], key=lambda p: p['level'])
+            collections.append({
+                "id": f"{id_prefix}_{idx}",
+                "name": name_fn(idx),
+                "problems": chunk
+            })
+            idx += 1
 
     return collections
 
