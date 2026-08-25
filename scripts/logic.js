@@ -37,7 +37,7 @@ function openDebugView() {
                 content += `<div class="debug-item">
                     <strong>Q${idx+1} (Lv${p.level})</strong>
                     <div>문제: $$ \\int ${p.latex} \\, dx $$</div>
-                    <div style="color:blue;">정답: $$ ${p.solution}${p.solution.includes("적포") ? "" : " + C"} $$</div>
+                    <div style="color:blue;">정답: $$ ${p.solution}${p.solution.includes("적포") || p.latex.includes("\\text{") ? "" : " + C"} $$</div>
                 </div>`;
             });
             
@@ -235,6 +235,9 @@ function loadCurrentProblem() {
     };
     renderMath(document.getElementById('problem-area'), state.problems[state.currentIndex]?.latex);
     updateNavButtons();
+    // Matrix-insert helper buttons only exist/matter for the algebra subject; harmless
+    // no-op (optional chaining) on any page/subject that doesn't have that element.
+    document.getElementById('algebra-matrix-tools')?.classList.toggle('hidden', state.subject !== 'algebra');
 }
 
 function renderMath(el, latex) {
@@ -303,8 +306,14 @@ async function finishTest() {
             
             try {
                 // Client-side Grading Call
-                // Use strictC from state
-                const gradeRes = await gradeProblem(p.userAnswer, p.solution, state.strictC);
+                // Use strictC from state, but never demand "+C" on derivative / word-problem
+                // items (anything whose statement contains \text{...}) -- they have no
+                // constant of integration to begin with. grade() itself can't tell a
+                // derivative solution from an integral one just by looking at the solution
+                // string (both contain "x"), so the per-problem exemption has to happen here,
+                // matching the same \text{ check the result view already uses to hide "+ C".
+                const effectiveStrict = state.strictC && !p.latex.includes("\\text{");
+                const gradeRes = await gradeProblem(p.userAnswer, p.solution, effectiveStrict);
                 
                 if (gradeRes === "CORRECT") {
                     isCorrect = true;
@@ -396,7 +405,7 @@ function renderResult(res) {
             <strong style="color:${color}; font-size: 1.2em;">Q${d.id} (${mark})</strong>
             <p>문제: $$${p.latex}$$</p>
             <p>내가 쓴 답: $$${p.userAnswer || "\\text{(비어있음)}"}$$</p>
-            <p>정답: $$${p.solution}${p.solution.includes("적포") ? "" : " + C"}$$</p>
+            <p>정답: $$${p.solution}${p.solution.includes("적포") || p.latex.includes("\\text{") ? "" : " + C"}$$</p>
         </li>`;
     }).join("");
     if (window.MathJax) MathJax.typesetPromise([document.getElementById('detail-list')]);

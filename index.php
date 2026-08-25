@@ -56,9 +56,6 @@ $year = date('Y');
             color: var(--text);
             margin: 0;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             overflow-x: hidden;
             transition: background 0.3s, color 0.3s;
         }
@@ -87,16 +84,166 @@ $year = date('Y');
                 radial-gradient(ellipse 40% 50% at 50% 100%, rgba(26, 115, 232, 0.06) 0%, transparent 60%);
         }
 
-        .page-wrap {
-            width: 100%;
-            max-width: 960px;
-            padding: 100px 24px 60px;
+        .ishs-text {
+            background: linear-gradient(135deg, #7c3aed 0%, #c026d3 50%, #e11d48 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        /* Hero */
+        .lab-text {
+            font-weight: 300;
+            color: var(--primary);
+            -webkit-text-fill-color: var(--primary);
+        }
+
+        /* ---------------- Top Nav ---------------- */
+        .topnav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 24px;
+            background: rgba(var(--surface-rgb), 0.72);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .topnav-brand {
+            font-size: 1.15rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .topnav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dday-pill {
+            padding: 6px 14px;
+            border-radius: 99px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: var(--dday-color);
+            background: color-mix(in srgb, var(--dday-color) 12%, transparent);
+            white-space: nowrap;
+        }
+
+        .nav-btn {
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            border-radius: 99px;
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            font-weight: 700;
+            font-family: inherit;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        .user-pill {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            background: var(--surface);
+            padding: 6px 8px 6px 16px;
+            border-radius: 99px;
+            border: 1px solid var(--border);
+        }
+
+        .user-pill span.nickname {
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .user-pill button {
+            background: none;
+            border: none;
+            color: #ea4335;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 99px;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-family: inherit;
+            font-size: 0.78rem;
+            font-weight: 700;
+            transition: background 0.2s;
+        }
+
+        .user-pill button:hover {
+            background: rgba(234, 67, 53, 0.1);
+        }
+
+        .theme-toggle-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .theme-toggle-btn:hover {
+            background-color: rgba(var(--primary-rgb), 0.1);
+            transform: rotate(15deg);
+        }
+
+        .sun-icon,
+        .moon-icon {
+            display: none !important;
+        }
+
+        html:not([data-theme="dark"]) .sun-icon {
+            display: block !important;
+        }
+
+        html[data-theme="dark"] .moon-icon {
+            display: block !important;
+        }
+
+        @media (max-width: 640px) {
+            .dday-pill {
+                display: none;
+            }
+
+            .topnav-brand {
+                font-size: 1rem;
+            }
+        }
+
+        /* ---------------- Page ---------------- */
+        .page-wrap {
+            width: 100%;
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 118px 24px 60px;
+        }
+
         .hero {
             text-align: center;
-            margin-bottom: 52px;
+            margin-bottom: 56px;
             animation: fadeUp 0.7s cubic-bezier(0.2, 1, 0.3, 1) both;
         }
 
@@ -136,41 +283,53 @@ $year = date('Y');
         }
 
         .hero h1 {
-            font-size: clamp(3.2rem, 9vw, 6rem);
+            font-size: clamp(3rem, 8.5vw, 5.5rem);
             font-weight: 900;
             line-height: 1;
             margin: 0 0 18px;
             letter-spacing: -3px;
         }
 
-        .ishs-text {
-            background: linear-gradient(135deg, #7c3aed 0%, #c026d3 50%, #e11d48 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .lab-text {
-            font-weight: 300;
-            color: var(--primary);
-            -webkit-text-fill-color: var(--primary);
-            letter-spacing: -2px;
-        }
-
         .hero p {
             font-size: 1rem;
             color: var(--muted);
             margin: 0 auto;
-            max-width: 380px;
+            max-width: 400px;
             line-height: 1.65;
         }
 
-        /* Grid */
+        /* ---------------- App categories ---------------- */
+        .app-category {
+            margin-bottom: 40px;
+            animation: fadeUp 0.55s cubic-bezier(0.2, 1, 0.3, 1) both;
+        }
+
+        .category-head {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            margin: 0 0 16px 4px;
+        }
+
+        .category-label {
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        .category-count {
+            font-size: 0.72rem;
+            color: var(--muted);
+            opacity: 0.6;
+        }
+
         .modules-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 16px;
-            margin-bottom: 40px;
         }
 
         @media (max-width: 600px) {
@@ -179,7 +338,7 @@ $year = date('Y');
             }
 
             .page-wrap {
-                padding-top: 80px;
+                padding-top: 96px;
             }
         }
 
@@ -188,7 +347,7 @@ $year = date('Y');
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 20px;
-            padding: 26px 24px;
+            padding: 24px 22px;
             cursor: pointer;
             transition: transform 0.25s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.25s, border-color 0.25s;
             position: relative;
@@ -206,6 +365,7 @@ $year = date('Y');
             opacity: 0;
             transition: opacity 0.3s;
             border-radius: 20px;
+            pointer-events: none;
         }
 
         .module-card:hover {
@@ -224,6 +384,7 @@ $year = date('Y');
             align-items: center;
             justify-content: center;
             font-size: 1.35rem;
+            font-weight: 700;
             margin-bottom: 14px;
             transition: transform 0.25s;
         }
@@ -263,108 +424,87 @@ $year = date('Y');
             line-height: 1.55;
         }
 
-        /* Blue */
-        .card-blue .card-icon {
-            background: rgba(26, 115, 232, 0.1);
-            color: #1a73e8;
+        .card-badge {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 99px;
+            margin-left: 8px;
+            vertical-align: middle;
+            letter-spacing: 0.02em;
         }
 
-        .card-blue .card-arr {
-            color: #1a73e8;
-        }
-
-        .card-blue::after {
-            background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(26, 115, 232, 0.06) 0%, transparent 100%);
-        }
-
-        .card-blue:hover {
-            border-color: rgba(26, 115, 232, 0.4);
-            box-shadow: 0 16px 40px rgba(26, 115, 232, 0.09);
-        }
-
-        [data-theme="dark"] .card-blue:hover {
-            box-shadow: 0 20px 50px rgba(26, 115, 232, 0.16);
-        }
-
-        /* Red */
-        .card-red .card-icon {
-            background: rgba(234, 67, 53, 0.1);
-            color: #ea4335;
-        }
-
-        .card-red .card-arr {
-            color: #ea4335;
-        }
-
-        .card-red::after {
-            background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(234, 67, 53, 0.06) 0%, transparent 100%);
-        }
-
-        .card-red:hover {
-            border-color: rgba(234, 67, 53, 0.4);
-            box-shadow: 0 16px 40px rgba(234, 67, 53, 0.09);
-        }
-
-        [data-theme="dark"] .card-red:hover {
-            box-shadow: 0 20px 50px rgba(234, 67, 53, 0.16);
-        }
-
-        /* Green */
-        .card-green .card-icon {
-            background: rgba(22, 163, 74, 0.1);
+        .card-badge.new {
+            background: rgba(22, 163, 74, 0.14);
             color: #16a34a;
         }
 
-        .card-green .card-arr {
-            color: #16a34a;
+        /* Color themes */
+        .card-blue .card-icon { background: rgba(26, 115, 232, 0.1); color: #1a73e8; }
+        .card-blue .card-arr { color: #1a73e8; }
+        .card-blue::after { background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(26, 115, 232, 0.06) 0%, transparent 100%); }
+        .card-blue:hover { border-color: rgba(26, 115, 232, 0.4); box-shadow: 0 16px 40px rgba(26, 115, 232, 0.09); }
+        [data-theme="dark"] .card-blue:hover { box-shadow: 0 20px 50px rgba(26, 115, 232, 0.16); }
+
+        .card-red .card-icon { background: rgba(234, 67, 53, 0.1); color: #ea4335; }
+        .card-red .card-arr { color: #ea4335; }
+        .card-red::after { background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(234, 67, 53, 0.06) 0%, transparent 100%); }
+        .card-red:hover { border-color: rgba(234, 67, 53, 0.4); box-shadow: 0 16px 40px rgba(234, 67, 53, 0.09); }
+        [data-theme="dark"] .card-red:hover { box-shadow: 0 20px 50px rgba(234, 67, 53, 0.16); }
+
+        .card-green .card-icon { background: rgba(22, 163, 74, 0.1); color: #16a34a; }
+        .card-green .card-arr { color: #16a34a; }
+        .card-green::after { background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(22, 163, 74, 0.06) 0%, transparent 100%); }
+        .card-green:hover { border-color: rgba(22, 163, 74, 0.4); box-shadow: 0 16px 40px rgba(22, 163, 74, 0.09); }
+        [data-theme="dark"] .card-green:hover { box-shadow: 0 20px 50px rgba(22, 163, 74, 0.16); }
+
+        .card-indigo .card-icon { background: rgba(99, 102, 241, 0.1); color: #6366f1; }
+        .card-indigo .card-arr { color: #6366f1; }
+        .card-indigo::after { background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(99, 102, 241, 0.06) 0%, transparent 100%); }
+        .card-indigo:hover { border-color: rgba(99, 102, 241, 0.4); box-shadow: 0 16px 40px rgba(99, 102, 241, 0.09); }
+        [data-theme="dark"] .card-indigo:hover { box-shadow: 0 20px 50px rgba(99, 102, 241, 0.16); }
+
+        /* Coming-soon (disabled) card */
+        .module-card.card-soon {
+            cursor: default;
+            border-style: dashed;
+            opacity: 0.6;
         }
 
-        .card-green::after {
-            background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(22, 163, 74, 0.06) 0%, transparent 100%);
+        .module-card.card-soon:hover {
+            transform: none;
         }
 
-        .card-green:hover {
-            border-color: rgba(22, 163, 74, 0.4);
-            box-shadow: 0 16px 40px rgba(22, 163, 74, 0.09);
+        .module-card.card-soon .card-icon {
+            background: rgba(var(--primary-rgb), 0.08);
+            color: var(--muted);
         }
 
-        [data-theme="dark"] .card-green:hover {
-            box-shadow: 0 20px 50px rgba(22, 163, 74, 0.16);
+        .module-card.card-soon:hover .card-icon {
+            transform: none;
         }
 
-        /* Indigo */
-        .card-indigo .card-icon {
-            background: rgba(99, 102, 241, 0.1);
-            color: #6366f1;
+        .soon-badge {
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 2px 9px;
+            border-radius: 99px;
+            background: var(--border);
+            color: var(--muted);
+            letter-spacing: 0.02em;
         }
 
-        .card-indigo .card-arr {
-            color: #6366f1;
-        }
-
-        .card-indigo::after {
-            background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(99, 102, 241, 0.06) 0%, transparent 100%);
-        }
-
-        .card-indigo:hover {
-            border-color: rgba(99, 102, 241, 0.4);
-            box-shadow: 0 16px 40px rgba(99, 102, 241, 0.09);
-        }
-
-        [data-theme="dark"] .card-indigo:hover {
-            box-shadow: 0 20px 50px rgba(99, 102, 241, 0.16);
-        }
-
-        /* Footer */
+        /* ---------------- Footer ---------------- */
         .site-footer {
             text-align: center;
             font-size: 0.78rem;
             color: var(--muted);
             opacity: 0.55;
-            padding-bottom: 40px;
+            padding: 20px 0 40px;
+            animation: fadeUp 0.55s cubic-bezier(0.2, 1, 0.3, 1) 0.5s both;
         }
 
-        /* Animations */
         @keyframes fadeUp {
             from {
                 opacity: 0;
@@ -377,150 +517,121 @@ $year = date('Y');
             }
         }
 
-        .module-card:nth-child(1) {
-            animation: fadeUp 0.55s cubic-bezier(0.2, 1, 0.3, 1) 0.18s both;
-        }
-
-        .module-card:nth-child(2) {
-            animation: fadeUp 0.55s cubic-bezier(0.2, 1, 0.3, 1) 0.26s both;
-        }
-
-        .module-card:nth-child(3) {
-            animation: fadeUp 0.55s cubic-bezier(0.2, 1, 0.3, 1) 0.34s both;
-        }
-
-        .module-card:nth-child(4) {
-            animation: fadeUp 0.55s cubic-bezier(0.2, 1, 0.3, 1) 0.42s both;
-        }
-
-        .site-footer {
-            animation: fadeUp 0.55s cubic-bezier(0.2, 1, 0.3, 1) 0.5s both;
-        }
-
-        /* Theme Toggle */
-        .theme-toggle-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 10000;
-            background: transparent;
-            border: none;
-            color: #9aa0a6;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .theme-toggle-btn:hover {
-            background-color: rgba(0, 0, 0, 0.05);
-            color: var(--text);
-        }
-
-        [data-theme="dark"] .theme-toggle-btn:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .sun-icon,
-        .moon-icon {
-            display: none !important;
-        }
-
-        html:not([data-theme="dark"]) .sun-icon {
-            display: block !important;
-        }
-
-        html[data-theme="dark"] .moon-icon {
-            display: block !important;
-        }
+        .app-category:nth-of-type(1) { animation-delay: 0.12s; }
+        .app-category:nth-of-type(2) { animation-delay: 0.2s; }
+        .app-category:nth-of-type(3) { animation-delay: 0.28s; }
     </style>
 </head>
 
 <body>
     <div class="mesh-bg"></div>
 
-    <!-- 왼쪽 상단 Auth -->
-    <div id="auth-header"
-        style="position:fixed;top:20px;left:20px;z-index:10000;display:flex;flex-direction:column;align-items:flex-start;gap:6px;">
-        <div style="display:flex;align-items:center;gap:10px;">
-            <button id="btn-login-open" onclick="openAuthModal()"
-                style="padding:8px 16px;font-size:0.85rem;border-radius:20px;background:rgba(var(--surface-rgb),0.9);backdrop-filter:blur(10px);color:var(--text);border:1px solid var(--border);box-shadow:0 4px 12px rgba(0,0,0,0.05);cursor:pointer;font-weight:600;font-family:inherit;">로그인
-                / 가입</button>
-            <div id="user-profile"
-                style="display:none;align-items:center;gap:12px;background:rgba(var(--surface-rgb),0.9);backdrop-filter:blur(10px);padding:5px 15px;border-radius:25px;border:1px solid var(--border);box-shadow:0 4px 12px rgba(0,0,0,0.05);">
-                <span id="user-nickname" style="font-weight:700;font-size:0.9rem;color:var(--text);">-</span>
-                <button onclick="handleLogout()"
-                    style="background:none;border:none;color:#ea4335;cursor:pointer;padding:0;display:flex;align-items:center;gap:3px;font-family:inherit;"
-                    title="로그아웃">
-                    <span style="font-size:0.75rem;font-weight:600;">로그아웃</span>
-                    <span style="font-size:1.1rem;">→</span>
+    <nav class="topnav">
+        <div class="topnav-brand"><span class="ishs-text">ISHS</span><span class="lab-text">&nbsp;LAB</span></div>
+        <div class="topnav-actions">
+            <span id="dday-counter" class="dday-pill"></span>
+            <button id="btn-login-open" class="nav-btn" onclick="openAuthModal()">로그인 / 가입</button>
+            <div id="user-profile" class="user-pill">
+                <span id="user-nickname" class="nickname">-</span>
+                <button onclick="handleLogout()" title="로그아웃">
+                    <span>로그아웃</span>
+                    <span>&rarr;</span>
                 </button>
             </div>
+            <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Dark Mode">
+                <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
         </div>
-        <div id="dday-counter" style="padding:2px 8px;font-size:1.05rem;font-weight:800;color:var(--dday-color);"></div>
-    </div>
-
-    <!-- 오른쪽 테마 토글 -->
-    <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Dark Mode">
-        <svg class="sun-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2">
-            <circle cx="12" cy="12" r="5"></circle>
-            <line x1="12" y1="1" x2="12" y2="3"></line>
-            <line x1="12" y1="21" x2="12" y2="23"></line>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-            <line x1="1" y1="12" x2="3" y2="12"></line>
-            <line x1="21" y1="12" x2="23" y2="12"></line>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-        </svg>
-        <svg class="moon-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-        </svg>
-    </button>
+    </nav>
 
     <div class="page-wrap">
-        <!-- Hero -->
         <section class="hero">
-            <div class="hero-badge"><span class="dot"></span> ISHS 32nd · 인천과학고등학교</div>
+            <div class="hero-badge"><span class="dot"></span> ISHS 32nd &middot; 인천과학고등학교</div>
             <h1><span class="ishs-text">ISHS</span><span class="lab-text"> LAB</span></h1>
             <p>자기주도 학습을 위한 실험 공간.<br>모듈을 선택해 지금 바로 시작하세요.</p>
         </section>
 
-        <!-- 모듈 그리드 -->
-        <div class="modules-grid">
-            <div class="module-card card-blue" onclick="enterModule('integral.php')">
-                <div class="card-icon">∫</div>
-                <div class="card-row">
-                    <div class="card-name">Integral Studio</div>
-                    <span class="card-arr">→</span>
-                </div>
-                <div class="card-desc">부정적분 트레이닝 모듈. 무한 생성 문제와 즉각 피드백으로 실력을 극대화하세요.</div>
+        <section class="app-category">
+            <div class="category-head">
+                <h2 class="category-label">수학 &middot; Math</h2>
+                <span class="category-count">2</span>
             </div>
-
-            <div class="module-card card-red" onclick="enterModule('vocabulary.php')">
-                <div class="card-icon">Aa</div>
-                <div class="card-row">
-                    <div class="card-name">Vocabulary Studio</div>
-                    <span class="card-arr">→</span>
+            <div class="modules-grid">
+                <div class="module-card card-blue" onclick="enterModule('integral.php')">
+                    <div class="card-icon">&int;</div>
+                    <div class="card-row">
+                        <div class="card-name">Integral Studio</div>
+                        <span class="card-arr">&rarr;</span>
+                    </div>
+                    <div class="card-desc">부정적분 트레이닝 모듈. 무한 생성 문제와 즉각 피드백으로 실력을 극대화하세요.</div>
                 </div>
-                <div class="card-desc">나만의 단어장 관리 &amp; 플래시카드 테스트로 영어 어휘를 체계적으로 암기하세요.</div>
-            </div>
 
-            <div class="module-card card-green" onclick="enterModule('coding_test.php')">
-                <div class="card-icon">💻</div>
-                <div class="card-row">
-                    <div class="card-name">Coding Test</div>
-                    <span class="card-arr">→</span>
+                <div class="module-card card-indigo" onclick="enterModule('adv_math.php')">
+                    <div class="card-icon">&Sigma;</div>
+                    <div class="card-row">
+                        <div class="card-name">Advanced Math Studio<span class="card-badge new">NEW</span></div>
+                        <span class="card-arr">&rarr;</span>
+                    </div>
+                    <div class="card-desc">쌍곡선함수·역함수 미적분부터 행렬과 연립일차방정식까지, 고급수학 심화 트레이닝.</div>
                 </div>
-                <div class="card-desc">파이썬 알고리즘 템플릿 &amp; 예제 모음. 코딩 테스트 핵심 로직을 한눈에 확인하세요.</div>
             </div>
+        </section>
 
-        </div>
+        <section class="app-category">
+            <div class="category-head">
+                <h2 class="category-label">어학 &middot; Language</h2>
+                <span class="category-count">1</span>
+            </div>
+            <div class="modules-grid">
+                <div class="module-card card-red" onclick="enterModule('vocabulary.php')">
+                    <div class="card-icon">Aa</div>
+                    <div class="card-row">
+                        <div class="card-name">Vocabulary Studio</div>
+                        <span class="card-arr">&rarr;</span>
+                    </div>
+                    <div class="card-desc">나만의 단어장 관리 &amp; 플래시카드 테스트로 영어 어휘를 체계적으로 암기하세요.</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="app-category">
+            <div class="category-head">
+                <h2 class="category-label">개발 &middot; Development</h2>
+                <span class="category-count">2</span>
+            </div>
+            <div class="modules-grid">
+                <div class="module-card card-green" onclick="enterModule('coding_test.php')">
+                    <div class="card-icon">&#128187;</div>
+                    <div class="card-row">
+                        <div class="card-name">Coding Test</div>
+                        <span class="card-arr">&rarr;</span>
+                    </div>
+                    <div class="card-desc">파이썬 알고리즘 템플릿 &amp; 예제 모음. 코딩 테스트 핵심 로직을 한눈에 확인하세요.</div>
+                </div>
+
+                <div class="module-card card-soon" title="준비 중입니다">
+                    <div class="card-icon">&#9881;&#65039;</div>
+                    <div class="card-row">
+                        <div class="card-name">Compiler Studio</div>
+                        <span class="soon-badge">준비중</span>
+                    </div>
+                    <div class="card-desc">브라우저에서 바로 실행하는 C/C++ 컴파일 플랫폼. 곧 만나보실 수 있습니다.</div>
+                </div>
+            </div>
+        </section>
 
         <footer class="site-footer">&copy; <?= $year ?> ISHS 32nd — Developed by Dohye Lee. All rights reserved.
         </footer>
@@ -540,7 +651,7 @@ $year = date('Y');
                     style="cursor:pointer;font-size:1.1rem;margin:0;font-weight:800;color:var(--text);opacity:0.3;transition:opacity 0.2s;">
                     회원가입</h2>
                 <span onclick="closeAuthModal()"
-                    style="cursor:pointer;opacity:0.5;font-size:1.6rem;line-height:1;align-self:center;margin-left:auto;">×</span>
+                    style="cursor:pointer;opacity:0.5;font-size:1.6rem;line-height:1;align-self:center;margin-left:auto;">&times;</span>
             </div>
             <div id="form-login-container" style="display:block;">
                 <form onsubmit="event.preventDefault();submitLogin();"
@@ -643,6 +754,9 @@ $year = date('Y');
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('msg') === 'login_required') {
                 setTimeout(() => { alert('이 서비스를 이용하려면 먼저 로그인해주세요.'); openAuthModal(); }, 500);
+            }
+            if (window.location.hash === '#signup') {
+                setTimeout(() => { openAuthModal(); switchTab('signup'); }, 300);
             }
             const updateDday = () => {
                 const today = new Date();

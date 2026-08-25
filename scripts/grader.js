@@ -77,14 +77,27 @@ def preprocess_for_sympy_parser(tex):
     s = s.replace(r"\\text{arccsc}", r"\\csc^{-1}")
     s = s.replace(r"\\text{arccot}", r"\\cot^{-1}")
     
+    # Inverse hyperbolic functions
+    s = s.replace(r"\\text{arsinh}", r"\\sinh^{-1}")
+    s = s.replace(r"\\text{arcosh}", r"\\cosh^{-1}")
+    s = s.replace(r"\\text{artanh}", r"\\tanh^{-1}")
+    
     s = s.replace(r"\\operatorname{arcsec}", r"\\sec^{-1}")
     s = s.replace(r"\\operatorname{arccsc}", r"\\csc^{-1}")
     s = s.replace(r"\\operatorname{arccot}", r"\\cot^{-1}")
 
-    # Handle bare arcsec
+    s = s.replace(r"\\operatorname{arsinh}", r"\\sinh^{-1}")
+    s = s.replace(r"\\operatorname{arcosh}", r"\\cosh^{-1}")
+    s = s.replace(r"\\operatorname{artanh}", r"\\tanh^{-1}")
+
+    # Handle bare names
     s = s.replace("arcsec", r"\\sec^{-1}")
     s = s.replace("arccsc", r"\\csc^{-1}")
     s = s.replace("arccot", r"\\cot^{-1}")
+    
+    s = s.replace("arsinh", r"\\sinh^{-1}")
+    s = s.replace("arcosh", r"\\cosh^{-1}")
+    s = s.replace("artanh", r"\\tanh^{-1}")
 
     # Cleanup remaining wrappers
     s = s.replace(r"\\text", "")
@@ -93,7 +106,7 @@ def preprocess_for_sympy_parser(tex):
     
     # CRITICAL: Remove extra braces around the functions (e.g. {{\\sec^{-1}}} -> \\sec^{-1})
     # MathLive or replacements might leave layers of braces that confuse parse_latex
-    s = re.sub(r"\\{+(\\\\(?:sec|csc|cot)\\^\\{-1\\})\\}+", r"\\1", s)
+    s = re.sub(r"\\{+(\\\\(?:sec|csc|cot|sinh|cosh|tanh)\\^\\{-1\\})\\}+", r"\\1", s)
 
     # 6. x(...) -> x \\cdot (...) to prevent Function interpretation
     # Only target 'x' to avoid breaking \\ln, \\cos, etc.
@@ -110,6 +123,102 @@ def check_strict_c(u_in):
     if "+C" in stripped or "+c" in stripped:
         return True
     return False
+
+def parse_matrix_latex(s):
+    s = str(s)
+    m = re.search(r'\\\\begin\\{(?:p|b)matrix\\}(.*?)\\\\end\\{(?:p|b)matrix\\}', s, re.S)
+    if not m:
+        return None
+    body = m.group(1)
+    row_strs = [r for r in body.split('\\\\\\\\') if r.strip() != '']
+    if not row_strs:
+        return None
+    rows = []
+    for row_str in row_strs:
+        cells = row_str.split('&')
+        row_exprs = []
+        for cell in cells:
+            cell = cell.strip()
+            cell_prep = preprocess_for_sympy_parser(cell)
+            expr = parse_latex(cell_prep)
+            e_sym2 = symbols('e')
+            pi_sym2 = symbols('pi')
+            if expr.has(e_sym2):
+                expr = expr.subs(e_sym2, sympy.E)
+            if expr.has(pi_sym2):
+                expr = expr.subs(pi_sym2, sympy.pi)
+            row_exprs.append(expr)
+        rows.append(row_exprs)
+    ncols = len(rows[0])
+    if any(len(r) != ncols for r in rows):
+        return None
+    return sympy.Matrix(rows)
+
+
+def grade_matrix_or_special(u_in, s_in):
+    s_nospace = s_in.replace(" ", "")
+
+    # A single generic "포기" (give up) answer is accepted for every give-up-style sentinel
+    # in this app -- unintegrable calculus problems ("적포"), no-inverse matrices, and
+    # no-solution systems -- alongside each one's own specific wording, so a student never
+    # has to remember which exact phrase applies to which problem type.
+    if s_nospace == "적포":
+        u_nospace = u_in.replace(" ", "")
+        markers = ["적포", "포기", "impossible"]
+        return "CORRECT" if any(mk in u_nospace for mk in markers) else "INCORRECT"
+
+    if s_nospace == "역행렬없음":
+        u_nospace = u_in.replace(" ", "")
+        markers = ["특이", "존재하지않", "존재안", "없음", "불가능", "포기"]
+        return "CORRECT" if any(mk in u_nospace for mk in markers) else "INCORRECT"
+
+    if s_nospace == "해없음":
+        u_nospace = u_in.replace(" ", "")
+        markers = ["해없음", "없음", "불능", "포기"]
+        return "CORRECT" if any(mk in u_nospace for mk in markers) else "INCORRECT"
+
+    if "matrix" in s_in:
+        try:
+            Mu = parse_matrix_latex(u_in)
+            Ms = parse_matrix_latex(s_in)
+        except Exception as e:
+            return f"FATAL: Matrix Parse Failed. {e}"
+        if Mu is None or Ms is None:
+            return "INCORRECT"
+        if Mu.shape != Ms.shape:
+            return "INCORRECT"
+        t_symbol = symbols('t')
+        all_ok = True
+        for i in range(Ms.rows):
+            for j in range(Ms.cols):
+                cu = Mu[i, j]
+                cs = Ms[i, j]
+                if cu.has(t_symbol) or cs.has(t_symbol):
+                    ok = True
+                    for tv in [-2, -1, 0, 1, 2, 3, sympy.Rational(1, 2)]:
+                        try:
+                            vu = complex(cu.subs(t_symbol, tv).evalf(15))
+                            vs = complex(cs.subs(t_symbol, tv).evalf(15))
+                            if abs(vu - vs) > 1e-4:
+                                ok = False
+                                break
+                        except Exception:
+                            ok = False
+                            break
+                    if not ok:
+                        all_ok = False
+                elif cu.free_symbols or cs.free_symbols:
+                    all_ok = False
+                else:
+                    try:
+                        diff = complex(sympy.simplify(cu - cs).evalf(15))
+                        if abs(diff) > 1e-4:
+                            all_ok = False
+                    except Exception:
+                        all_ok = False
+        return "CORRECT" if all_ok else "INCORRECT"
+
+    return None
 
 def grade(u_in, s_in, strict_c=False):
     global result_log
@@ -135,8 +244,18 @@ def grade(u_in, s_in, strict_c=False):
             # Exception for "적포" (Integral Impossible)
             if "적포" in s_in or "impossible" in s_in.lower():
                  return "CORRECT"
+            # Exception for definite integrals (no 'x' in solution)
+            if "x" not in s_in:
+                 return "CORRECT"
             return "INCORRECT (Missing Constant of Integration)"
         return "CORRECT"
+
+    # Matrix / vector answers (Gauss-Jordan inverses, PA=I, solution vectors -- including
+    # ones with a free parameter t) and Korean-text sentinels ("역행렬 없음", "해 없음")
+    # aren't single scalar expressions, so parse_latex below can't handle them at all.
+    special_result = grade_matrix_or_special(u_in, s_in)
+    if special_result is not None:
+        return special_result
 
     try:
         # Preprocessing
@@ -152,6 +271,14 @@ def grade(u_in, s_in, strict_c=False):
         e_sym = symbols('e')
         if u_expr.has(e_sym): u_expr = u_expr.subs(e_sym, sympy.E)
         if s_expr.has(e_sym): s_expr = s_expr.subs(e_sym, sympy.E)
+
+        # parse_latex turns \\pi into a plain Symbol('pi'), not the numeric constant
+        # sympy.pi (same trap as 'e' above) -- left unresolved, any answer containing
+        # pi never numerically evaluates, so two DIFFERENT pi-multiples of terms can
+        # cancel down to "just a constant" and slip past the equality checks below.
+        pi_sym = symbols('pi')
+        if u_expr.has(pi_sym): u_expr = u_expr.subs(pi_sym, sympy.pi)
+        if s_expr.has(pi_sym): s_expr = s_expr.subs(pi_sym, sympy.pi)
 
         # Numerical Consistency Check
         # Robust Substitution Helper
@@ -185,11 +312,23 @@ def grade(u_in, s_in, strict_c=False):
                 pass
         
         is_correct_math = False
-        
-        if len(diffs) < 3:
+
+        # Pure-number answers (distances, angles, slopes, coordinates -- anything with no
+        # free symbol left at all, e.g. the whole polar pool) have no x/theta to vary the
+        # probe points over, so every "sample" above is identical and their difference is
+        # trivially "constant" no matter what the two numbers actually are. That makes the
+        # consistency checks below pass for ANY two constants (right or wrong). Only a pure
+        # number needs this: require the values to actually be numerically equal instead.
+        if not u_expr.free_symbols and not s_expr.free_symbols:
+            try:
+                num_diff = complex(sympy.simplify(u_expr - s_expr).evalf(15))
+                is_correct_math = abs(num_diff) < 1e-4
+            except Exception:
+                pass
+        elif len(diffs) < 3:
              try:
                  sim_diff = sympy.simplify(u_expr - s_expr)
-                 if sim_diff.is_constant(): 
+                 if sim_diff.is_constant():
                      is_correct_math = True
              except: pass
         else:
@@ -208,6 +347,8 @@ def grade(u_in, s_in, strict_c=False):
 
         if is_correct_math:
             if strict_c and not has_c:
+                 if "x" not in s_in:
+                      return "CORRECT"
                  return "INCORRECT (Missing Constant of Integration)"
             return "CORRECT"
         else:
