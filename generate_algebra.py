@@ -170,18 +170,23 @@ def assemble(raw_problems, id_prefix, name_fn):
     template_keys = list(by_template.keys())
     random.shuffle(template_keys)
 
-    rr_sequence = []
-    while any(by_template[t] for t in template_keys):
-        for t in template_keys:
-            if by_template[t]:
-                rr_sequence.append(by_template[t].pop(0))
-
+    # Each "pass" pulls at most one problem per template still holding content, so a
+    # single pass can never repeat a template -- passes are never merged into a bigger
+    # CHUNK_SIZE-sized collection (the old behavior), even if that leaves a collection
+    # short of CHUNK_SIZE questions. A shorter, fully diverse collection beats a padded,
+    # repetitive one (with only 5 templates and CHUNK_SIZE=10, the old approach combined
+    # two passes per collection, so every template appeared twice in every collection).
     collections = []
     idx = 1
-    for i in range(0, len(rr_sequence), CHUNK_SIZE):
-        chunk = sorted(rr_sequence[i:i + CHUNK_SIZE], key=lambda p: p['level'])
-        collections.append({"id": f"{id_prefix}_{idx}", "name": name_fn(idx), "problems": chunk})
-        idx += 1
+    while any(by_template[t] for t in template_keys):
+        pass_items = []
+        for t in template_keys:
+            if by_template[t]:
+                pass_items.append(by_template[t].pop(0))
+        for i in range(0, len(pass_items), CHUNK_SIZE):
+            chunk = sorted(pass_items[i:i + CHUNK_SIZE], key=lambda p: p['level'])
+            collections.append({"id": f"{id_prefix}_{idx}", "name": name_fn(idx), "problems": chunk})
+            idx += 1
     return collections
 
 

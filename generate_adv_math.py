@@ -31,6 +31,17 @@ def tc(k):
     """Coefficient string to place directly before a trig/theta term (drops '1')."""
     return '' if k == 1 else str(k)
 
+def coefx(k, suffix='x'):
+    """k*suffix as latex, dropping a literal '1' or '-1' coefficient -- e.g. coefx(1) ==
+    'x', coefx(3) == '3x', coefx(-1) == '-x', coefx(1, 'x^2') == 'x^2'. Fixes the ugly
+    '1x' / '1x^2' output that shows up whenever a loop variable starting at 1 (or an
+    algebraic combination like 1-k) gets spliced directly in front of a variable."""
+    if k == 1:
+        return suffix
+    if k == -1:
+        return f'-{suffix}'
+    return f'{k}{suffix}'
+
 def frac_pi(mult, denom):
     g = math.gcd(abs(mult), denom)
     mult //= g
@@ -69,76 +80,85 @@ def get_prad_solution(k):
 
 # Level 1 Templates
 for k in range(1, 16):
-    hyperbolic_raw.append({'level': 1, 'template': 'cosh', 'latex': f'\\cosh({k}x)', 'solution': f'\\frac{{1}}{{{k}}}\\sinh({k}x)' if k>1 else '\\sinh(x)'})
-    hyperbolic_raw.append({'level': 1, 'template': 'sinh', 'latex': f'\\sinh({k}x)', 'solution': f'\\frac{{1}}{{{k}}}\\cosh({k}x)' if k>1 else '\\cosh(x)'})
-    hyperbolic_raw.append({'level': 1, 'template': 'asin_d', 'latex': f'\\text{{다음 함수의 도함수를 구하시오: }} \\sin^{{-1}}({k}x)', 'solution': f'\\frac{{{k}}}{{\\sqrt{{1-{k**2}x^2}}}}'})
-    hyperbolic_raw.append({'level': 1, 'template': 'acos_d', 'latex': f'\\text{{다음 함수의 도함수를 구하시오: }} \\cos^{{-1}}({k}x)', 'solution': f'-\\frac{{{k}}}{{\\sqrt{{1-{k**2}x^2}}}}'})
-    hyperbolic_raw.append({'level': 1, 'template': 'atan_d', 'latex': f'\\text{{다음 함수의 도함수를 구하시오: }} \\tan^{{-1}}({k}x)', 'solution': f'\\frac{{{k}}}{{1+{k**2}x^2}}'})
+    kx, kx2 = coefx(k), coefx(k**2, 'x^2')
+    hyperbolic_raw.append({'level': 1, 'template': 'cosh', 'latex': f'\\cosh({kx})', 'solution': f'\\frac{{1}}{{{k}}}\\sinh({kx})' if k>1 else '\\sinh(x)'})
+    hyperbolic_raw.append({'level': 1, 'template': 'sinh', 'latex': f'\\sinh({kx})', 'solution': f'\\frac{{1}}{{{k}}}\\cosh({kx})' if k>1 else '\\cosh(x)'})
+    hyperbolic_raw.append({'level': 1, 'template': 'asin_d', 'latex': f'\\text{{다음 함수의 도함수를 구하시오: }} \\sin^{{-1}}({kx})', 'solution': f'\\frac{{{k}}}{{\\sqrt{{1-{kx2}}}}}'})
+    hyperbolic_raw.append({'level': 1, 'template': 'acos_d', 'latex': f'\\text{{다음 함수의 도함수를 구하시오: }} \\cos^{{-1}}({kx})', 'solution': f'-\\frac{{{k}}}{{\\sqrt{{1-{kx2}}}}}'})
+    hyperbolic_raw.append({'level': 1, 'template': 'atan_d', 'latex': f'\\text{{다음 함수의 도함수를 구하시오: }} \\tan^{{-1}}({kx})', 'solution': f'\\frac{{{k}}}{{1+{kx2}}}'})
 
 # Level 2 Templates
 for k in range(1, 16):
-    hyperbolic_raw.append({'level': 2, 'template': 'sech2', 'latex': f'\\text{{sech}}^2({k}x)', 'solution': f'\\frac{{1}}{{{k}}}\\tanh({k}x)' if k>1 else '\\tanh(x)'})
-    hyperbolic_raw.append({'level': 2, 'template': 'csch2', 'latex': f'\\text{{csch}}^2({k}x)', 'solution': f'-\\frac{{1}}{{{k}}}\\text{{coth}}({k}x)' if k>1 else '-\\text{coth}(x)'})
-    hyperbolic_raw.append({'level': 2, 'template': 'acosh_d', 'latex': f'\\text{{다음 함수의 도함수를 구하시오: }} \\cosh^{{-1}}({k}x)', 'solution': f'\\frac{{{k}}}{{\\sqrt{{{k**2}x^2-1}}}}'})
-    hyperbolic_raw.append({'level': 2, 'template': 'asinh_d', 'latex': f'\\text{{다음 함수의 도함수를 구하시오: }} \\sinh^{{-1}}({k}x)', 'solution': f'\\frac{{{k}}}{{\\sqrt{{1+{k**2}x^2}}}}'})
+    kx, kx2 = coefx(k), coefx(k**2, 'x^2')
+    hyperbolic_raw.append({'level': 2, 'template': 'sech2', 'latex': f'\\text{{sech}}^2({kx})', 'solution': f'\\frac{{1}}{{{k}}}\\tanh({kx})' if k>1 else '\\tanh(x)'})
+    hyperbolic_raw.append({'level': 2, 'template': 'csch2', 'latex': f'\\text{{csch}}^2({kx})', 'solution': f'-\\frac{{1}}{{{k}}}\\text{{coth}}({kx})' if k>1 else '-\\text{coth}(x)'})
+    hyperbolic_raw.append({'level': 2, 'template': 'acosh_d', 'latex': f'\\text{{다음 함수의 도함수를 구하시오: }} \\cosh^{{-1}}({kx})', 'solution': f'\\frac{{{k}}}{{\\sqrt{{{kx2}-1}}}}'})
+    hyperbolic_raw.append({'level': 2, 'template': 'asinh_d', 'latex': f'\\text{{다음 함수의 도함수를 구하시오: }} \\sinh^{{-1}}({kx})', 'solution': f'\\frac{{{k}}}{{\\sqrt{{1+{kx2}}}}}'})
 
 # Level 3 Templates
 for k in range(1, 16):
-    hyperbolic_raw.append({'level': 3, 'template': 'sechtanh', 'latex': f'\\text{{sech}}({k}x)\\tanh({k}x)', 'solution': f'-\\frac{{1}}{{{k}}}\\text{{sech}}({k}x)' if k>1 else '-\\text{sech}(x)'})
-    hyperbolic_raw.append({'level': 3, 'template': 'cschcoth', 'latex': f'\\text{{csch}}({k}x)\\text{{coth}}({k}x)', 'solution': f'-\\frac{{1}}{{{k}}}\\text{{csch}}({k}x)' if k>1 else '-\\text{csch}(x)'})
-    hyperbolic_raw.append({'level': 3, 'template': 'asin_i', 'latex': f'\\sin^{{-1}}({k}x)', 'solution': f'x\\sin^{{-1}}({k}x) + \\frac{{1}}{{{k}}}\\sqrt{{1-{k**2}x^2}}'})
-    hyperbolic_raw.append({'level': 3, 'template': 'atan_i', 'latex': f'\\tan^{{-1}}({k}x)', 'solution': f'x\\tan^{{-1}}({k}x) - \\frac{{1}}{{{2*k}}}\\ln(1+{k**2}x^2)'})
-    hyperbolic_raw.append({'level': 3, 'template': 'tanh_i', 'latex': f'\\tanh({k}x)', 'solution': f'\\frac{{1}}{{{k}}}\\ln(\\cosh({k}x))'})
+    kx, kx2 = coefx(k), coefx(k**2, 'x^2')
+    hyperbolic_raw.append({'level': 3, 'template': 'sechtanh', 'latex': f'\\text{{sech}}({kx})\\tanh({kx})', 'solution': f'-\\frac{{1}}{{{k}}}\\text{{sech}}({kx})' if k>1 else '-\\text{sech}(x)'})
+    hyperbolic_raw.append({'level': 3, 'template': 'cschcoth', 'latex': f'\\text{{csch}}({kx})\\text{{coth}}({kx})', 'solution': f'-\\frac{{1}}{{{k}}}\\text{{csch}}({kx})' if k>1 else '-\\text{csch}(x)'})
+    hyperbolic_raw.append({'level': 3, 'template': 'asin_i', 'latex': f'\\sin^{{-1}}({kx})', 'solution': f'x\\sin^{{-1}}({kx}) + \\frac{{1}}{{{k}}}\\sqrt{{1-{kx2}}}'})
+    hyperbolic_raw.append({'level': 3, 'template': 'atan_i', 'latex': f'\\tan^{{-1}}({kx})', 'solution': f'x\\tan^{{-1}}({kx}) - \\frac{{1}}{{{2*k}}}\\ln(1+{kx2})'})
+    hyperbolic_raw.append({'level': 3, 'template': 'tanh_i', 'latex': f'\\tanh({kx})', 'solution': f'\\frac{{1}}{{{k}}}\\ln(\\cosh({kx}))'})
     # Bare inverse-hyperbolic integrals (sibling of asin_i / atan_i above), each verified
     # by symbolic differentiation: d/dx[x*f(kx) - g(x)] == f(kx).
-    sqrt_1pk2x2 = '\\sqrt{{1+{}x^2}}'.format(k**2)
-    sqrt_k2x2m1 = '\\sqrt{{{}x^2-1}}'.format(k**2)
-    ln_1mk2x2 = '\\ln(1-{}x^2)'.format(k**2)
-    hyperbolic_raw.append({'level': 3, 'template': 'asinh_i', 'latex': f'\\sinh^{{-1}}({k}x)', 'solution': f'x\\sinh^{{-1}}({k}x) - {fracstr(sqrt_1pk2x2, k)}'})
-    hyperbolic_raw.append({'level': 3, 'template': 'acosh_i', 'latex': f'\\cosh^{{-1}}({k}x)', 'solution': f'x\\cosh^{{-1}}({k}x) - {fracstr(sqrt_k2x2m1, k)}'})
-    hyperbolic_raw.append({'level': 3, 'template': 'atanh_i', 'latex': f'\\tanh^{{-1}}({k}x)', 'solution': f'x\\tanh^{{-1}}({k}x) + {fracstr(ln_1mk2x2, 2*k)}'})
+    sqrt_1pk2x2 = f'\\sqrt{{1+{kx2}}}'
+    sqrt_k2x2m1 = f'\\sqrt{{{kx2}-1}}'
+    ln_1mk2x2 = f'\\ln(1-{kx2})'
+    hyperbolic_raw.append({'level': 3, 'template': 'asinh_i', 'latex': f'\\sinh^{{-1}}({kx})', 'solution': f'x\\sinh^{{-1}}({kx}) - {fracstr(sqrt_1pk2x2, k)}'})
+    hyperbolic_raw.append({'level': 3, 'template': 'acosh_i', 'latex': f'\\cosh^{{-1}}({kx})', 'solution': f'x\\cosh^{{-1}}({kx}) - {fracstr(sqrt_k2x2m1, k)}'})
+    hyperbolic_raw.append({'level': 3, 'template': 'atanh_i', 'latex': f'\\tanh^{{-1}}({kx})', 'solution': f'x\\tanh^{{-1}}({kx}) + {fracstr(ln_1mk2x2, 2*k)}'})
 
 # Level 4 Templates
 for k in range(1, 16):
-    hyperbolic_raw.append({'level': 4, 'template': 'xcosh', 'latex': f'x\\cosh({k}x^2)', 'solution': f'\\frac{{1}}{{{2*k}}}\\sinh({k}x^2)'})
-    hyperbolic_raw.append({'level': 4, 'template': 'xsinh', 'latex': f'x\\sinh({k}x^2)', 'solution': f'\\frac{{1}}{{{2*k}}}\\cosh({k}x^2)'})
-    hyperbolic_raw.append({'level': 4, 'template': 'ecosh', 'latex': f'e^x\\cosh({k}x)', 'solution': f'\\frac{{1}}{{2}}(\\frac{{1}}{{{1+k}}}e^{{{1+k}x}} + \\frac{{1}}{{{1-k}}}e^{{{1-k}x}})' if k!=1 else '\\frac{1}{4}e^{2x} + \\frac{1}{2}x'})
+    kx = coefx(k)
+    kx2sq = coefx(k, 'x^2')  # k*x^2 directly -- NOT (kx)^2, so reuses k (not k**2) here
+    hyperbolic_raw.append({'level': 4, 'template': 'xcosh', 'latex': f'x\\cosh({kx2sq})', 'solution': f'\\frac{{1}}{{{2*k}}}\\sinh({kx2sq})'})
+    hyperbolic_raw.append({'level': 4, 'template': 'xsinh', 'latex': f'x\\sinh({kx2sq})', 'solution': f'\\frac{{1}}{{{2*k}}}\\cosh({kx2sq})'})
+    hyperbolic_raw.append({'level': 4, 'template': 'ecosh', 'latex': f'e^x\\cosh({kx})', 'solution': f'\\frac{{1}}{{2}}(\\frac{{1}}{{{1+k}}}e^{{{coefx(1+k)}}} + \\frac{{1}}{{{1-k}}}e^{{{coefx(1-k)}}})' if k!=1 else '\\frac{1}{4}e^{2x} + \\frac{1}{2}x'})
 
 # Level 5 Templates
 for k in range(1, 16):
-    hyperbolic_raw.append({'level': 5, 'template': 'cosh2', 'latex': f'\\cosh^2({k}x)', 'solution': f'\\frac{{1}}{{2}}x + \\frac{{1}}{{{4*k}}}\\sinh({2*k}x)'})
-    hyperbolic_raw.append({'level': 5, 'template': 'sinh2', 'latex': f'\\sinh^2({k}x)', 'solution': f'-\\frac{{1}}{{2}}x + \\frac{{1}}{{{4*k}}}\\sinh({2*k}x)'})
-    hyperbolic_raw.append({'level': 5, 'template': 'coshsqrt', 'latex': f'\\cosh({k}\\sqrt{{x}})', 'solution': f'\\frac{{2}}{{{k**2}}}({k}\\sqrt{{x}}\\sinh({k}\\sqrt{{x}}) - \\cosh({k}\\sqrt{{x}}))'})
+    kx = coefx(k)
+    ksqrtx = coefx(k, '\\sqrt{x}')
+    hyperbolic_raw.append({'level': 5, 'template': 'cosh2', 'latex': f'\\cosh^2({kx})', 'solution': f'\\frac{{1}}{{2}}x + \\frac{{1}}{{{4*k}}}\\sinh({coefx(2*k)})'})
+    hyperbolic_raw.append({'level': 5, 'template': 'sinh2', 'latex': f'\\sinh^2({kx})', 'solution': f'-\\frac{{1}}{{2}}x + \\frac{{1}}{{{4*k}}}\\sinh({coefx(2*k)})'})
+    hyperbolic_raw.append({'level': 5, 'template': 'coshsqrt', 'latex': f'\\cosh({ksqrtx})', 'solution': f'\\frac{{2}}{{{k**2}}}({ksqrtx}\\sinh({ksqrtx}) - \\cosh({ksqrtx}))'})
 
 # Level 6-7 Templates
 for k in range(1, 11):
-    hyperbolic_raw.append({'level': 6, 'template': 'esinh', 'latex': f'e^{{{k}x}}\\sinh(x)', 'solution': f'\\frac{{1}}{{2}}(\\frac{{1}}{{{k+1}}}e^{{{k+1}x}} - \\frac{{1}}{{{k-1}}}e^{{{k-1}x}})' if k>1 else '\\frac{1}{4}e^{2x} - \\frac{1}{2}x'})
-    hyperbolic_raw.append({'level': 7, 'template': 'coscosh', 'latex': f'\\cos({k}x)\\cosh(x)', 'solution': f'\\frac{{1}}{{{k**2+1}}}(\\cos({k}x)\\sinh(x) + {k}\\sin({k}x)\\cosh(x))'})
+    kx = coefx(k)
+    hyperbolic_raw.append({'level': 6, 'template': 'esinh', 'latex': f'e^{{{kx}}}\\sinh(x)', 'solution': f'\\frac{{1}}{{2}}(\\frac{{1}}{{{k+1}}}e^{{{coefx(k+1)}}} - \\frac{{1}}{{{k-1}}}e^{{{coefx(k-1)}}})' if k>1 else '\\frac{1}{4}e^{2x} - \\frac{1}{2}x'})
+    hyperbolic_raw.append({'level': 7, 'template': 'coscosh', 'latex': f'\\cos({kx})\\cosh(x)', 'solution': f'\\frac{{1}}{{{k**2+1}}}(\\cos({kx})\\sinh(x) + {tc(k)}\\sin({kx})\\cosh(x))'})
 
 # Level 8: x * (역함수) -- 부분적분(IBP) 1회로 풀리는 문제보다 한 단계 더 어려운,
 # dv = x dx 로 두는 유형. 모든 공식은 sympy로 도함수를 재확인해서 검증했다.
 for k in range(1, 11):
     k2 = k**2
-    sq_1mk2 = '\\sqrt{{1-{}x^2}}'.format(k2)
+    kx, kx2 = coefx(k), coefx(k2, 'x^2')
+    sq_1mk2 = f'\\sqrt{{1-{kx2}}}'
     x_sq_1mk2 = 'x' + sq_1mk2
-    asin_kx = '\\sin^{{-1}}({}x)'.format(k)
-    acos_kx = '\\cos^{{-1}}({}x)'.format(k)
-    atan_kx = '\\tan^{{-1}}({}x)'.format(k)
-    asinh_kx = '\\sinh^{{-1}}({}x)'.format(k)
-    acosh_kx = '\\cosh^{{-1}}({}x)'.format(k)
-    atanh_kx = '\\tanh^{{-1}}({}x)'.format(k)
+    asin_kx = f'\\sin^{{-1}}({kx})'
+    acos_kx = f'\\cos^{{-1}}({kx})'
+    atan_kx = f'\\tan^{{-1}}({kx})'
+    asinh_kx = f'\\sinh^{{-1}}({kx})'
+    acosh_kx = f'\\cosh^{{-1}}({kx})'
+    atanh_kx = f'\\tanh^{{-1}}({kx})'
 
     hyperbolic_raw.append({'level': 8, 'template': 'x_asin', 'latex': f'x{asin_kx}', 'solution': f'\\frac{{x^2}}{{2}}{asin_kx} + {fracstr(x_sq_1mk2, 4*k)} - {fracstr(asin_kx, 4*k2)}'})
     hyperbolic_raw.append({'level': 8, 'template': 'x_acos', 'latex': f'x{acos_kx}', 'solution': f'\\frac{{x^2}}{{2}}{acos_kx} - {fracstr(x_sq_1mk2, 4*k)} - {fracstr(acos_kx, 4*k2)}'})
     hyperbolic_raw.append({'level': 8, 'template': 'x_atan', 'latex': f'x{atan_kx}', 'solution': f'\\frac{{x^2}}{{2}}{atan_kx} - {fracstr("x", 2*k)} + {fracstr(atan_kx, 2*k2)}'})
 
-    sq_1pk2 = '\\sqrt{{1+{}x^2}}'.format(k2)
+    sq_1pk2 = f'\\sqrt{{1+{kx2}}}'
     x_sq_1pk2 = 'x' + sq_1pk2
     hyperbolic_raw.append({'level': 8, 'template': 'x_asinh', 'latex': f'x{asinh_kx}', 'solution': f'\\frac{{x^2}}{{2}}{asinh_kx} - {fracstr(x_sq_1pk2, 4*k)} + {fracstr(asinh_kx, 4*k2)}'})
 
-    sq_k2m1 = '\\sqrt{{{}x^2-1}}'.format(k2)
+    sq_k2m1 = f'\\sqrt{{{kx2}-1}}'
     x_sq_k2m1 = 'x' + sq_k2m1
-    ln_acosh = '\\ln({}x+{})'.format(k, sq_k2m1)
+    ln_acosh = f'\\ln({kx}+{sq_k2m1})'
     hyperbolic_raw.append({'level': 8, 'template': 'x_acosh', 'latex': f'x{acosh_kx}', 'solution': f'\\frac{{x^2}}{{2}}{acosh_kx} - {fracstr(x_sq_k2m1, 4*k)} - {fracstr(ln_acosh, 4*k2)}'})
 
     hyperbolic_raw.append({'level': 8, 'template': 'x_atanh', 'latex': f'x{atanh_kx}', 'solution': f'\\frac{{x^2}}{{2}}{atanh_kx} + {fracstr("x", 2*k)} - {fracstr(atanh_kx, 2*k2)}'})
@@ -149,21 +169,25 @@ for k in range(1, 11):
 CYCLIC_PAIRS = [(1, 2), (2, 3), (3, 1), (1, 4), (4, 2), (2, 5), (5, 3), (3, 4), (4, 5), (1, 3), (5, 1), (2, 4)]
 for a, b in CYCLIC_PAIRS:
     denom = a**2 + b**2
-    hyperbolic_raw.append({'level': 9, 'template': 'sinh_sin', 'latex': f'\\sinh({a}x)\\sin({b}x)', 'solution': fracstr(f'{a}\\sin({b}x)\\cosh({a}x) - {b}\\cos({b}x)\\sinh({a}x)', denom)})
-    hyperbolic_raw.append({'level': 9, 'template': 'sinh_cos', 'latex': f'\\sinh({a}x)\\cos({b}x)', 'solution': fracstr(f'{a}\\cos({b}x)\\cosh({a}x) + {b}\\sin({b}x)\\sinh({a}x)', denom)})
-    hyperbolic_raw.append({'level': 9, 'template': 'cosh_sin', 'latex': f'\\cosh({a}x)\\sin({b}x)', 'solution': fracstr(f'{a}\\sin({b}x)\\sinh({a}x) - {b}\\cos({b}x)\\cosh({a}x)', denom)})
-    hyperbolic_raw.append({'level': 9, 'template': 'cosh_cos', 'latex': f'\\cosh({a}x)\\cos({b}x)', 'solution': fracstr(f'{a}\\cos({b}x)\\sinh({a}x) + {b}\\sin({b}x)\\cosh({a}x)', denom)})
-    hyperbolic_raw.append({'level': 9, 'template': 'exp_sin', 'latex': f'e^{{{a}x}}\\sin({b}x)', 'solution': fracstr(f'({a}\\sin({b}x)-{b}\\cos({b}x))e^{{{a}x}}', denom)})
-    hyperbolic_raw.append({'level': 9, 'template': 'exp_cos', 'latex': f'e^{{{a}x}}\\cos({b}x)', 'solution': fracstr(f'({a}\\cos({b}x)+{b}\\sin({b}x))e^{{{a}x}}', denom)})
+    ax, bx = coefx(a), coefx(b)
+    ta, tb = tc(a), tc(b)
+    hyperbolic_raw.append({'level': 9, 'template': 'sinh_sin', 'latex': f'\\sinh({ax})\\sin({bx})', 'solution': fracstr(f'{ta}\\sin({bx})\\cosh({ax}) - {tb}\\cos({bx})\\sinh({ax})', denom)})
+    hyperbolic_raw.append({'level': 9, 'template': 'sinh_cos', 'latex': f'\\sinh({ax})\\cos({bx})', 'solution': fracstr(f'{ta}\\cos({bx})\\cosh({ax}) + {tb}\\sin({bx})\\sinh({ax})', denom)})
+    hyperbolic_raw.append({'level': 9, 'template': 'cosh_sin', 'latex': f'\\cosh({ax})\\sin({bx})', 'solution': fracstr(f'{ta}\\sin({bx})\\sinh({ax}) - {tb}\\cos({bx})\\cosh({ax})', denom)})
+    hyperbolic_raw.append({'level': 9, 'template': 'cosh_cos', 'latex': f'\\cosh({ax})\\cos({bx})', 'solution': fracstr(f'{ta}\\cos({bx})\\sinh({ax}) + {tb}\\sin({bx})\\cosh({ax})', denom)})
+    hyperbolic_raw.append({'level': 9, 'template': 'exp_sin', 'latex': f'e^{{{ax}}}\\sin({bx})', 'solution': fracstr(f'({ta}\\sin({bx})-{tb}\\cos({bx}))e^{{{ax}}}', denom)})
+    hyperbolic_raw.append({'level': 9, 'template': 'exp_cos', 'latex': f'e^{{{ax}}}\\cos({bx})', 'solution': fracstr(f'({ta}\\cos({bx})+{tb}\\sin({bx}))e^{{{ax}}}', denom)})
 
 # Level 10: 쌍곡선함수끼리의 곱 (a != b, 합·차 공식을 이용해 두 번 부분적분 후 대수적으로 풀어내는 유형).
 # 분모가 a^2-b^2 라서 a==b 인 조합은 제외 (그 경우는 레벨5의 cosh^2/sinh^2 문제로 이미 다룸).
 HYP_PAIRS = [(2, 1), (3, 1), (3, 2), (4, 1), (4, 3), (5, 2), (5, 3), (5, 4), (1, 3), (2, 5), (1, 4), (4, 2)]
 for a, b in HYP_PAIRS:
     denom = a**2 - b**2
-    hyperbolic_raw.append({'level': 10, 'template': 'sinh_cosh', 'latex': f'\\sinh({a}x)\\cosh({b}x)', 'solution': signfrac(f'{a}\\cosh({a}x)\\cosh({b}x) - {b}\\sinh({a}x)\\sinh({b}x)', denom)})
-    hyperbolic_raw.append({'level': 10, 'template': 'cosh_cosh', 'latex': f'\\cosh({a}x)\\cosh({b}x)', 'solution': signfrac(f'{a}\\sinh({a}x)\\cosh({b}x) - {b}\\sinh({b}x)\\cosh({a}x)', denom)})
-    hyperbolic_raw.append({'level': 10, 'template': 'sinh_sinh', 'latex': f'\\sinh({a}x)\\sinh({b}x)', 'solution': signfrac(f'{a}\\sinh({b}x)\\cosh({a}x) - {b}\\sinh({a}x)\\cosh({b}x)', denom)})
+    ax, bx = coefx(a), coefx(b)
+    ta, tb = tc(a), tc(b)
+    hyperbolic_raw.append({'level': 10, 'template': 'sinh_cosh', 'latex': f'\\sinh({ax})\\cosh({bx})', 'solution': signfrac(f'{ta}\\cosh({ax})\\cosh({bx}) - {tb}\\sinh({ax})\\sinh({bx})', denom)})
+    hyperbolic_raw.append({'level': 10, 'template': 'cosh_cosh', 'latex': f'\\cosh({ax})\\cosh({bx})', 'solution': signfrac(f'{ta}\\sinh({ax})\\cosh({bx}) - {tb}\\sinh({bx})\\cosh({ax})', denom)})
+    hyperbolic_raw.append({'level': 10, 'template': 'sinh_sinh', 'latex': f'\\sinh({ax})\\sinh({bx})', 'solution': signfrac(f'{ta}\\sinh({bx})\\cosh({ax}) - {tb}\\sinh({ax})\\cosh({bx})', denom)})
 
 # --- "고급 미적분 중간고사" style additions: identities, telescoping series, and a
 # double-angle reduction integral, matching a reference worksheet the user provided.
@@ -507,7 +531,8 @@ def spiral_arclen_latex(kval, Tm, Td):
     from fractions import Fraction
     exp_frac = Fraction(kval * Tm, Td)
     exp_arg = frac_pi(exp_frac.numerator, exp_frac.denominator)
-    return f'\\frac{{\\sqrt{{{1+kval**2}}}}}{{{kval}}}\\left(e^{{{exp_arg}}}-1\\right)'
+    numer = f'\\sqrt{{{1+kval**2}}}'
+    return f'{fracstr(numer, kval)}\\left(e^{{{exp_arg}}}-1\\right)'
 
 # ---------- Level 5: 극곡선의 넓이와 길이 ----------
 for i, k in enumerate(range(1, 16)):
@@ -610,24 +635,30 @@ def assemble_collections(raw_problems, id_prefix, name_fn):
         template_keys = list(by_template.keys())
         random.shuffle(template_keys)
 
-        # 2. Round robin across every template in the band -- this is what keeps any one
-        # template from clustering inside a single 20-question slice.
-        rr_sequence = []
+        # 2. Each "pass" pulls at most one problem per template that still has content --
+        # a single pass therefore can NEVER contain the same template twice, which is
+        # exactly the "same problem, just the number changed" complaint. Passes are never
+        # merged together into a bigger CHUNK_SIZE-sized collection (the old behavior),
+        # even when that leaves a collection short of 20 questions -- a shorter, fully
+        # diverse collection beats a padded, repetitive one.
         while any(by_template[t] for t in template_keys):
+            pass_items = []
             for t in template_keys:
                 if by_template[t]:
-                    rr_sequence.append(by_template[t].pop(0))
+                    pass_items.append(by_template[t].pop(0))
 
-        # 3. Chunk at CHUNK_SIZE (never exceeded; a short final chunk per band is fine),
-        # then sort each chunk by level so difficulty ramps up within the collection.
-        for i in range(0, len(rr_sequence), CHUNK_SIZE):
-            chunk = sorted(rr_sequence[i:i + CHUNK_SIZE], key=lambda p: p['level'])
-            collections.append({
-                "id": f"{id_prefix}_{idx}",
-                "name": name_fn(idx),
-                "problems": chunk
-            })
-            idx += 1
+            # 3. Split a single pass at CHUNK_SIZE if the band has more distinct templates
+            # than that (not needed at current pool sizes, but safe either way) -- slicing
+            # inside one pass can't introduce a duplicate since the source has none. Each
+            # resulting chunk is sorted by level so difficulty ramps up within it.
+            for i in range(0, len(pass_items), CHUNK_SIZE):
+                chunk = sorted(pass_items[i:i + CHUNK_SIZE], key=lambda p: p['level'])
+                collections.append({
+                    "id": f"{id_prefix}_{idx}",
+                    "name": name_fn(idx),
+                    "problems": chunk
+                })
+                idx += 1
 
     return collections
 
