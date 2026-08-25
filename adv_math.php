@@ -409,7 +409,17 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
         // (renderResult override), which had the exact same overflow bug.
         function buildProblemHtml(latex) {
             if (!latex) return '';
-            if (!/\\text\{/.test(latex)) {
+            // \text{...} is used two different ways in this data: real Korean instructional
+            // prose ("다음을 구하시오: ..."), and upright function-name notation inside pure
+            // math (\text{sech}, \text{csch}, \text{coth} have no native LaTeX macro, so the
+            // generator wraps them in \text{} just to get non-italic letters -- same trick as
+            // \sin, \cos). Only the former should be pulled out of the math and shown as plain
+            // HTML text; a \text{sech} block has no Korean in it, so it stays inside the $$...$$
+            // and MathJax renders it correctly on its own. Telling them apart by Hangul content
+            // instead of "contains \text{ at all" is what fixes sech/csch/coth showing up as
+            // inert plain text instead of rendered math.
+            const hasKoreanProse = /\\text\{[^}]*[가-힣][^}]*\}/.test(latex);
+            if (!hasKoreanProse) {
                 return `$$${latex}$$`;
             }
             const parts = latex.split(/(\\text\{[^}]*\})/g).map(p => p.trim()).filter(p => p.length > 0);
@@ -417,7 +427,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
             let displayParts = [];
             parts.forEach((part) => {
                 const m = part.match(/^\\text\{([^}]*)\}$/);
-                if (m) {
+                if (m && /[가-힣]/.test(m[1])) {
                     proseHtml += escapeHtmlText(m[1]);
                 } else if (/\\begin\{/.test(part)) {
                     displayParts.push(part);
