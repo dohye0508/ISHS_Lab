@@ -238,6 +238,13 @@ function loadCurrentProblem() {
     // Matrix-insert helper buttons only exist/matter for the algebra subject; harmless
     // no-op (optional chaining) on any page/subject that doesn't have that element.
     document.getElementById('algebra-matrix-tools')?.classList.toggle('hidden', state.subject !== 'algebra');
+    // sech/csch/coth have no key on MathLive's virtual keyboard, so typing them letter by
+    // letter renders as separate italic variables (looks wrong) instead of an upright
+    // function name. Show insert buttons only for the problems that actually involve one
+    // of these three; harmless no-op (optional chaining) on pages without the element.
+    const curProb = state.problems[state.currentIndex];
+    const needsHypFuncs = !!curProb && /sech|csch|coth/.test(curProb.latex + curProb.solution);
+    document.getElementById('hyp-func-tools')?.classList.toggle('hidden', !needsHypFuncs);
 }
 
 function renderMath(el, latex) {

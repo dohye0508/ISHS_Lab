@@ -99,6 +99,19 @@ def preprocess_for_sympy_parser(tex):
     s = s.replace("arcosh", r"\\cosh^{-1}")
     s = s.replace("artanh", r"\\tanh^{-1}")
 
+    # sech/csch/coth have no native LaTeX macro sympy's parser understands, so
+    # "\\text{csch}(5x)" (or a student typing bare "csch(5x)" with no \\text at all --
+    # MathLive doesn't recognize these as function names either) parses as literal
+    # letter-by-letter multiplication (c*s*c*h*(5x)), not the actual function -- and the
+    # \\text{...}-wrapped and bare forms parse to DIFFERENT garbage, so a student's own
+    # typed answer would essentially never match the stored solution even when correct.
+    # Rewrite every form into its reciprocal identity (using the argument captured from
+    # the immediately-following single-level parens -- every problem here only ever uses
+    # simple arguments like "5x", never nested parens) before parsing.
+    s = re.sub(r"(?:\\\\text\\{sech\\}|\\\\operatorname\\{sech\\}|\\\\mathrm\\{sech\\}|sech)\\s*\\(([^()]*)\\)", r"\\\\frac{1}{\\\\cosh(\\1)}", s)
+    s = re.sub(r"(?:\\\\text\\{csch\\}|\\\\operatorname\\{csch\\}|\\\\mathrm\\{csch\\}|csch)\\s*\\(([^()]*)\\)", r"\\\\frac{1}{\\\\sinh(\\1)}", s)
+    s = re.sub(r"(?:\\\\text\\{coth\\}|\\\\operatorname\\{coth\\}|\\\\mathrm\\{coth\\}|coth)\\s*\\(([^()]*)\\)", r"\\\\frac{\\\\cosh(\\1)}{\\\\sinh(\\1)}", s)
+
     # Cleanup remaining wrappers
     s = s.replace(r"\\text", "")
     s = s.replace(r"\\operatorname", "")
