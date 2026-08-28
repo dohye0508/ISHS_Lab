@@ -266,11 +266,6 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                     <button type="button" class="btn secondary" onclick="insertMatrixTemplate(2,1)">2×1 벡터</button>
                     <button type="button" class="btn secondary" onclick="insertMatrixTemplate(3,1)">3×1 벡터</button>
                 </div>
-                <div id="hyp-func-tools" class="hidden" style="display:flex; gap:8px; margin: 10px 0; flex-wrap:wrap;">
-                    <button type="button" class="btn secondary" onclick="insertHypFuncTemplate('sech')">sech</button>
-                    <button type="button" class="btn secondary" onclick="insertHypFuncTemplate('csch')">csch</button>
-                    <button type="button" class="btn secondary" onclick="insertHypFuncTemplate('coth')">coth</button>
-                </div>
                 <div class="action-bar">
                     <button id="btn-prev" class="btn secondary hidden" onclick="prevProblem()">← Previous</button>
                     <div style="flex-grow: 1; text-align: center;">
@@ -600,19 +595,6 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
             const field = document.getElementById('math-input');
             const rowPattern = Array(cols).fill('#0').join('&');
             const template = '\\begin{pmatrix}' + Array(rows).fill(rowPattern).join('\\\\') + '\\end{pmatrix}';
-            field.focus();
-            field.executeCommand(['insert', template, { feedback: false, mode: 'math' }]);
-        }
-
-        // sech/csch/coth aren't on MathLive's virtual keyboard and MathLive doesn't
-        // recognize them as function names either, so typing them letter by letter just
-        // inserts four separate italic variables (looks wrong, and grader.js would have to
-        // guess at how they were typed). Insert the same \text{...}(...) form the problem
-        // statements themselves use -- already verified to render correctly -- with a
-        // placeholder for the argument.
-        function insertHypFuncTemplate(name) {
-            const field = document.getElementById('math-input');
-            const template = `\\text{${name}}(#0)`;
             field.focus();
             field.executeCommand(['insert', template, { feedback: false, mode: 'math' }]);
         }
