@@ -99,18 +99,34 @@ def preprocess_for_sympy_parser(tex):
     s = s.replace("arcosh", r"\\cosh^{-1}")
     s = s.replace("artanh", r"\\tanh^{-1}")
 
-    # sech/csch/coth have no native LaTeX macro sympy's parser understands, so
-    # "\\text{csch}(5x)" (or a student typing bare "csch(5x)" with no \\text at all --
-    # MathLive doesn't recognize these as function names either) parses as literal
-    # letter-by-letter multiplication (c*s*c*h*(5x)), not the actual function -- and the
-    # \\text{...}-wrapped and bare forms parse to DIFFERENT garbage, so a student's own
-    # typed answer would essentially never match the stored solution even when correct.
-    # Rewrite every form into its reciprocal identity (using the argument captured from
-    # the immediately-following single-level parens -- every problem here only ever uses
-    # simple arguments like "5x", never nested parens) before parsing.
-    s = re.sub(r"(?:\\\\text\\{sech\\}|\\\\operatorname\\{sech\\}|\\\\mathrm\\{sech\\}|sech)\\s*\\(([^()]*)\\)", r"\\\\frac{1}{\\\\cosh(\\1)}", s)
-    s = re.sub(r"(?:\\\\text\\{csch\\}|\\\\operatorname\\{csch\\}|\\\\mathrm\\{csch\\}|csch)\\s*\\(([^()]*)\\)", r"\\\\frac{1}{\\\\sinh(\\1)}", s)
-    s = re.sub(r"(?:\\\\text\\{coth\\}|\\\\operatorname\\{coth\\}|\\\\mathrm\\{coth\\}|coth)\\s*\\(([^()]*)\\)", r"\\\\frac{\\\\cosh(\\1)}{\\\\sinh(\\1)}", s)
+    # sympy's parser DOES understand bare "\\sech(x)"/"\\coth(x)"/"\\csch(x)" natively as
+    # real functions (confirmed directly) -- MathLive's own inline shortcuts serialize
+    # typed "sech"/"coth"/"csch" down to exactly this bare-macro form. What it does NOT
+    # understand is a \\text{}/\\operatorname{}/\\mathrm{}-wrapped or fully bare (no
+    # backslash) form, e.g. the stored solution's "\\text{csch}(5x)" parses as literal
+    # letter-by-letter multiplication, not the function.
+    #
+    # A previous version of this block used a bare "sech"/"csch"/"coth" alternative with no
+    # boundary check, which matched the SAME text *inside* a legitimate "\\sech(x)" macro
+    # (regex doesn't care that a backslash precedes it) and mangled it into an unparseable
+    # "\\\\frac{...}" (a literal double backslash) -- silently marking a student's already-
+    # correct, cleanly-typed answer wrong. Flatten one level of \\operatorname{\\mathrm{X}}
+    # nesting (an odd but observed MathLive re-serialization) first, then handle the two
+    # remaining cases separately: \\sec/\\cot/\\csc immediately followed by "h" (zero
+    # whitespace = MathLive's own native \\sech/\\coth/\\csch macro; nonzero whitespace =
+    # the shortcut firing on the shorter \\sec/\\cot/\\csc before the trailing "h" is typed
+    # -- both convert to the identical reciprocal identity, so one pattern covers both and
+    # must run first so no backslash-prefixed occurrence remains for the next step), and
+    # the wrapped/bare forms (bare alternative requires NOT preceded by a backslash, so it
+    # can never fire inside an already-valid native macro again).
+    s = re.sub(r"\\\\operatorname\\{\\\\mathrm\\{([a-z]+)\\}\\}", r"\\\\operatorname{\\1}", s)
+    s = re.sub(r"\\\\mathrm\\{\\\\operatorname\\{([a-z]+)\\}\\}", r"\\\\operatorname{\\1}", s)
+    s = re.sub(r"\\\\sec\\s*h\\s*\\(([^()]*)\\)", r"\\\\frac{1}{\\\\cosh(\\1)}", s)
+    s = re.sub(r"\\\\csc\\s*h\\s*\\(([^()]*)\\)", r"\\\\frac{1}{\\\\sinh(\\1)}", s)
+    s = re.sub(r"\\\\cot\\s*h\\s*\\(([^()]*)\\)", r"\\\\frac{\\\\cosh(\\1)}{\\\\sinh(\\1)}", s)
+    s = re.sub(r"(?:\\\\text\\{sech\\}|\\\\operatorname\\{sech\\}|\\\\mathrm\\{sech\\}|(?<!\\\\)sech)\\s*\\(([^()]*)\\)", r"\\\\frac{1}{\\\\cosh(\\1)}", s)
+    s = re.sub(r"(?:\\\\text\\{csch\\}|\\\\operatorname\\{csch\\}|\\\\mathrm\\{csch\\}|(?<!\\\\)csch)\\s*\\(([^()]*)\\)", r"\\\\frac{1}{\\\\sinh(\\1)}", s)
+    s = re.sub(r"(?:\\\\text\\{coth\\}|\\\\operatorname\\{coth\\}|\\\\mathrm\\{coth\\}|(?<!\\\\)coth)\\s*\\(([^()]*)\\)", r"\\\\frac{\\\\cosh(\\1)}{\\\\sinh(\\1)}", s)
 
     # Cleanup remaining wrappers
     s = s.replace(r"\\text", "")
