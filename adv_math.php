@@ -167,6 +167,10 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                                     <li>(중요) 일정 레벨 이상 문제에는 <strong>"포기"</strong> 버튼이 나타납니다. 초등함수로
                                         <strong>적분이 불가능</strong>하거나, <strong>역행렬이 존재하지 않거나</strong>, <strong>해가 없는</strong>
                                         문제는 직접 입력하지 않고 이 버튼으로 처리할 수 있습니다.</li>
+                                    <li><strong>sech, csch, coth</strong>를 입력하실 때 가끔 화면에 <strong>이상하게 보일 수 있습니다</strong>
+                                        (MathLive 자체 자동완성 충돌 때문). 그래도 <strong>채점은 정상적으로 동작</strong>하니 안심하고 그대로 제출하세요.</li>
+                                    <li><strong>역함수</strong>는 <strong>-1 표기</strong>(예: sin⁻¹(x), sinh⁻¹(x))와 <strong>arc 표기</strong>
+                                        (예: arcsin(x), arsinh(x)) <strong>둘 다 정답으로 인정</strong>됩니다. 편한 쪽으로 입력하세요.</li>
                                 </ul>
                             </div>
                         </div>
