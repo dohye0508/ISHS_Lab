@@ -121,6 +121,17 @@ def preprocess_for_sympy_parser(tex):
     # can never fire inside an already-valid native macro again).
     s = re.sub(r"\\\\operatorname\\{\\\\mathrm\\{([a-z]+)\\}\\}", r"\\\\operatorname{\\1}", s)
     s = re.sub(r"\\\\mathrm\\{\\\\operatorname\\{([a-z]+)\\}\\}", r"\\\\operatorname{\\1}", s)
+
+    # MathLive itself ships "ch" as a built-in shortcut (-> \\operatorname{ch}, presumably
+    # for the European cosh notation). Typing "sech"/"csch" letter by letter can trigger
+    # THAT shortcut on the trailing 2 letters before the full 4-letter word is recognized,
+    # leaving the first 2 letters bare and only the last 2 wrapped -- confirmed directly
+    # from a reported raw answer: "cs\\operatorname{\\mathrm{ch}}(5x)" for what should have
+    # been "csch(5x)". Catch the bare-prefix + ch-shortcut split for both words ending "ch".
+    CH_WRAP = r"(?:\\\\operatorname\\{ch\\}|\\\\mathrm\\{ch\\}|\\\\text\\{ch\\}|ch)"
+    s = re.sub(r"(?<![a-zA-Z])cs" + CH_WRAP + r"\\s*\\(([^()]*)\\)", r"\\\\frac{1}{\\\\sinh(\\1)}", s)
+    s = re.sub(r"(?<![a-zA-Z])se" + CH_WRAP + r"\\s*\\(([^()]*)\\)", r"\\\\frac{1}{\\\\cosh(\\1)}", s)
+
     s = re.sub(r"\\\\sec\\s*h\\s*\\(([^()]*)\\)", r"\\\\frac{1}{\\\\cosh(\\1)}", s)
     s = re.sub(r"\\\\csc\\s*h\\s*\\(([^()]*)\\)", r"\\\\frac{1}{\\\\sinh(\\1)}", s)
     s = re.sub(r"\\\\cot\\s*h\\s*\\(([^()]*)\\)", r"\\\\frac{\\\\cosh(\\1)}{\\\\sinh(\\1)}", s)
