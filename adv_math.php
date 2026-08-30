@@ -476,6 +476,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                     <strong style="color:${color}; font-size: 1.2em;">Q${d.id} (${mark})</strong>
                     <div>문제: ${buildProblemHtml(p.latex)}</div>
                     <p>내가 쓴 답: $$${p.userAnswer || "\\text{(비어있음)}"}$$</p>
+                    <p style="font-family: monospace; font-size: 0.75rem; opacity: 0.55; word-break: break-all;">(raw: ${escapeHtmlText(p.userAnswer || "")})</p>
                     <p>정답: $$${p.solution}${cLabel}$$</p>
                 </li>`;
             }).join("");
