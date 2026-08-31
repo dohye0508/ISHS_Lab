@@ -355,6 +355,37 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
             transform: scale(0.8);
         }
 
+        /* Language tabs -- shown next to the file path when a file has more than one
+           language available; switches which source (Python/C++) is being viewed. */
+        .lang-tabs {
+            display: flex;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .lang-tab {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            padding: 0.3rem 0.85rem;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .lang-tab:hover:not(.active) {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .lang-tab.active {
+            background: var(--accent-color);
+            color: #fff;
+            border-color: var(--accent-color);
+        }
+
         .code-container {
             flex: 1;
             overflow: auto;
@@ -524,6 +555,10 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                     </svg>
                     Copy
                 </button>
+                <div class="lang-tabs" id="lang-tabs" style="display: none;">
+                    <button type="button" class="lang-tab" id="lang-tab-python" data-lang="python">Python</button>
+                    <button type="button" class="lang-tab" id="lang-tab-cpp" data-lang="cpp">C++</button>
+                </div>
             </div>
             <div class="topbar-actions">
                 <button class="icon-btn" id="theme-toggle" title="Toggle Theme">
@@ -563,6 +598,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/cpp.min.js"></script>
     <script src="data/algorithms/data.js?v=<?php echo time(); ?>"></script>
 
     <script>
@@ -652,7 +688,14 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
             const ioIn = document.getElementById('io-in');
             const ioOut = document.getElementById('io-out');
 
+            const langTabsEl = document.getElementById('lang-tabs');
+            const langTabPython = document.getElementById('lang-tab-python');
+            const langTabCpp = document.getElementById('lang-tab-cpp');
+
             let currentCode = '';
+            let currentFileObj = null;
+            let currentFolder = '';
+            let currentLang = 'python';
 
             if (typeof codeData === 'undefined') {
                 fileTreeEl.innerHTML = '<div style="padding: 1rem; color: #ef4444;">데이터를 불러오지 못했습니다.<br>scripts/sync_algorithms.py를 실행하세요.</div>';
@@ -681,7 +724,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                     fileLi.onclick = () => {
                         document.querySelectorAll('.file-item').forEach(el => el.classList.remove('selected'));
                         fileLi.classList.add('selected');
-                        parseAndShow(folderObj.folderName, fileObj.fileName, fileObj.content);
+                        selectFile(folderObj.folderName, fileObj);
                     };
 
                     fileListUl.appendChild(fileLi);
@@ -692,25 +735,65 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                 fileTreeEl.appendChild(folderDiv);
             });
 
-            function parseAndShow(folder, file, fullContent) {
+            // A file entry can carry "python" and/or "cpp" source text (see
+            // scripts/sync_algorithms.py -- it bundles a "<name>.py" and matching
+            // "<name>.cpp" sibling into one entry). Selecting a file in the sidebar picks
+            // a language to show (keeping whatever was last selected if this file has it,
+            // otherwise falling back to whichever language it DOES have) and shows the
+            // language tab bar only when there's actually a choice to make.
+            function selectFile(folder, fileObj) {
+                currentFolder = folder;
+                currentFileObj = fileObj;
+
+                const hasPython = !!fileObj.python;
+                const hasCpp = !!fileObj.cpp;
+
+                langTabsEl.style.display = (hasPython && hasCpp) ? 'flex' : 'none';
+                langTabPython.style.display = hasPython ? 'inline-block' : 'none';
+                langTabCpp.style.display = hasCpp ? 'inline-block' : 'none';
+
+                let lang = currentLang;
+                if (lang === 'python' && !hasPython) lang = 'cpp';
+                if (lang === 'cpp' && !hasCpp) lang = 'python';
+
+                renderLang(lang);
+            }
+
+            function renderLang(lang) {
+                currentLang = lang;
+                langTabPython.classList.toggle('active', lang === 'python');
+                langTabCpp.classList.toggle('active', lang === 'cpp');
+                parseAndShow(currentFolder, currentFileObj.fileName, currentFileObj[lang], lang);
+            }
+
+            langTabPython.onclick = () => { if (currentFileObj && currentFileObj.python) renderLang('python'); };
+            langTabCpp.onclick = () => { if (currentFileObj && currentFileObj.cpp) renderLang('cpp'); };
+
+            function parseAndShow(folder, fileName, fullContent, lang) {
                 emptyStateEl.style.display = 'none';
                 codeBlockEl.style.display = 'block';
                 copyBtn.style.display = 'flex';
-                filePathEl.innerHTML = `${folder} / <span>${file}</span>`;
+                const ext = lang === 'cpp' ? '.cpp' : '.py';
+                filePathEl.innerHTML = `${folder} / <span>${fileName}${ext}</span>`;
 
-                // Parse Docstring
+                // Parse the header comment -- Python uses a '''...'''/"""..." docstring,
+                // C++ uses a /* ... */ block comment, but both hold the same structured
+                // content (title / description / 시간 복잡도 / [입력 예시] / [출력 예시]).
                 let docstring = "";
                 let codeStr = fullContent;
 
-                const docRegex = /^\s*(['"]{3})([\s\S]*?)\1\s*/;
+                const docRegex = lang === 'cpp'
+                    ? /^\s*\/\*([\s\S]*?)\*\/\s*/
+                    : /^\s*(['"]{3})([\s\S]*?)\1\s*/;
                 const match = fullContent.match(docRegex);
 
                 if (match) {
-                    docstring = match[2].trim();
+                    docstring = (lang === 'cpp' ? match[1] : match[2]).trim();
                     codeStr = fullContent.substring(match[0].length).trim();
                 }
 
                 currentCode = codeStr;
+                codeDisplayEl.className = lang === 'cpp' ? 'language-cpp' : 'language-python';
                 codeDisplayEl.textContent = codeStr;
                 delete codeDisplayEl.dataset.highlighted;
                 hljs.highlightElement(codeDisplayEl);
@@ -722,7 +805,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
 
                 docBlock.style.display = 'block';
 
-                let title = file.replace('.py', '');
+                let title = fileName;
                 let desc = "";
                 let inExample = "";
                 let outExample = "";
