@@ -1,5 +1,9 @@
 # ISHS Lab
 
+![ISHS Lab Preview](assets/images/preview.png)
+
+**🌐 Live Demo:** [https://ishslab.dothome.co.kr/index.php](https://ishslab.dothome.co.kr/index.php)
+
 ISHS Lab is an integrated web-based academic platform designed to provide a comprehensive learning environment for mathematics, algorithms, and vocabulary management. The platform is optimized for user experience and learning efficiency, offering tools for continuous practice and evaluation.
 
 ## Key Modules
