@@ -1,5 +1,6 @@
 /*
 선분 교차 판별 (Line Intersection)
+- 백준 난이도: 골드 III
 CCW를 응용하여 두 선분 AB와 CD가 교차하는지 판별하는 알고리즘.
 두 점 쌍에 대해 서로 엇갈려 있는지 CCW 부호의 곱으로 판단하며, 일직선 상에 겹치는 예외 케이스 처리도 포함됩니다.
 두 선분이 일직선 상에 있는 경우 양 점의 좌표를 비교해 겹치는지 확인하고,
@@ -12,7 +13,10 @@ CCW를 응용하여 두 선분 AB와 CD가 교차하는지 판별하는 알고�
 [출력 예시]
 1
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <algorithm>
+
 using namespace std;
 
 int ccw(long long x1, long long y1, long long x2, long long y2, long long x3, long long y3) {

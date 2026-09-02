@@ -1,5 +1,6 @@
 '''
 다각형의 넓이 (Polygon Area) - 신발끈 공식 (Shoelace Formula)
+- 백준 난이도: 골드 V
 주어진 다각형의 꼭짓점 좌표를 이용해 넓이를 구하는 공식입니다.
 CCW(Counter Clockwise)를 응용하여, 벡터의 외적을 통해 각 삼각형의 넓이를 합산하는 원리입니다.
 

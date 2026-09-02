@@ -1,5 +1,6 @@
 /*
 계단 오르기 (Climbing Stairs)
+- 백준 난이도: 실버 III
 
 [작동 원리]
 n개의 계단을 오르는데, 한 번에 1계단 또는 2계단씩 오를 수 있으며 연속된 세 개의 계단을 모두 밟을 수는 없는 조건일 때, 얻을 수 있는 총 점수의 최댓값을 구하는 매우 유명한 기초 DP입니다.
@@ -24,7 +25,11 @@ O(N) (N은 계단의 개수)
 [출력 예시]
 75
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
 using namespace std;
 
 int main() {

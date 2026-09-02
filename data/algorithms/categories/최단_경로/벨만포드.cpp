@@ -1,5 +1,6 @@
 /*
 벨만-포드 알고리즘 (Bellman-Ford)
+- 백준 난이도: 골드 IV
 그래프에서 한 출발점에서 모든 다른 노드까지의 최단 거리를 구하는 알고리즘입니다.
 다익스트라와 달리 간선 가중치가 음수일 때도 작동하며, 음수 사이클 존재 여부를 감지할 수 있습니다.
 
@@ -20,7 +21,11 @@
 [출력 예시]
 1에서 3까지 최단 거리: 3
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+#include <climits>
+
 using namespace std;
 
 const long long INF = LLONG_MAX;

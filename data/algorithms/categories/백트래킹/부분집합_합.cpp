@@ -1,5 +1,6 @@
 /*
 [문제 제목]: 부분집합의 합 (Subset Sum)
+- 백준 난이도: 실버 II
 - 문제 설명: 주어진 집합(N개의 원소) 중 원소들의 합이 특정 목표(S)가 되는 모든 부분집합의 개수를 구합니다.
 - 시간 복잡도: O(2^N)
 
@@ -10,7 +11,10 @@
 [출력 예시]
 1
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+
 using namespace std;
 
 int n;

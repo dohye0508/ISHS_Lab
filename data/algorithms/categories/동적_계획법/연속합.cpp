@@ -1,5 +1,6 @@
 /*
 연속 합 (Maximum Subarray Sum)
+- 백준 난이도: 실버 II
 
 [작동 원리]
 배열 안에서 연속된 몇 개의 수를 선택해 구할 수 있는 가장 큰 부분합을 구하는 카다네(Kadane's) 알고리즘 방식의 기초 DP입니다.
@@ -17,7 +18,11 @@ O(N) (N은 배열의 길이)
 [출력 예시]
 33
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
 using namespace std;
 
 int main() {

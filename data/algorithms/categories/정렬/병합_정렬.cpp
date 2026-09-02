@@ -1,5 +1,6 @@
 /*
 병합 정렬 (Merge Sort)
+- 백준 난이도: 실버 V
 분할 정정(Divide and Conquer) 방식을 사용하는 정교하고 안정적인 정렬 알고리즘입니다.
 전체 성분을 절반으로 나누고, 다시 합치는 과정에서 정렬을 수행하며 O(N log N)의 시간 복잡도를 가집니다.
 
@@ -10,7 +11,10 @@
 [출력 예시]
 1 2 3 5 8 10 15 20
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+
 using namespace std;
 
 vector<int> merge(vector<int>& left, vector<int>& right) {

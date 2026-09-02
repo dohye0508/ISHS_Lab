@@ -1,5 +1,6 @@
 /*
 [문제 제목]: 강한 연결 요소 (SCC, Tarjan's Algorithm)
+- 백준 난이도: 플래티넘 V
 - 문제 설명: 방향 그래프에서 모든 정점 쌍 (u, v)에 대해 u에서 v로, v에서 u로 가는 경로가 모두 존재하는 정점의 집합을 찾습니다. 타잔 알고리즘은 DFS를 이용해 한 번의 탐색으로 모든 SCC를 찾아냅니다.
 - 시간 복잡도: O(V + E)
 
@@ -21,7 +22,12 @@
 2 3 7 -1
 6 -1
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <stack>
+
 using namespace std;
 
 vector<int> adj[100001];

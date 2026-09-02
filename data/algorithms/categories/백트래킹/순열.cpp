@@ -1,5 +1,6 @@
 /*
 백트래킹 (Backtracking) - 순열
+- 백준 난이도: 실버 III
 재귀를 통해 조건을 만족하는 모든 조합을 찾는 알고리즘입니다. (순서가 있는 나열)
 N개의 숫자 중 M개를 고르는 모든 경우의 수를 반환합니다.
 
@@ -15,7 +16,10 @@ N개의 숫자 중 M개를 고르는 모든 경우의 수를 반환합니다.
 2
 3 4 5
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+
 using namespace std;
 
 int n, m;

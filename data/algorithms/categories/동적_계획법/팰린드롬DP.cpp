@@ -1,5 +1,6 @@
 /*
 팰린드롬 (Palindrome) 판별 DP
+- 백준 난이도: 골드 IV
 어떤 문자열의 부분 문자열이 팰린드롬(앞으로 읽어도, 뒤로 읽어도 같은 문자열)인지 미리 계산해두어 여러 쿼리를 O(1)에 처리하는 2차원 DP 알고리즘입니다.
 
 [입력 예시]
@@ -14,7 +15,10 @@
 2
 3 4 5
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+
 using namespace std;
 
 int main() {

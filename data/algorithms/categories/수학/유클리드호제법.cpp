@@ -1,5 +1,6 @@
 /*
 유클리드 호제법 (Euclidean Algorithm)
+- 백준 난이도: 브론즈 I
 
 [작동 원리]
 두 정수의 최대공약수(GCD)를 로그 시간 내에 빠르게 구하는 고전적인 수학 알고리즘입니다.
@@ -17,7 +18,9 @@ O(log(min(A, B)))
 6
 72
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+
 using namespace std;
 
 long long gcd_func(long long a, long long b) {

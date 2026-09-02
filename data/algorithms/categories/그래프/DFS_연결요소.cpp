@@ -1,5 +1,6 @@
 /*
 깊이 우선 탐색 (DFS) - 연결요소
+- 백준 난이도: 실버 II
 스택 또는 재귀함수를 이용하여 그래프의 깊은 부분을 먼저 탐색하는 알고리즘입니다.
 그래프 전체를 깊게 탐색할 때 사용하는 경로 찾기/연결 요소 세기 알고리즘.
 시간 복잡도: O(V + E)
@@ -15,7 +16,11 @@
 [출력 예시]
 1 2 4 3
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+#include <string>
+
 using namespace std;
 
 int n, m;

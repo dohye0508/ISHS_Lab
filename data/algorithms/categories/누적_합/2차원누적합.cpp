@@ -1,5 +1,6 @@
 /*
 2차원 배열 누적 합 (2D Prefix Sum)
+- 백준 난이도: 실버 I
 2차원 격자에서 지정된 특정 직사각형 영역의 합을 O(1) 시간만에 빠르게 계산하는 알고리즘.
 
 [입력 예시]
@@ -14,7 +15,10 @@
 2
 3 4 5
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+
 using namespace std;
 
 int main() {

@@ -1,5 +1,6 @@
 /*
 다각형의 넓이 (Polygon Area) - 신발끈 공식 (Shoelace Formula)
+- 백준 난이도: 골드 V
 주어진 다각형의 꼭짓점 좌표를 이용해 넓이를 구하는 공식입니다.
 CCW(Counter Clockwise)를 응용하여, 벡터의 외적을 통해 각 삼각형의 넓이를 합산하는 원리입니다.
 
@@ -21,7 +22,11 @@ Area = 1/2 * |Σ (x_i * y_{i+1} - x_{i+1} * y_i)|
 [출력 예시]
 100.0
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+#include <cmath>
+
 using namespace std;
 
 int main() {

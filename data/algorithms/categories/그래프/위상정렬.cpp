@@ -1,5 +1,6 @@
 /*
 위상 정렬 (Topological Sorting)
+- 백준 난이도: 골드 III
 방향 그래프에서 그래프의 모든 노드를 방향성에 거스르지 않도록 순서대로 나열하는 알고리즘.
 선수 과목을 고려한 수강 신청, 작업의 순서 결정 등에 사용. (사이클이 없어야 함)
 
@@ -11,7 +12,11 @@
 [출력 예시]
 1 2 3
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+#include <queue>
+
 using namespace std;
 
 int main() {

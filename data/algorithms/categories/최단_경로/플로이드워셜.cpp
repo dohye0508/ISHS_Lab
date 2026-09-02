@@ -1,5 +1,6 @@
 /*
 플로이드 워셜 알고리즘 (Floyd-Warshall Algorithm)
+- 백준 난이도: 골드 IV
 
 [작동 원리]
 동적 계획법을 이용하여 '모든 정점에서 모든 정점으로'의 최단 경로를 구하는 알고리즘입니다.
@@ -34,7 +35,11 @@ O(V^3)
 10 7 13 0 3
 7 4 10 6 0
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
 using namespace std;
 
 const long long INF = 1000000000LL;

@@ -1,5 +1,6 @@
 /*
 동전 교환 (Coin Change)
+- 백준 난이도: 골드 V
 
 [작동 원리]
 N가지 종류의 동전이 주어질 때, 이 동전들을 사용하여 목표 금액 K를 만드는 경우의 수(또는 최소 동전 개수)를 구하는 1차원 배낭문제(Knapsack) 유형의 동적 계획법 알고리즘입니다.
@@ -19,7 +20,11 @@ O(N * K) (N은 동전 종류의 개수, K는 목표 금액)
 [출력 예시]
 3
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
 using namespace std;
 
 int main() {

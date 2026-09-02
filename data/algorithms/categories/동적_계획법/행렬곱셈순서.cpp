@@ -1,5 +1,6 @@
 /*
 행렬 곱셈 순서 (Matrix Chain Multiplication) - DP
+- 백준 난이도: 골드 III
 N개의 행렬을 연속해서 곱할 때, 어떤 순서로 괄호를 묶어 곱셈을 하느냐에 따라 연산 횟수가 달라집니다.
 최소의 곱셈 연산 횟수를 구하는 2차원 구간 DP의 대표적인 사례입니다.
 구간의 길이 L을 1부터 N-1까지 늘려가며 탐색하고,
@@ -17,7 +18,11 @@ i부터 k까지의 최소 횟수 + k+1부터 j까지의 최소 횟수 + 앞뒤 �
 2
 3 4 5
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+#include <climits>
+
 using namespace std;
 
 int main() {

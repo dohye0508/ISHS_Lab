@@ -1,5 +1,6 @@
 /*
 세그먼트 트리 (Segment Tree)
+- 백준 난이도: 골드 I
 
 [작동 원리]
 어떤 배열에서 '특정 구간의 데이터 합/최솟값/최댓값' 등을 구하는 쿼리가 매우 잦고, 동시에 '배열의 특정 요소 값이 변경'되는 업데이트 쿼리 또한 잦을 때 사용하는 고급 자료구조입니다.
@@ -25,7 +26,10 @@
 17
 12
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+
 using namespace std;
 
 int segN;

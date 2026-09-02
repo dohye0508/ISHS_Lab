@@ -1,5 +1,6 @@
 /*
 부분 배낭 문제 (Fractional Knapsack / 무도회장) - 그리디
+- 백준 난이도: 실버 III
 물건을 쪼갤 수 있는(Fractional) 조건의 배낭 문제.
 가성비(단위 무게당 가치)가 높은 순서대로 내림차순 정렬하여 담고,
 물건이 전부 들어가지 않으면 배낭의 남은 하중만큼 물건을 쪼개서 넣습니다.
@@ -16,7 +17,12 @@
 2
 3 4 5
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <tuple>
+
 using namespace std;
 
 int main() {

@@ -1,5 +1,6 @@
 /*
 트리 DP (Tree DP)
+- 백준 난이도: 골드 III
 트리 구조에서 자식 노드들의 DP 결괏값을 모아 부모 노드의 결괏값을 도출하는 알고리즘.
 우수 마을 선정(독립 집합), 트리의 지름, 자식 노드 개수 세기 등에 사용.
 
@@ -24,7 +25,11 @@
 9
 3
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
 using namespace std;
 
 vector<vector<int>> tree;

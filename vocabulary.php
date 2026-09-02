@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    header("Location: index.php?msg=login_required");
+    header("Location: modules.php?msg=login_required");
     exit();
 }
 // Banned users see a blank page
@@ -734,7 +734,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
 <body>
 
     <!-- Go Home Button (Back Arrow) -->
-    <a href="index.php" class="home-btn-global" aria-label="Go Home">
+    <a href="modules.php" class="home-btn-global" aria-label="Go Home">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="19" y1="12" x2="5" y2="12"></line>
             <polyline points="12 19 5 12 12 5"></polyline>
@@ -932,9 +932,9 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
     <!-- Auth UI Elements (Top-Left) -->
     <div id="auth-header"
         style="position: fixed; top: 20px; left: 20px; z-index: 10000; display: flex; align-items: center; gap: 10px;">
-        <a href="index.php"
+        <a href="modules.php"
             style="background: var(--surface); backdrop-filter: blur(10px); color: var(--text); padding: 8px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05);"
-            title="홈으로">
+            title="모듈 목록으로">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                 <polyline points="9 22 9 12 15 12 15 22"></polyline>

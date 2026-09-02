@@ -1,5 +1,6 @@
 /*
 [문제 제목]: 매개 변수 탐색 (Parametric Search)
+- 백준 난이도: 실버 II
 - 문제 설명: "최적화 문제"를 "예/아니오로 대답 가능한 결정 문제"로 바꾸어 이분 탐색하는 기법입니다.
 - 시간 복잡도: O(N log(MaxHeight))
 
@@ -10,7 +11,11 @@
 [출력 예시]
 3
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
 using namespace std;
 
 vector<long long> arr;

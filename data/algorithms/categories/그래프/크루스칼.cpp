@@ -1,5 +1,6 @@
 /*
 크루스칼 알고리즘 (Kruskal's Algorithm) - 최소 신장 트리 (MST)
+- 백준 난이도: 골드 IV
 그래프 내의 모든 노드를 포함하면서 사이클이 없고, 간선 가중치의 합이 최소가 되는 트리를 찾는 알고리즘.
 모든 마을을 최소 비용으로 연결하는 전력망 구축 등에 사용.
 
@@ -15,7 +16,12 @@
 2
 3 4 5
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <tuple>
+
 using namespace std;
 
 vector<int> parent;

@@ -1,5 +1,6 @@
 /*
 [문제 제목]: CCW (Counter Clockwise)
+- 백준 난이도: 골드 V
 - 문제 설명: 평면 위에 놓인 세 점의 방향 관계를 결정합니다. 세 점 A, B, C가 순서대로 있을 때 반시계 방향이면 1, 시계 방향이면 -1, 일직선이면 0을 반환합니다.
 - 시간 복잡도: O(1)
 
@@ -11,7 +12,9 @@
 [출력 예시]
 -1
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+
 using namespace std;
 
 int ccw(long long x1, long long y1, long long x2, long long y2, long long x3, long long y3) {

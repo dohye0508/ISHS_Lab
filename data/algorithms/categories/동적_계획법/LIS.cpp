@@ -1,5 +1,6 @@
 /*
 최장 증가 부분 수열 (LIS, Longest Increasing Subsequence)
+- 백준 난이도: 실버 II
 어떠한 수열이 주어졌을 때, 그 부분 수열 중 원소가 오름차순으로 유지되는 가장 긴 수열의 길이를 찾는 알고리즘입니다.
 
 [실전 활용처]
@@ -13,7 +14,11 @@
 [출력 예시]
 4                 <- (최장 증가 부분 수열의 길이)
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
 using namespace std;
 
 int main() {

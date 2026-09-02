@@ -1,5 +1,6 @@
 /*
 무한 배낭 문제 (Unbounded Knapsack Problem)
+- 백준 난이도: 골드 V
 각 물건의 개수 제한이 무한대일 때, 버틸 수 있는 무게 내에서 가치의 최댓값을 구하는 알고리즘.
 0/1 1차원 배낭과 유사하지만, 중복을 허용해야 하므로 무게를 앞에서부터(정방향) 탐색합니다.
 
@@ -15,7 +16,11 @@
 2
 3 4 5
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
 using namespace std;
 
 int main() {

@@ -1,5 +1,6 @@
 /*
 분할 정복 (Divide and Conquer) - 행렬 거듭제곱
+- 백준 난이도: 골드 IV
 행렬 A의 n제곱(A^n)을 O(log n) 시간에 구하는 알고리즘입니다.
 지수가 홀수인 경우와 짝수인 경우를 나누어 재귀적으로 계산합니다.
 
@@ -14,7 +15,10 @@
 3 4
 3751 0
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+
 using namespace std;
 
 typedef vector<vector<long long>> Matrix;

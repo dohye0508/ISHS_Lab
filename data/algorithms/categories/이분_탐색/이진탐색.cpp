@@ -1,5 +1,6 @@
 /*
 이진 탐색 (Binary Search)
+- 백준 난이도: 실버 II
 정렬된 배열 내에서 찾아야 할 값을 반으로 나누어가며 탐색하는 알고리즘.
 시간 복잡도: O(log N)
 
@@ -15,7 +16,10 @@
 2
 3 4 5
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+
 using namespace std;
 
 int binarySearch(vector<int>& array, int target, int start, int end) {

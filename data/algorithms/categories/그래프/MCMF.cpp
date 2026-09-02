@@ -1,5 +1,6 @@
 /*
 [문제 제목]: 최소 비용 최대 유량 (MCMF - Minimum Cost Maximum Flow)
+- 백준 난이도: 플래티넘 III
 - 문제 설명: 네트워크 유량 문제에서 각 간선에 비용이 추가된 경우, 주어진 유량을 보낼 때 발생하는 최소 비용을 구합니다. SPFA 알고리즘을 사용하여 최단 경로(최소 비용 경로)를 찾으며 유량을 보냅니다.
 - 시간 복잡도: O(F * E * V) (F는 최대 유량)
 
@@ -15,7 +16,13 @@
 [출력 예시]
 2 6
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <climits>
+
 using namespace std;
 
 const long long INF = 1e18;

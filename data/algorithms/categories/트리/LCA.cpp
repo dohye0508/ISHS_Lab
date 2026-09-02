@@ -1,5 +1,6 @@
 /*
 최소 공통 조상 (LCA, Lowest Common Ancestor)
+- 백준 난이도: 골드 III
 트리에서 두 노드 A, B의 가장 가까운 공통 조상을 찾는 알고리즘입니다.
 
 [입력 예시]
@@ -12,7 +13,11 @@
 [출력 예시]
 1                   <- (두 노드 u, v의 최소 공통 조상 노드 번호)
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
 using namespace std;
 
 const int LOG = 17;

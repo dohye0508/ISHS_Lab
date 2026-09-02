@@ -1,5 +1,6 @@
 /*
 편집 거리 알고리즘 (레벤슈타인 거리, Levenshtein Distance)
+- 백준 난이도: 골드 III
 두 문자열을 최소 편집(삽입, 삭제, 교체) 횟수로 변환하는 수치를 구합니다.
 
 [LCS와의 차이점]
@@ -13,7 +14,12 @@ def   <- (두 번째 문자열)
 [출력 예시]
 3     <- (최소 편집 연산 횟수)
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+
 using namespace std;
 
 int main() {

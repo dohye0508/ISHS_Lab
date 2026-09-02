@@ -1,5 +1,6 @@
 /*
 KMP 문자열 매칭 알고리즘
+- 백준 난이도: 골드 I
 
 [작동 원리]
 긴 본문 문자열 속에서 특정 패턴 문자열을 빠르게 찾는 알고리즘입니다.
@@ -17,7 +18,11 @@ ABCDABD
 1
 16
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+#include <string>
+
 using namespace std;
 
 string strip_str(const string& s) {

@@ -1,5 +1,6 @@
 /*
 분리 집합 / 유니온 파인드 (Disjoint Set / Union-Find)
+- 백준 난이도: 골드 IV
 
 [작동 원리]
 서로 중복되지 않는 부분 집합들을 표현할 때 사용하는 자료구조로, 노드들이 같은 집합에 속해 있는지를 확인하거나 두 집합을 하나로 합치는 연산을 수행합니다.
@@ -20,7 +21,10 @@
 NO
 YES
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+
 using namespace std;
 
 vector<int> parent;

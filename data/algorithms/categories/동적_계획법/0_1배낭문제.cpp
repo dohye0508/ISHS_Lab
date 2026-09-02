@@ -1,5 +1,6 @@
 /*
 0/1 배낭 문제 (0-1 Knapsack)
+- 백준 난이도: 골드 V
 
 [작동 원리]
 배낭의 용량이 정해져 있을 때, 담을 수 있는 물건들의 가치 합을 최대로 만드는 조합을 찾는 동적 계획법 알고리즘입니다.
@@ -20,7 +21,11 @@ O(N * K) (N: 물품의 수, K: 배낭의 용량)
 [출력 예시]
 14
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
 using namespace std;
 
 int main() {

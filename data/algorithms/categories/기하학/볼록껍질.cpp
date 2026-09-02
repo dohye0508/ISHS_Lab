@@ -1,5 +1,6 @@
 /*
 볼록 껍질 (Convex Hull) - 모노톤 체인(Monotone Chain) 알고리즘
+- 백준 난이도: 플래티넘 V
 주어진 점들을 모두 포함하는 가장 작은 볼록 다각형을 구하는 알고리즘입니다.
 
 [작동 원리]
@@ -22,7 +23,11 @@
 ...
 0 0
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
 using namespace std;
 
 typedef pair<long long, long long> pll;

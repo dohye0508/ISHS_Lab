@@ -1,5 +1,5 @@
 <?php
-// Root index - ISHS LAB
+// Modules launcher - ISHS LAB
 $year = date('Y');
 ?><!DOCTYPE html>
 <html lang="ko">
@@ -7,19 +7,16 @@ $year = date('Y');
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ISHS LAB</title>
-<meta name="description" content="인천과학고등학교 32기 자기주도 학습 플랫폼. 적분, 고급수학, 어휘, 알고리즘까지 한 곳에서.">
+<title>모듈 &middot; ISHS LAB</title>
+<meta name="description" content="ISHS LAB의 학습 모듈을 한눈에 둘러보고 바로 시작하세요.">
 <meta name="theme-color" content="#FFFFFF">
 <link rel="icon" type="image/jpeg" href="assets/images/inticon.jpg">
-<meta property="og:title" content="ISHS LAB">
-<meta property="og:description" content="자기주도 학습을 위한 실험 공간.">
+<meta property="og:title" content="모듈 · ISHS LAB">
+<meta property="og:description" content="원하는 과목을 골라 바로 시작하세요.">
 <meta property="og:image" content="assets/images/int.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
 <script>
     (function () {
         var theme = localStorage.getItem('theme') || 'light';
@@ -29,7 +26,7 @@ $year = date('Y');
 </script>
 <style>
 /* ───────────────────────────────────────────────
-   ISHS LAB — 화이트 톤 + 핑크·블루·민트 메시 그라데이션
+   ISHS LAB — 모듈 (화이트 톤 + 핑크·블루·민트 메시 그라데이션)
    ─────────────────────────────────────────────── */
 
 *,*::before,*::after{box-sizing:border-box}
@@ -54,7 +51,6 @@ $year = date('Y');
     --accent-soft:rgba(219,76,140,.11);
 
     --sans:'Pretendard',system-ui,-apple-system,'Apple SD Gothic Neo',sans-serif;
-    --pen:'Nanum Pen Script',cursive;
 
     --wrap:1180px;
 }
@@ -95,7 +91,7 @@ body{
     transition:background-color .25s ease,color .25s ease;
 }
 
-body,p,li,h1,h2,h3,h4,dt,dd,figcaption{word-break:keep-all;overflow-wrap:break-word}
+body,p,li,h1,h2,h3,h4,dt,dd{word-break:keep-all;overflow-wrap:break-word}
 h1,h2,h3,h4{margin:0;font-weight:700;letter-spacing:-.022em;line-height:1.28}
 p{margin:0 0 1.05em}
 p:last-child{margin-bottom:0}
@@ -105,30 +101,14 @@ a{color:var(--ink)}
 button{font-family:inherit}
 
 .wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
-.sec{padding:clamp(48px,5.4vw,68px) 0}
-.rule-top{border-top:1px solid var(--rule)}
+.sec{padding:clamp(40px,5vw,60px) 0 clamp(60px,6vw,84px)}
 
 /* ── 타입 유틸 ─────────────────────────────── */
 .label{
     font:600 13px/1.5 var(--sans);
     letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);
 }
-.label--dark{color:var(--ink-3)}
-.lead{font-size:19px;line-height:1.62;color:var(--ink-2)}
-.nb{display:inline-block}
 .h2{font-size:clamp(28px,3.6vw,42px);line-height:1.22}
-.h3{font-size:clamp(21px,2.5vw,25px);line-height:1.28}
-
-.note{
-    font:400 30px/1.35 var(--pen);
-    color:var(--ink-3);
-    display:flex;align-items:flex-start;gap:10px;
-    margin-top:14px;
-}
-.arw{flex:0 0 auto;width:48px;height:30px;margin-top:4px;transform:translateY(-2px)}
-
-.ul{position:relative;display:inline-block;white-space:nowrap}
-.ul svg{position:absolute;left:-1%;width:102%;height:.2em;bottom:-.2em;color:var(--ink);overflow:visible}
 
 /* ── 헤더 ──────────────────────────────────── */
 .masthead{
@@ -174,9 +154,6 @@ button{font-family:inherit}
 }
 .btn--fill{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 .btn--fill:hover{box-shadow:0 8px 22px -6px rgba(96,165,250,.45),0 8px 22px -10px rgba(244,114,182,.4);transform:translateY(-1px)}
-.btn--line{background:transparent;color:var(--ink)}
-.btn--line:hover{background:var(--paper-2);border-color:var(--ink)}
-.btn--sm{min-height:40px;padding:8px 16px;font-size:13.5px}
 
 .nav-btn{
     min-height:40px;padding:8px 18px;
@@ -210,98 +187,65 @@ button{font-family:inherit}
 html:not([data-theme="dark"]) .sun-icon{display:block!important}
 html[data-theme="dark"] .moon-icon{display:block!important}
 
-.cta{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.cta-tip{margin-top:26px !important;font:400 14px/1.5 var(--sans);color:var(--ink-3)}
-
-/* ── 히어로 ────────────────────────────────── */
-.hero{
-    padding:clamp(40px,4.8vw,58px) 0 clamp(44px,5vw,60px);
-}
-.hero-grid{display:grid;grid-template-columns:minmax(0,.98fr) minmax(0,1.1fr);gap:clamp(28px,3.4vw,42px);align-items:center}
-.hero h1{
-    font-size:clamp(42px,6.6vw,68px);
-    line-height:1.12;font-weight:800;letter-spacing:-.035em;
-    margin:0 0 18px;
-}
-.hero .lead{max-width:38ch;margin-bottom:0}
-.hero-actions{margin-top:26px;display:flex;flex-wrap:wrap;align-items:center;gap:12px}
-
-/* ── 앱 목업 (실 스크린샷 대신, 카드 위에 그린 화면) ── */
-.figure{margin:0}
-.frame{
-    background:var(--patch);
-    border:1px solid var(--rule);
-    padding:0;
-    box-shadow:0 30px 60px -24px rgba(96,165,250,.22),0 18px 34px -20px rgba(244,114,182,.18);
-    position:relative;border-radius:20px;overflow:hidden;
-}
-
-.app-mock__body{padding:clamp(24px,3.4vw,36px)}
-.app-mock__row{display:flex;gap:8px;margin-bottom:22px}
-.pill{
-    font:600 12.5px/1 var(--sans);letter-spacing:.01em;
-    padding:6px 12px;border-radius:99px;border:1px solid var(--rule-2);color:var(--ink-2);
-}
-.pill--accent{color:var(--accent);border-color:transparent;background:var(--pink-soft)}
-.app-mock__eq{
-    min-height:64px;display:flex;align-items:center;
-    font-size:clamp(19px,2.6vw,25px);color:var(--ink);
-    margin-bottom:22px;overflow-x:auto;
-}
-.app-mock__eq .katex{color:inherit}
-.app-mock__input{
-    display:flex;align-items:center;
-    border:1.5px solid var(--rule-2);border-radius:12px;
-    padding:14px 16px;margin-bottom:18px;background:var(--paper-2);
-}
-.caret{width:2px;height:20px;background:var(--blue);animation:blink-caret 1.1s step-end infinite}
-@keyframes blink-caret{0%,100%{opacity:1}50%{opacity:0}}
-.app-mock__actions{display:flex;gap:10px}
-.app-mock__actions .btn{pointer-events:none}
-
 /* ── 섹션 헤더 ─────────────────────────────── */
 .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:clamp(20px,2.6vw,30px);flex-wrap:wrap}
 .sec-head .h2{flex:1 1 auto;min-width:0}
 
-/* ── 기능 행 (specimen 포함) ───────────────── */
-.rows{display:flex;flex-direction:column;gap:clamp(34px,4vw,46px)}
-.row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.92fr);gap:clamp(24px,3.2vw,40px);align-items:center}
-.row--flip .row__media{order:-1}
-.row__num{font:700 13px/1 var(--sans);letter-spacing:.1em;color:var(--ink-3);margin-bottom:10px}
-.row h3{margin-bottom:12px}
-.row p{color:var(--ink-2)}
-.row .fact{margin-top:.35em;font-size:14.5px;line-height:1.65;color:var(--ink-3)}
+/* ── 모듈 (실제 런처, 앱스토어 타일) ─────────── */
+.modules-note{color:var(--ink-3);font-size:15px;margin-bottom:clamp(28px,3vw,38px)}
+.mod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px}
 
-.specimen{border:1px solid var(--rule);background:var(--patch);box-shadow:0 24px 50px -30px rgba(96,165,250,.28);border-radius:16px;overflow:hidden}
-.specimen h4{padding:13px 20px;border-bottom:1px solid var(--rule);background:linear-gradient(90deg,var(--pink-soft),var(--blue-soft) 55%,var(--mint-soft));font-size:13.5px;font-family:var(--sans);font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3)}
-.specimen li{display:flex;gap:14px;align-items:baseline;padding:12px 20px;border-bottom:1px solid var(--rule);font-size:15.5px;font-weight:500}
-.specimen li:last-child{border-bottom:0}
-.specimen li span{font:700 13px/1 var(--sans);color:var(--ink-3);flex:0 0 auto;width:24px}
-
-/* ── 이용 안내 (그라데이션 틴트) ─────────────── */
-.ink{
-    background:
-        radial-gradient(ellipse 60% 70% at 12% 15%, var(--pink-soft) 0%, transparent 60%),
-        radial-gradient(ellipse 55% 60% at 88% 12%, var(--blue-soft) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 65% at 45% 100%, var(--mint-soft) 0%, transparent 60%),
-        var(--paper-2);
-    color:var(--ink);
+.mod-card{
+    background:var(--patch);border:1px solid var(--rule);border-radius:24px;
+    padding:26px;cursor:pointer;position:relative;
+    display:flex;flex-direction:column;
+    box-shadow:0 20px 44px -30px rgba(23,24,31,.2);
+    transition:transform .22s cubic-bezier(.2,1,.3,1),box-shadow .22s ease,border-color .22s ease;
 }
-.ink h2,.ink h3{color:var(--ink)}
-.ink p{color:var(--ink-2)}
-.steps{display:flex;flex-direction:column;gap:clamp(28px,3.4vw,40px)}
-.step__text{max-width:58ch}
-.step__n{
-    font:700 14px/1 var(--sans);letter-spacing:.16em;
-    color:var(--ink-3);border-top:1px solid var(--rule-2);
-    padding-top:10px;margin-bottom:14px;display:block;
+.mod-card:hover,.mod-card:focus-visible{
+    transform:translateY(-5px);
+    border-color:var(--rule-2);
+    box-shadow:0 28px 56px -22px rgba(96,165,250,.32),0 20px 40px -24px rgba(244,114,182,.26);
 }
+.mod-card:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.mod-card__head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:18px}
+.mod-icon{
+    width:56px;height:56px;flex:0 0 auto;
+    border-radius:18px;
+    display:flex;align-items:center;justify-content:center;
+    font:700 24px/1 var(--sans);color:#fff;
+    transition:transform .22s cubic-bezier(.2,1,.3,1);
+}
+.mod-card:hover .mod-icon{transform:scale(1.06) rotate(-3deg)}
+.mod-icon--pb{background:linear-gradient(135deg,var(--pink),var(--blue));box-shadow:0 12px 22px -10px rgba(244,114,182,.55)}
+.mod-icon--bm{background:linear-gradient(135deg,var(--blue),var(--mint));box-shadow:0 12px 22px -10px rgba(96,165,250,.5)}
+.mod-icon--pm{background:linear-gradient(135deg,var(--pink),var(--mint));box-shadow:0 12px 22px -10px rgba(94,234,212,.5)}
+.mod-icon--soon{background:var(--rule);color:var(--ink-3);box-shadow:none}
+.mod-name{font-size:18.5px;margin-bottom:8px}
+.mod-desc{font-size:14px;line-height:1.6;color:var(--ink-3);margin-bottom:18px}
+.mod-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;margin-bottom:16px}
+.mod-chip{
+    font:600 11.5px/1 var(--sans);letter-spacing:.01em;
+    padding:5px 10px;border-radius:99px;background:var(--paper-2);color:var(--ink-3);border:1px solid var(--rule);
+}
+.mod-cta{
+    display:flex;align-items:center;gap:6px;
+    padding-top:16px;border-top:1px solid var(--rule);
+    font:700 14.5px/1 var(--sans);color:var(--ink);
+}
+.mod-arr{margin-left:auto;font-size:16px;color:var(--ink-3);transition:transform .18s ease,color .18s ease}
+.mod-card:hover .mod-arr{transform:translate(4px,-4px);color:var(--blue)}
+.mod-badge{
+    font:700 10.5px/1 var(--sans);letter-spacing:.03em;
+    padding:5px 9px;border-radius:99px;flex:0 0 auto;
+}
+.mod-badge--new{background:var(--accent-soft);color:var(--accent)}
+.mod-badge--soon{background:var(--rule);color:var(--ink-3)}
 
-/* ── 시작하기 ──────────────────────────────── */
-.dl{text-align:center}
-.dl .h2{margin-bottom:14px}
-.dl p{margin:0 auto 26px;color:var(--ink-2);white-space:nowrap}
-.dl .cta{justify-content:center}
+.mod-card--soon{cursor:default;opacity:.72}
+.mod-card--soon:hover{transform:none;border-color:var(--rule);box-shadow:0 20px 44px -30px rgba(23,24,31,.2)}
+.mod-card--soon:hover .mod-icon{transform:none}
+.mod-card--soon .mod-cta{color:var(--ink-3)}
 
 /* ── 푸터 ──────────────────────────────────── */
 .foot{border-top:1px solid var(--rule);padding:7px 0 9px}
@@ -367,34 +311,20 @@ html.js .rv-drop{
     transition-delay:calc(var(--i,0)*55ms);
 }
 html.js .rv-drop.is-in{opacity:1;transform:none}
-html.js .rv-fig{opacity:0;transition:opacity .45s ease}
-html.js .rv-fig.is-in{opacity:1}
-html.js .rv-fig .frame{
-    transform:translateY(34px) scale(.95);
-    transition:transform .72s cubic-bezier(.3,1.42,.46,1);
-}
-html.js .rv-fig.is-in .frame{transform:translateY(0) scale(1)}
 
 /* ── 반응형 ────────────────────────────────── */
-@media (max-width:960px){
-    .hero-grid,.row{grid-template-columns:minmax(0,1fr)}
-    .row--flip .row__media{order:0}
-    .hero .lead{max-width:none}
-}
 @media (max-width:640px){
     body{font-size:16px}
     .nav-left a{display:none}
     .brand{font-size:22px}
-    .dl p,.colophon{white-space:normal}
-    .note{font-size:23px}
-    .lead{font-size:16.5px}
+    .colophon{white-space:normal}
     .dday-pill{display:none}
     .foot nav{margin-left:0;width:100%}
 }
 @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto}
     *{transition-duration:.001ms!important;animation-duration:.001ms!important}
-    html.js .rv,html.js .rv-fig,html.js .rv-drop{opacity:1;transform:none}
+    html.js .rv,html.js .rv-drop{opacity:1;transform:none}
 }
 </style>
 </head>
@@ -403,11 +333,11 @@ html.js .rv-fig.is-in .frame{transform:translateY(0) scale(1)}
 
 <header class="masthead">
     <div class="wrap">
-        <a class="brand" href="#top">ISHS<span class="brand-sub">LAB</span></a>
+        <a class="brand" href="index.php">ISHS<span class="brand-sub">LAB</span></a>
         <nav class="nav-left">
-            <a href="#features">기능</a>
+            <a href="index.php#features">기능</a>
             <a href="modules.php">모듈</a>
-            <a href="#guide">이용 안내</a>
+            <a href="index.php#guide">이용 안내</a>
             <span id="dday-counter" class="dday-pill"></span>
         </nav>
         <div class="nav-right">
@@ -438,148 +368,88 @@ html.js .rv-fig.is-in .frame{transform:translateY(0) scale(1)}
     </div>
 </header>
 
-<main id="top">
+<main>
 
-    <!-- ─────────── 히어로 ─────────── -->
-    <section class="hero">
-        <div class="wrap hero-grid">
-            <div>
-                <h1>복습이 귀찮다면,<br><span class="ul">ISHS LAB<svg viewBox="0 0 200 10" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="ulGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#F472B6"/><stop offset="55%" stop-color="#60A5FA"/><stop offset="100%" stop-color="#5EEAD4"/></linearGradient></defs><path d="M2 7.2C33 3.4 66 2.3 100 3.6c31 1.2 63 3.4 98 1.1" fill="none" stroke="url(#ulGrad)" stroke-width="3" stroke-linecap="round"/></svg></span></h1>
-                <p class="lead"><span class="nb">적분부터 알고리즘, 단어까지 —</span> <span class="nb">채점과 피드백을 대신 해주는 자기주도 학습 공간</span></p>
-                <div class="hero-actions">
-                    <a class="btn btn--fill" href="modules.php">모듈 둘러보기</a>
-                    <button class="btn btn--line" onclick="openAuthModal()">로그인 · 가입</button>
-                </div>
-                <p class="note"><svg class="arw" viewBox="0 0 40 24" aria-hidden="true"><path d="M2 4c10 12 20 15 34 14M27 12l9 6-8 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>문제마다 새로 생성되고, 제출 즉시 채점까지 끝나요</span></p>
-            </div>
-
-            <figure class="figure rv-fig">
-                <div class="frame" aria-hidden="true">
-                    <div class="app-mock__body">
-                        <div class="app-mock__row">
-                            <span class="pill pill--accent">LV.4</span>
-                            <span class="pill">15 / 20</span>
-                        </div>
-                        <div class="app-mock__eq" id="heroEq"></div>
-                        <div class="app-mock__input"><span class="caret"></span></div>
-                        <div class="app-mock__actions">
-                            <span class="btn btn--fill btn--sm">채점하기</span>
-                            <span class="btn btn--line btn--sm">다음 문제</span>
-                        </div>
-                    </div>
-                </div>
-                <figcaption class="note"><span>정답까지 과정도 같이 확인해요</span></figcaption>
-            </figure>
-        </div>
-    </section>
-
-    <!-- ─────────── 기능 ─────────── -->
-    <section class="sec" id="features">
+    <!-- ─────────── 모듈 (실제 런처) ─────────── -->
+    <section class="sec" id="modules">
         <div class="wrap">
             <div class="sec-head">
-                <p class="label">기능</p>
-                <h2 class="h2">혼자 풀어도 확인까지 다 해줘요</h2>
+                <p class="label">모듈</p>
+                <h2 class="h2">원하는 과목을 골라 시작하세요</h2>
             </div>
+            <p class="modules-note">로그인하면 바로 시작할 수 있어요.</p>
 
-            <div class="rows">
-                <article class="row">
-                    <div>
-                        <p class="row__num">01</p>
-                        <h3 class="h3">문제는 무한, 피드백은 즉시</h3>
-                        <p>부정적분부터 고급수학까지, 풀 때마다 새로운 문제가 생성되고 제출 즉시 채점돼요. 정답이 아니어도 어디서 틀렸는지 확인할 수 있어요.</p>
-                        <p class="fact">SymPy 기반 수식 동치 검증 &middot; 자동 난이도 조절</p>
+            <div class="mod-grid">
+                <article class="mod-card rv-drop" tabindex="0" role="button" onclick="enterModule('integral.php')">
+                    <div class="mod-card__head">
+                        <span class="mod-icon mod-icon--pb">&int;</span>
                     </div>
-                    <div class="specimen row__media">
-                        <h4>문제 유형</h4>
-                        <ul>
-                            <li><span>01</span>부정적분</li>
-                            <li><span>02</span>쌍곡선함수&middot;역함수 미적분</li>
-                            <li><span>03</span>행렬과 연립일차방정식</li>
-                        </ul>
+                    <h4 class="mod-name">Integral Studio</h4>
+                    <p class="mod-desc">컬렉션 기반 실전 부정적분 트레이닝. 무한 생성 문제와 즉각 피드백으로 실력을 극대화하세요.</p>
+                    <div class="mod-chips">
+                        <span class="mod-chip">무한 생성</span>
+                        <span class="mod-chip">즉시 채점</span>
                     </div>
+                    <div class="mod-cta">시작하기<span class="mod-arr">&rarr;</span></div>
                 </article>
 
-                <article class="row row--flip">
-                    <div>
-                        <p class="row__num">02</p>
-                        <h3 class="h3">학번 인증으로, 우리 학교 학생만</h3>
-                        <p>리로스쿨 계정으로 딱 한 번 본인 확인을 거치면 닉네임으로 활동할 수 있어요. 리로스쿨 비밀번호는 인증에만 쓰이고 서버에 저장되지 않아요.</p>
+                <article class="mod-card rv-drop" tabindex="0" role="button" onclick="enterModule('adv_math.php')">
+                    <div class="mod-card__head">
+                        <span class="mod-icon mod-icon--bm">&Sigma;</span>
+                        <span class="mod-badge mod-badge--new">NEW</span>
                     </div>
-                    <div class="specimen row__media">
-                        <h4>가입 절차</h4>
-                        <ul>
-                            <li><span>01</span>리로스쿨 계정으로 학번 확인</li>
-                            <li><span>02</span>닉네임&middot;비밀번호 설정</li>
-                            <li><span>03</span>바로 이용 시작</li>
-                        </ul>
+                    <h4 class="mod-name">Advanced Math Studio</h4>
+                    <p class="mod-desc">쌍곡선함수&middot;역함수 미적분부터 행렬과 연립일차방정식까지, 고급수학 심화 트레이닝.</p>
+                    <div class="mod-chips">
+                        <span class="mod-chip">쌍곡선함수</span>
+                        <span class="mod-chip">행렬</span>
                     </div>
+                    <div class="mod-cta">시작하기<span class="mod-arr">&rarr;</span></div>
                 </article>
-            </div>
-        </div>
-    </section>
 
-    <!-- ─────────── 이용 안내 (잉크 반전) ─────────── -->
-    <section class="sec ink" id="guide">
-        <div class="wrap">
-            <div class="sec-head">
-                <p class="label label--dark">이용 안내</p>
-                <h2 class="h2">가입부터 학습까지, 3단계면 충분해요</h2>
-            </div>
+                <article class="mod-card rv-drop" tabindex="0" role="button" onclick="enterModule('vocabulary.php')">
+                    <div class="mod-card__head">
+                        <span class="mod-icon mod-icon--pm">Aa</span>
+                    </div>
+                    <h4 class="mod-name">Vocabulary Studio</h4>
+                    <p class="mod-desc">나만의 단어장 관리 &amp; 플래시카드 테스트로 영어 어휘를 체계적으로 암기하세요.</p>
+                    <div class="mod-chips">
+                        <span class="mod-chip">플래시카드</span>
+                        <span class="mod-chip">나만의 단어장</span>
+                    </div>
+                    <div class="mod-cta">시작하기<span class="mod-arr">&rarr;</span></div>
+                </article>
 
-            <div class="steps">
-                <article class="step rv">
-                    <span class="step__n">STEP 01</span>
-                    <div class="step__text">
-                        <h3 class="h3">리로스쿨 계정으로 학번 인증</h3>
-                        <p>가입할 때 한 번, 리로스쿨 아이디와 비밀번호로 본인을 확인해요. 비밀번호는 인증에만 쓰이고 저장되지 않아요.</p>
+                <article class="mod-card rv-drop" tabindex="0" role="button" onclick="enterModule('coding_test.php')">
+                    <div class="mod-card__head">
+                        <span class="mod-icon mod-icon--bm">&lt;/&gt;</span>
                     </div>
-                </article>
-                <article class="step rv">
-                    <span class="step__n">STEP 02</span>
-                    <div class="step__text">
-                        <h3 class="h3">닉네임과 비밀번호로 로그인</h3>
-                        <p>인증이 끝나면 그다음부터는 직접 정한 닉네임과 비밀번호로 로그인해요.</p>
+                    <h4 class="mod-name">Coding Test</h4>
+                    <p class="mod-desc">파이썬 알고리즘 템플릿 &amp; 예제 모음. 코딩 테스트 핵심 로직을 한눈에 확인하세요.</p>
+                    <div class="mod-chips">
+                        <span class="mod-chip">14+ 카테고리</span>
+                        <span class="mod-chip">표준 코드</span>
                     </div>
-                </article>
-                <article class="step rv">
-                    <span class="step__n">STEP 03</span>
-                    <div class="step__text">
-                        <h3 class="h3">모듈을 골라 바로 시작</h3>
-                        <p>원하는 스튜디오에 들어가면 바로 문제 풀이가 시작돼요.</p>
-                    </div>
+                    <div class="mod-cta">시작하기<span class="mod-arr">&rarr;</span></div>
                 </article>
             </div>
         </div>
     </section>
 
-    <!-- ─────────── 시작하기 ─────────── -->
-    <section class="sec rule-top dl" id="start">
-        <div class="wrap">
-            <p class="label">시작하기</p>
-            <h2 class="h2">지금, 학번 인증 한 번으로 시작하세요</h2>
-            <p>가입은 1분이면 충분해요. 로그인하면 모든 모듈을 바로 이용할 수 있어요.</p>
-            <div class="cta">
-                <button class="btn btn--fill" onclick="openAuthModal()">로그인 · 가입</button>
-                <a class="btn btn--line" href="modules.php">모듈 둘러보기</a>
-            </div>
-            <p class="cta-tip" id="dday-tip"></p>
-        </div>
-    </section>
+</main>
 
 <footer class="foot">
     <div class="wrap">
-        <a class="brand" href="#top">ISHS<span class="brand-sub">LAB</span></a>
+        <a class="brand" href="index.php">ISHS<span class="brand-sub">LAB</span></a>
         <p class="colophon">&copy; <?= $year ?> ISHS 32nd — Developed by Dohye Lee. All rights reserved.</p>
         <nav>
-            <a href="#features">기능</a>
+            <a href="index.php#features">기능</a>
             <a href="modules.php">모듈</a>
-            <a href="#guide">이용 안내</a>
+            <a href="index.php#guide">이용 안내</a>
             <a onclick="openAuthModal()">로그인 · 가입</a>
         </nav>
     </div>
 </footer>
-
-</main>
 
 <!-- Auth Modal -->
 <div id="auth-modal" class="modal-overlay" onclick="closeAuthModal()">
@@ -690,20 +560,8 @@ html.js .rv-fig.is-in .frame{transform:translateY(0) scale(1)}
             const label = diff === 0 ? '중간고사까지 D-Day' : '중간고사까지 D-' + diff;
             const pill = document.getElementById('dday-counter');
             if (pill) pill.innerText = label;
-            const tip = document.getElementById('dday-tip');
-            if (tip) tip.innerText = label + (diff > 0 ? ' — 모듈로 미리 준비해두세요' : '');
         };
         updateDday();
-
-        const eqEl = document.getElementById('heroEq');
-        if (eqEl) {
-            const tex = '\\displaystyle\\int e^{x}\\sin x \\; dx';
-            if (window.katex) {
-                katex.render(tex, eqEl, { throwOnError: false, displayMode: true });
-            } else {
-                eqEl.textContent = '∫ eˣ sin x dx';
-            }
-        }
     });
     document.getElementById('theme-toggle').addEventListener('click', () => {
         const cur = document.documentElement.getAttribute('data-theme');
@@ -724,12 +582,10 @@ html.js .rv-fig.is-in .frame{transform:translateY(0) scale(1)}
         if(i)el.style.setProperty('--i',i);
         items.push(el);
     }
-    q('.hero-grid>div, .sec-head, .row>div:not(.row__media), .step, #start .wrap')
-        .forEach(function(scope){
-            Array.prototype.slice.call(scope.children).forEach(function(el,i){mark(el,'rv',i);});
-        });
-    q('main .figure').forEach(function(el){mark(el,'rv-fig',0);});
-    q('main .specimen').forEach(function(el,i){mark(el,'rv-drop',i%4);});
+    q('.sec-head').forEach(function(scope){
+        Array.prototype.slice.call(scope.children).forEach(function(el,i){mark(el,'rv',i);});
+    });
+    q('main .mod-card').forEach(function(el,i){mark(el,'rv-drop',i%4);});
 
     var io=new IntersectionObserver(function(entries){
         for(var i=0;i<entries.length;i++){

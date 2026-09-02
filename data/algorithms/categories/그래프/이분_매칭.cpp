@@ -1,5 +1,6 @@
 /*
 [문제 제목]: 이분 매칭 (Bipartite Matching)
+- 백준 난이도: 플래티넘 IV
 - 문제 설명: 두 개의 그룹으로 나누어진 정점들 사이에서, 각 정점이 최대 하나의 간선에만 포함되도록 정점 쌍을 선택하는 최대 매칭을 구합니다. DFS를 이용한 증가 경로 찾기 방식으로 구현합니다.
 - 시간 복잡도: O(V * E)
 
@@ -14,7 +15,11 @@
 [출력 예시]
 4
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
 using namespace std;
 
 int n, m;

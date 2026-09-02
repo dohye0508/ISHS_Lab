@@ -1,5 +1,6 @@
 /*
 최장 공통 부분 수열 (LCS, Longest Common Subsequence)
+- 백준 난이도: 골드 V
 두 수열(또는 문자열)이 주어졌을 때, 두 수열의 길이가 가장 긴 부분 수열(흩어져 있어도 순서가 맞으면 됨)을 찾는 알고리즘.
 두 데이터의 유사도를 판별하거나 DNA 염기서열 비교 등에 사용.
 
@@ -10,7 +11,12 @@ CAPCAK
 [출력 예시]
 4
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+
 using namespace std;
 
 int main() {

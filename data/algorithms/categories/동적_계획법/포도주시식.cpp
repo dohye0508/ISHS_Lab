@@ -1,5 +1,6 @@
 /*
 포도주 시식 (Wine Tasting)
+- 백준 난이도: 실버 I
 
 [작동 원리]
 포도주 잔이 일렬로 놓여 있을 때, 연속으로 3잔을 마시지 않으면서 가장 많은 양의 포도주를 마시는 문제입니다.
@@ -25,7 +26,11 @@ O(N) (N은 포도주 잔의 개수)
 [출력 예시]
 33
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
 using namespace std;
 
 int main() {

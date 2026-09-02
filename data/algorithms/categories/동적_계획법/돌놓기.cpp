@@ -1,5 +1,6 @@
 /*
 돌 놓기 (Pebble Placing)
+- 백준 난이도: 골드 V
 
 [작동 원리]
 3 x N 크기의 테이블에 돌을 놓는 문제입니다. 단, 가로나 세로로 인접한 두 칸에는 동시에 돌을 놓을 수 없습니다.
@@ -24,7 +25,12 @@
 [출력 예시]
 28
 */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <climits>
+
 using namespace std;
 
 int N;
