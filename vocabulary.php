@@ -16,8 +16,10 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vocabulary Studio</title>
-    <link rel="icon" type="image/jpeg" href="assets/images/inticon.jpg">
-    <meta property="og:image" content="assets/images/int.jpg">
+    <link rel="icon" type="image/jpeg" href="assets/images/vocabicon.jpg">
+    <meta property="og:title" content="Vocabulary Studio">
+    <meta property="og:description" content="나만의 단어장 관리 & 플래시카드 테스트로 영어 어휘를 체계적으로 암기하세요.">
+    <meta property="og:image" content="assets/images/vocab.jpg">
     <link rel="stylesheet" href="assets/css/style.css?v=lab_final_v6">
     <script>
         window.userRole = '<?php echo $_SESSION['role'] ?? 'user'; ?>';

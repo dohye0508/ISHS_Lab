@@ -17,6 +17,10 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Algorithm Coding Test Viewer</title>
+    <link rel="icon" type="image/jpeg" href="assets/images/codingtesticon.jpg">
+    <meta property="og:title" content="Coding Test">
+    <meta property="og:description" content="파이썬 & C++ 알고리즘 템플릿 모음. 코딩 테스트 핵심 로직을 한눈에 확인하세요.">
+    <meta property="og:image" content="assets/images/codingtest.jpg">
     <!-- Google Fonts -->
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
@@ -814,6 +818,11 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                 let currentSection = 'desc';
 
                 title = lines[0].trim();
+                if (title.startsWith('[문제 제목]:')) {
+                    title = title.substring('[문제 제목]:'.length).trim();
+                } else if (title.startsWith('문제 제목:')) {
+                    title = title.substring('문제 제목:'.length).trim();
+                }
 
                 for (let i = 1; i < lines.length; i++) {
                     const l = lines[i].trim();
@@ -836,8 +845,31 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                         .replace(/>/g, '&gt;');
                 }
 
-                docTitle.textContent = title;
-                docDesc.textContent = desc.trim();
+                // Extract Baekjoon difficulty if present in desc
+                let difficulty = "";
+                let cleanDesc = desc;
+                const diffRegex = /[-*]?\s*백준\s*난이도\s*:\s*([^\n]+)/;
+                const diffMatch = desc.match(diffRegex);
+                if (diffMatch) {
+                    difficulty = diffMatch[1].trim();
+                    cleanDesc = desc.replace(diffRegex, '').trim();
+                } else {
+                    cleanDesc = desc.trim();
+                }
+
+                docTitle.innerHTML = esc(title);
+                if (difficulty) {
+                    let color = '#7f8c8d'; // Default gray
+                    if (difficulty.includes('브론즈')) color = '#ad5600';
+                    else if (difficulty.includes('실버')) color = '#435f7a';
+                    else if (difficulty.includes('골드')) color = '#ec9a00';
+                    else if (difficulty.includes('플래')) color = '#27e2a4';
+                    else if (difficulty.includes('다이아')) color = '#00b4fc';
+                    else if (difficulty.includes('루비')) color = '#ff0062';
+                    
+                    docTitle.innerHTML += ` <span style="display: inline-block; font-size: 0.8rem; padding: 2px 8px; border-radius: 4px; background-color: ${color}; color: #fff; margin-left: 8px; vertical-align: middle; font-weight: 600; text-transform: uppercase;">${esc(difficulty)}</span>`;
+                }
+                docDesc.textContent = cleanDesc;
 
                 inExample = inExample.trim();
                 outExample = outExample.trim();

@@ -18,7 +18,9 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Indefinite Integral Studio</title>
     <link rel="icon" type="image/jpeg" href="assets/images/inticon.jpg">
-    <!-- ... (meta tags omitted for brevity if unchanged) ... -->
+    <meta property="og:title" content="Indefinite Integral Studio">
+    <meta property="og:description" content="부정적분 트레이닝 모듈. 무한 생성 문제와 즉각 피드백으로 실력을 극대화하세요.">
+    <meta property="og:image" content="assets/images/int.jpg">
 
     <link rel="stylesheet" href="assets/css/style.css?v=lab_final_v6">
     <script src="https://unpkg.com/mathlive"></script>

@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compiler Studio</title>
-    <link rel="icon" type="image/jpeg" href="../assets/images/inticon.jpg">
-    <meta property="og:image" content="../assets/images/int.jpg">
-    <link rel="stylesheet" href="../assets/css/style.css?v=lab_final_v6">
+    <link rel="icon" type="image/jpeg" href="assets/images/compilericon.jpg">
+    <meta property="og:title" content="Compiler Studio">
+    <meta property="og:description" content="브라우저에서 바로 실행하는 C/C++ 컴파일 플랫폼. 곧 만나보실 수 있습니다.">
+    <meta property="og:image" content="assets/images/compiler.jpg">
+    <link rel="stylesheet" href="assets/css/style.css?v=lab_final_v6">
 
     <style>
         /* (Style overrides kept same) */
@@ -63,7 +65,7 @@
 </head>
 <body>
     <!-- Go Home Button (Back Arrow) -->
-    <a href="../index.php" class="home-btn-global" aria-label="Go Home">
+    <a href="index.php" class="home-btn-global" aria-label="Go Home">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="19" y1="12" x2="5" y2="12"></line>
             <polyline points="12 19 5 12 12 5"></polyline>

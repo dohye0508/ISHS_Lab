@@ -17,8 +17,10 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advanced Math Studio</title>
-    <link rel="icon" type="image/jpeg" href="assets/images/inticon.jpg">
-    <!-- ... (meta tags omitted for brevity if unchanged) ... -->
+    <link rel="icon" type="image/jpeg" href="assets/images/advmathicon.jpg">
+    <meta property="og:title" content="Advanced Math Studio">
+    <meta property="og:description" content="쌍곡선함수·역함수 미적분부터 행렬과 연립일차방정식까지, 고급수학 심화 트레이닝.">
+    <meta property="og:image" content="assets/images/advmath.jpg">
 
     <link rel="stylesheet" href="assets/css/style.css?v=lab_final_v6">
     <script src="https://unpkg.com/mathlive"></script>
