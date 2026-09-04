@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    header("Location: modules.php?msg=login_required");
+    header("Location: auth.php?msg=login_required&redirect=coding_test.php");
     exit();
 }
 // Banned users see a blank page

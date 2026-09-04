@@ -276,109 +276,6 @@ html[data-theme="dark"] .moon-icon{display:block!important}
     white-space:nowrap;
 }
 
-/* ── 인증 모달 ─────────────────────────────── */
-.modal-overlay{
-    display:none;position:fixed;inset:0;z-index:999999;
-    background:rgba(23,24,31,.5);backdrop-filter:blur(6px);
-    align-items:center;justify-content:center;padding:20px;
-}
-.modal-overlay.is-open{display:flex}
-.modal-panel{
-    width:100%;max-width:840px;max-height:calc(100vh - 40px);background:var(--patch);
-    border:1px solid var(--rule);border-radius:26px;overflow:hidden;
-    box-shadow:0 40px 80px -28px rgba(96,165,250,.32),0 24px 48px -24px rgba(244,114,182,.24);
-    display:flex;align-items:stretch;
-    animation:modal-pop .38s cubic-bezier(.3,1.42,.46,1);
-}
-@keyframes modal-pop{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
-
-/* Left hero: fixed dark "brand moment" panel, independent of site light/dark theme,
-   reusing the same pink/blue/mint palette as the page's own body mesh gradient. */
-.modal-hero{
-    position:relative;flex:0 0 40%;min-width:0;overflow:hidden;
-    display:flex;flex-direction:column;justify-content:space-between;
-    padding:30px 26px;background:#15161E;
-}
-.modal-hero-bg{
-    position:absolute;inset:-20%;z-index:0;
-    background-image:
-        radial-gradient(ellipse 60% 50% at 20% 15%, rgba(244,114,182,.55) 0%, transparent 72%),
-        radial-gradient(ellipse 55% 48% at 85% 20%, rgba(96,165,250,.5) 0%, transparent 72%),
-        radial-gradient(ellipse 70% 60% at 45% 90%, rgba(94,234,212,.4) 0%, transparent 75%);
-    filter:blur(38px);animation:aurora-drift 14s ease-in-out infinite alternate;
-}
-@keyframes aurora-drift{
-    0%{transform:translate(-3%,-2%) scale(1)}
-    100%{transform:translate(3%,3%) scale(1.08)}
-}
-@media (prefers-reduced-motion:reduce){.modal-hero-bg{animation:none}}
-.modal-hero-brand{
-    position:relative;z-index:1;display:flex;align-items:center;gap:8px;
-    font:700 15px/1 var(--sans);color:#fff;
-}
-.modal-hero-brand .dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--blue))}
-.modal-hero-copy{position:relative;z-index:1;margin-top:auto}
-.modal-hero-copy h3{margin:0 0 8px;font:700 24px/1.25 var(--sans);color:#fff;letter-spacing:-.01em}
-.modal-hero-copy p{margin:0 0 22px;font:400 13.5px/1.55 var(--sans);color:rgba(255,255,255,.62)}
-.modal-steps{position:relative;z-index:1;display:flex;flex-direction:column;gap:8px}
-.modal-step{
-    display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;
-    font:600 13px/1.3 var(--sans);color:rgba(255,255,255,.55);
-    background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);
-    transition:background .3s,color .3s,border-color .3s;
-}
-.modal-step.is-active{background:#fff;color:#15161E;border-color:#fff}
-.modal-step-num{
-    flex:0 0 auto;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-    font:700 11px/1 var(--sans);background:rgba(255,255,255,.14);color:rgba(255,255,255,.75);
-    transition:background .3s,color .3s;
-}
-.modal-step.is-active .modal-step-num{background:#15161E;color:#fff}
-
-/* Right side: the actual form, still theme-aware (light/dark) like the rest of the site */
-.modal-form-side{position:relative;flex:1;min-width:0;padding:30px 30px 26px;overflow-y:auto}
-.modal-tabs{display:flex;align-items:center;gap:18px;border-bottom:1px solid var(--rule);padding-bottom:12px;margin-bottom:20px}
-.modal-tab{
-    background:none;border:none;cursor:pointer;padding:0;
-    font:700 17px/1 var(--sans);color:var(--ink);opacity:.35;transition:opacity .2s;
-}
-.modal-tab.is-active{opacity:1}
-.modal-close{
-    position:absolute;top:18px;right:18px;
-    background:none;border:none;cursor:pointer;
-    font-size:22px;line-height:1;color:var(--ink-3);padding:4px;
-}
-.modal-form{display:flex;flex-direction:column;gap:12px}
-.modal-field{display:flex;flex-direction:column;gap:6px}
-.modal-field label{font:600 12.5px/1 var(--sans);color:var(--ink-2)}
-.modal-input{
-    width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid var(--rule-2);
-    background:var(--paper-2);color:var(--ink);box-sizing:border-box;
-    font:400 14.5px/1.4 var(--sans);transition:border-color .2s,box-shadow .2s;
-}
-.modal-input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-soft)}
-.modal-pw-wrap{position:relative}
-.modal-pw-wrap .modal-input{padding-right:42px}
-.modal-pw-toggle{
-    position:absolute;right:10px;top:50%;transform:translateY(-50%);
-    background:none;border:none;cursor:pointer;padding:4px;display:flex;color:var(--ink-3);
-}
-.modal-pw-toggle:hover{color:var(--ink)}
-.modal-pw-toggle svg{width:18px;height:18px}
-.modal-submit{width:100%;margin-top:6px}
-.modal-warn{
-    background:var(--blue-soft);padding:12px 13px;border-radius:12px;
-    font-size:13px;line-height:1.5;color:#2E6FCC;border-left:3px solid var(--blue);
-}
-[data-theme="dark"] .modal-warn{color:#9CC2FA}
-.modal-divider{height:1px;background:var(--rule);margin:2px 0}
-
-@media (max-width:720px){
-    .modal-hero{display:none}
-    .modal-panel{max-width:420px}
-    .modal-form-side{padding:26px 22px 22px}
-}
-
 /* 등장 애니메이션 */
 html.js .rv{
     opacity:0;transform:translateY(22px);
@@ -426,7 +323,7 @@ html.js .rv-drop.is-in{opacity:1;transform:none}
             <span id="dday-counter" class="dday-pill"></span>
         </nav>
         <div class="nav-right">
-            <button id="btn-login-open" class="nav-btn" onclick="openAuthModal()"><span class="btn-label-full">로그인 · 가입</span><span class="btn-label-short">로그인</span></button>
+            <button id="btn-login-open" class="nav-btn" onclick="location.href='auth.php?redirect=modules.php'"><span class="btn-label-full">로그인 · 가입</span><span class="btn-label-short">로그인</span></button>
             <div id="user-profile" class="user-pill">
                 <span id="user-nickname" class="nickname">-</span>
                 <button onclick="handleLogout()" title="로그아웃">
@@ -531,116 +428,15 @@ html.js .rv-drop.is-in{opacity:1;transform:none}
             <a href="index.php#features">기능</a>
             <a href="modules.php">스튜디오</a>
             <a href="index.php#guide">이용 안내</a>
-            <a onclick="openAuthModal()">로그인 · 가입</a>
+            <a href="auth.php?redirect=modules.php">로그인 · 가입</a>
         </nav>
     </div>
 </footer>
-
-<!-- Auth Modal -->
-<div id="auth-modal" class="modal-overlay" onclick="closeAuthModal()">
-    <div class="modal-panel" onclick="event.stopPropagation()">
-        <div class="modal-hero">
-            <div class="modal-hero-bg" aria-hidden="true"></div>
-            <div class="modal-hero-brand"><span class="dot"></span>ISHS LAB</div>
-            <div class="modal-hero-copy">
-                <h3>함께 성장해요</h3>
-                <p>3단계만 거치면 모든 스튜디오를 자유롭게 이용할 수 있어요.</p>
-                <div class="modal-steps">
-                    <div class="modal-step" id="hero-step-1"><span class="modal-step-num">1</span>리로스쿨 계정으로 학번 인증</div>
-                    <div class="modal-step" id="hero-step-2"><span class="modal-step-num">2</span>닉네임 &amp; 비밀번호 설정</div>
-                    <div class="modal-step" id="hero-step-3"><span class="modal-step-num">3</span>모든 스튜디오 이용 시작</div>
-                </div>
-            </div>
-        </div>
-        <div class="modal-form-side">
-            <button type="button" class="modal-close" onclick="closeAuthModal()" aria-label="닫기">&times;</button>
-            <div class="modal-tabs">
-                <button type="button" id="tab-login" class="modal-tab is-active" onclick="switchTab('login')">로그인</button>
-                <button type="button" id="tab-signup" class="modal-tab" onclick="switchTab('signup')">회원가입</button>
-            </div>
-            <div id="form-login-container">
-                <form onsubmit="event.preventDefault();submitLogin();" class="modal-form">
-                    <div class="modal-field">
-                        <label for="login-nickname">닉네임</label>
-                        <input type="text" id="login-nickname" placeholder="닉네임" required class="modal-input" autocomplete="username">
-                    </div>
-                    <div class="modal-field">
-                        <label for="login-password">비밀번호</label>
-                        <div class="modal-pw-wrap">
-                            <input type="password" id="login-password" placeholder="비밀번호" required class="modal-input" autocomplete="current-password">
-                            <button type="button" class="modal-pw-toggle" onclick="togglePw('login-password', this)" aria-label="비밀번호 표시"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn--fill modal-submit">로그인</button>
-                </form>
-            </div>
-            <div id="form-signup-container" style="display:none;">
-                <form onsubmit="event.preventDefault();submitSignup();" class="modal-form">
-                    <p class="modal-warn">학번 조회를 위해 리로스쿨 계정이 필요합니다. 비밀번호는 인증에만 쓰이고 저장되지 않아요.</p>
-                    <div class="modal-field">
-                        <label for="signup-riro-id">리로스쿨 ID</label>
-                        <input type="text" id="signup-riro-id" placeholder="리로스쿨 ID" required class="modal-input" autocomplete="off" onfocus="setHeroStep(1)">
-                    </div>
-                    <div class="modal-field">
-                        <label for="signup-riro-pw">리로스쿨 PW</label>
-                        <div class="modal-pw-wrap">
-                            <input type="password" id="signup-riro-pw" placeholder="리로스쿨 PW" required class="modal-input" autocomplete="off" onfocus="setHeroStep(1)">
-                            <button type="button" class="modal-pw-toggle" onclick="togglePw('signup-riro-pw', this)" aria-label="비밀번호 표시"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>
-                        </div>
-                    </div>
-                    <div class="modal-divider"></div>
-                    <div class="modal-field">
-                        <label for="signup-nickname">사용할 닉네임</label>
-                        <input type="text" id="signup-nickname" placeholder="사용할 닉네임" required class="modal-input" autocomplete="off" onfocus="setHeroStep(2)">
-                    </div>
-                    <div class="modal-field">
-                        <label for="signup-password">사용할 비밀번호</label>
-                        <div class="modal-pw-wrap">
-                            <input type="password" id="signup-password" placeholder="사용할 비밀번호" required class="modal-input" autocomplete="new-password" onfocus="setHeroStep(2)">
-                            <button type="button" class="modal-pw-toggle" onclick="togglePw('signup-password', this)" aria-label="비밀번호 표시"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn--fill modal-submit">인증 및 가입하기</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
 <script>
     const AUTH_API = 'api/user_system.php';
     let isUserLoggedIn = false;
 
-    function openAuthModal() {
-        document.getElementById('auth-modal').classList.add('is-open');
-        setHeroStep(document.getElementById('tab-login').classList.contains('is-active') ? 3 : 1);
-    }
-    function closeAuthModal() { document.getElementById('auth-modal').classList.remove('is-open'); }
-    function switchTab(tab) {
-        const isLogin = tab === 'login';
-        document.getElementById('tab-login').classList.toggle('is-active', isLogin);
-        document.getElementById('tab-signup').classList.toggle('is-active', !isLogin);
-        document.getElementById('form-login-container').style.display = isLogin ? 'block' : 'none';
-        document.getElementById('form-signup-container').style.display = isLogin ? 'none' : 'block';
-        setHeroStep(isLogin ? 3 : 1);
-    }
-    // Highlights one of the 3 steps in the modal's hero panel -- called when switching
-    // tabs, and again as the signer moves through the signup form's field groups.
-    function setHeroStep(n) {
-        for (let i = 1; i <= 3; i++) {
-            const el = document.getElementById('hero-step-' + i);
-            if (el) el.classList.toggle('is-active', i === n);
-        }
-    }
-    const EYE_OPEN = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"></path><circle cx="12" cy="12" r="3"></circle>';
-    const EYE_OFF = '<path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a20.6 20.6 0 0 1 5.06-6.06M9.9 4.24A10.4 10.4 0 0 1 12 4c7 0 11 8 11 8a20.6 20.6 0 0 1-3.22 4.44M14.12 14.12a3 3 0 1 1-4.24-4.24"></path><path d="M1 1l22 22"></path>';
-    function togglePw(inputId, btn) {
-        const input = document.getElementById(inputId);
-        const showing = input.type === 'text';
-        input.type = showing ? 'password' : 'text';
-        btn.querySelector('svg').innerHTML = showing ? EYE_OPEN : EYE_OFF;
-        btn.setAttribute('aria-label', showing ? '비밀번호 표시' : '비밀번호 숨기기');
-    }
     async function updateAuthUI() {
         try {
             const res = await fetch(AUTH_API + '?action=status');
@@ -659,32 +455,7 @@ html.js .rv-drop.is-in{opacity:1;transform:none}
     }
     function enterModule(url) {
         if (isUserLoggedIn) { location.href = url; }
-        else { alert('이 스튜디오를 이용하려면 로그인이 필요합니다.'); openAuthModal(); }
-    }
-    async function submitLogin() {
-        const nickname = document.getElementById('login-nickname').value;
-        const password = document.getElementById('login-password').value;
-        const res = await fetch(AUTH_API + '?action=login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nickname, password }) });
-        const data = await res.json();
-        if (data.status === 'success') { closeAuthModal(); updateAuthUI(); }
-        else alert(data.message);
-    }
-    async function submitSignup() {
-        const riro_id = document.getElementById('signup-riro-id').value;
-        const riro_pw = document.getElementById('signup-riro-pw').value;
-        const nickname = document.getElementById('signup-nickname').value;
-        const password = document.getElementById('signup-password').value;
-        const btn = document.querySelector('#form-signup-container button');
-        if (btn) { btn.textContent = '인증 중...'; btn.disabled = true; }
-        const res = await fetch(AUTH_API + '?action=signup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ riro_id, riro_pw, nickname, password }) });
-        const data = await res.json();
-        if (btn) { btn.textContent = '인증 및 가입하기'; btn.disabled = false; }
-        if (data.status === 'success') {
-            alert('회원가입 완료! 환영합니다.');
-            const r = await fetch(AUTH_API + '?action=login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nickname, password }) });
-            const d = await r.json();
-            if (d.status === 'success') { closeAuthModal(); updateAuthUI(); }
-        } else alert(data.message);
+        else { location.href = 'auth.php?redirect=' + encodeURIComponent(url); }
     }
     async function handleLogout() {
         await fetch(AUTH_API + '?action=logout', { method: 'POST' });
@@ -694,10 +465,10 @@ html.js .rv-drop.is-in{opacity:1;transform:none}
         updateAuthUI();
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('msg') === 'login_required') {
-            setTimeout(() => { alert('이 서비스를 이용하려면 먼저 로그인해주세요.'); openAuthModal(); }, 500);
+            location.href = 'auth.php?msg=login_required&redirect=modules.php';
         }
         if (window.location.hash === '#signup') {
-            setTimeout(() => { openAuthModal(); switchTab('signup'); }, 300);
+            location.href = 'auth.php?tab=signup&redirect=modules.php';
         }
         const updateDday = () => {
             const today = new Date();
