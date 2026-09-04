@@ -40,6 +40,7 @@ $showLoginRequiredMsg = isset($_GET['msg']) && $_GET['msg'] === 'login_required'
     --rule:#EAEAF1;--rule-2:#DEDFE9;
     --pink:#F472B6;--blue:#60A5FA;--mint:#5EEAD4;
     --blue-soft:rgba(96,165,250,.13);
+    --mesh-a:rgba(244,114,182,.13);--mesh-b:rgba(96,165,250,.11);--mesh-c:rgba(94,234,212,.08);
     --sans:'Pretendard',system-ui,-apple-system,'Apple SD Gothic Neo',sans-serif;
 }
 [data-theme="dark"]{
@@ -47,26 +48,42 @@ $showLoginRequiredMsg = isset($_GET['msg']) && $_GET['msg'] === 'login_required'
     --ink:#F2F2F6;--ink-2:#C3C4D1;--ink-3:#8A8B9B;
     --rule:#2A2C38;--rule-2:#363847;
     --blue-soft:rgba(96,165,250,.14);
+    --mesh-a:rgba(244,114,182,.16);--mesh-b:rgba(96,165,250,.14);--mesh-c:rgba(94,234,212,.10);
 }
 html,body{margin:0;padding:0}
 html{overflow-x:hidden}
 body{
-    background:var(--paper);color:var(--ink);
+    background-color:var(--paper);
+    /* Same mesh-gradient language the rest of the site uses (index.php/modules.php),
+       so the form side reads as part of the same page instead of a flat card bolted
+       onto the dark hero -- both halves now share one continuous background feel. */
+    background-image:
+        radial-gradient(ellipse 60% 55% at 82% 12%, var(--mesh-b) 0%, transparent 72%),
+        radial-gradient(ellipse 70% 62% at 70% 92%, var(--mesh-c) 0%, transparent 75%),
+        radial-gradient(ellipse 55% 50% at 96% 55%, var(--mesh-a) 0%, transparent 72%);
+    background-repeat:no-repeat;background-attachment:fixed;
+    color:var(--ink);
     font:400 16px/1.6 var(--sans);letter-spacing:-.004em;
     -webkit-font-smoothing:antialiased;
     transition:background-color .25s ease,color .25s ease;
 }
 
 .auth-topbar{
-    position:absolute;top:0;left:0;right:0;z-index:5;
-    display:flex;align-items:center;justify-content:space-between;
+    position:absolute;top:0;right:0;z-index:5;
     padding:20px clamp(20px,4vw,40px);
 }
+/* Matches the real site wordmark (.brand in index.php/modules.php) exactly --
+   gradient-filled "ISHS" + muted "LAB" -- placed inside the hero panel (rather than
+   a full-width topbar) so it's guaranteed to sit on the hero's always-dark
+   background instead of risking dark-on-dark in light theme. */
 .auth-brand{
-    display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink);
-    font:800 16px/1 var(--sans);letter-spacing:-.01em;
+    position:relative;z-index:1;display:inline-flex;align-items:center;
+    text-decoration:none;font:800 22px/1 var(--sans);letter-spacing:-.03em;
+    background:linear-gradient(100deg,var(--pink) 0%,var(--blue) 55%,var(--mint) 100%);
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    margin-bottom:auto;
 }
-.auth-brand .dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--blue))}
+.auth-brand-sub{font-weight:400;color:rgba(255,255,255,.55);margin-left:4px;-webkit-text-fill-color:rgba(255,255,255,.55)}
 .theme-toggle-btn{
     background:transparent;border:1px solid var(--rule-2);color:var(--ink);
     cursor:pointer;padding:8px;border-radius:50%;
@@ -81,11 +98,13 @@ html[data-theme="dark"] .moon-icon{display:block!important}
 .auth-shell{display:flex;align-items:stretch;min-height:100vh}
 
 /* Left hero: fixed dark "brand moment" panel, independent of light/dark theme,
-   reusing the same pink/blue/mint palette as the rest of the site. */
+   reusing the same pink/blue/mint palette as the rest of the site. Content is
+   vertically centered (not bottom-pinned) so it lines up with the form side's own
+   vertical centering instead of the two halves reading as unrelated compositions. */
 .auth-hero{
     position:relative;flex:0 0 44%;min-width:0;overflow:hidden;
-    display:flex;flex-direction:column;justify-content:flex-end;
-    padding:56px clamp(32px,4vw,64px);background:#15161E;
+    display:flex;flex-direction:column;justify-content:center;
+    padding:80px clamp(32px,4vw,64px) 56px;background:#15161E;
 }
 .auth-hero-bg{
     position:absolute;inset:-20%;z-index:0;
@@ -123,9 +142,9 @@ html[data-theme="dark"] .moon-icon{display:block!important}
    container -- the content just recenters, no jarring height jump. */
 .auth-form-side{
     flex:1;min-width:0;display:flex;align-items:center;justify-content:center;
-    padding:96px 24px 40px;
+    padding:96px clamp(24px,6vw,72px) 40px;
 }
-.auth-form-inner{width:100%;max-width:400px}
+.auth-form-inner{width:100%;max-width:480px}
 .auth-tabs{display:flex;align-items:center;gap:22px;border-bottom:1px solid var(--rule);padding-bottom:14px;margin-bottom:26px}
 .auth-tab{
     background:none;border:none;cursor:pointer;padding:0;
@@ -136,9 +155,9 @@ html[data-theme="dark"] .moon-icon{display:block!important}
 .auth-field{display:flex;flex-direction:column;gap:6px}
 .auth-field label{font:600 13px/1 var(--sans);color:var(--ink-2)}
 .auth-input{
-    width:100%;padding:13px 15px;border-radius:12px;border:1.5px solid var(--rule-2);
+    width:100%;padding:15px 17px;border-radius:12px;border:1.5px solid var(--rule-2);
     background:var(--paper-2);color:var(--ink);box-sizing:border-box;
-    font:400 15px/1.4 var(--sans);transition:border-color .2s,box-shadow .2s;
+    font:400 15.5px/1.4 var(--sans);transition:border-color .2s,box-shadow .2s;
 }
 .auth-input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-soft)}
 .auth-pw-wrap{position:relative}
@@ -181,7 +200,6 @@ html[data-theme="dark"] .moon-icon{display:block!important}
 <body>
 
 <div class="auth-topbar">
-    <a class="auth-brand" href="index.php"><span class="dot"></span>ISHS LAB</a>
     <button id="theme-toggle" class="theme-toggle-btn" aria-label="다크모드 전환">
         <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="5"></circle>
@@ -203,6 +221,7 @@ html[data-theme="dark"] .moon-icon{display:block!important}
 <div class="auth-shell">
     <div class="auth-hero">
         <div class="auth-hero-bg" aria-hidden="true"></div>
+        <a class="auth-brand" href="index.php">ISHS<span class="auth-brand-sub">LAB</span></a>
         <div class="auth-hero-copy">
             <h3>함께 성장해요</h3>
             <p>3단계만 거치면 모든 스튜디오를 자유롭게 이용할 수 있어요.</p>
