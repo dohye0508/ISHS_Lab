@@ -1,5 +1,28 @@
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 
+/* Problem-statement Korean text only — see #problem-area below */
+@font-face {
+    font-family: 'KoPubWorld Dotum Pro';
+    src: url('../fonts/kopub/KoPubWorldDotumPro-Light.otf') format('opentype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'KoPubWorld Dotum Pro';
+    src: url('../fonts/kopub/KoPubWorldDotumPro-Medium.otf') format('opentype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'KoPubWorld Dotum Pro';
+    src: url('../fonts/kopub/KoPubWorldDotumPro-Bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
 :root {
     --bg: #fcfdfe;
     --text: #1f1f1f;
@@ -23,7 +46,7 @@
 }
 
 body {
-    font-family: 'Pretendard', sans-serif;
+    font-family: 'Pretendard', system-ui, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
     margin: 0;
     padding: 0;
     background: var(--bg);
@@ -227,9 +250,9 @@ h1 {
 }
 
 .start-btn:hover {
-    background: #1557b0;
+    background: color-mix(in srgb, var(--primary) 82%, black);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
+    box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.3);
 }
 
 /* Rules Section as a Memo */
@@ -347,16 +370,18 @@ h1 {
     border-radius: 4px;
     font-size: 0.9rem;
     font-weight: bold;
-    color: #5f6368;
+    color: color-mix(in srgb, var(--text) 62%, transparent);
     background: var(--surface);
 }
 
 .badge.progress {
-    background: #e8f0fe;
+    background: rgba(var(--primary-rgb), 0.1);
     color: var(--primary);
     margin-left: 10px;
 }
 
+/* 문제 지문의 한글 부분만 KoPub으로 — MathJax가 그리는 수식 기호(mjx-*)는
+   자체 폰트를 쓰므로 영향받지 않고, \text{} 안의 한글만 이 폰트를 탄다. */
 #problem-area {
     font-size: 2rem;
     text-align: center;
@@ -366,7 +391,11 @@ h1 {
     justify-content: center;
     margin-bottom: 30px;
     background: #ffffff;
-    /* padding: 20px; */ /* padding 제거해서 수식이 안 짤리게 */
+    padding: 0 20px; /* 좌우 여백만 확보 (위아래는 min-height로 이미 확보되어 있어 수식이 안 짤림) */
+    box-sizing: border-box;
+    overflow-x: auto; /* 한글 문장이 섞여 폭이 넘칠 때 잘리지 않고 스크롤 */
+    font-family: 'KoPubWorld Dotum Pro', 'Pretendard', system-ui, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+    font-weight: 500;
 }
 
 /* 수식 입력기 스타일 */
@@ -816,13 +845,13 @@ body, .btn, .math-card, .sel-group, input, math-field, .detail-item, .header, .b
 #btn-toggle-collection:hover,
 #btn-toggle-passage:hover {
     border-color: var(--primary);
-    background: #f8faff;
+    background: rgba(var(--primary-rgb), 0.04);
 }
 
 #btn-toggle-collection.active,
 #btn-toggle-passage.active {
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
 }
 
 .status-indicator {
@@ -857,8 +886,8 @@ body, .btn, .math-card, .sel-group, input, math-field, .detail-item, .header, .b
 
 .collection-card.selected {
     border-color: var(--primary);
-    background-color: #f0f7ff;
-    box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+    background-color: rgba(var(--primary-rgb), 0.06);
+    box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.2);
 }
 
 .collection-card h3 {
@@ -1033,7 +1062,7 @@ body, .btn, .math-card, .sel-group, input, math-field, .detail-item, .header, .b
 
 .selected-collection-display:hover {
     border-color: var(--primary);
-    box-shadow: 0 4px 12px rgba(26, 115, 232, 0.1);
+    box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.1);
 }
 
 #current-collection-name,
@@ -1047,7 +1076,7 @@ body, .btn, .math-card, .sel-group, input, math-field, .detail-item, .header, .b
     font-size: 0.9rem;
     color: var(--primary);
     font-weight: 600;
-    background: #e8f0fe;
+    background: rgba(var(--primary-rgb), 0.1);
     padding: 6px 12px;
     border-radius: 20px;
 }
@@ -1101,7 +1130,7 @@ body, .btn, .math-card, .sel-group, input, math-field, .detail-item, .header, .b
 }
 
 [data-theme='dark'] .change-btn-text {
-    background: rgba(102, 157, 246, 0.15); /* primary 색상 투명도 적용 */
+    background: rgba(var(--primary-rgb), 0.15); /* primary 색상 투명도 적용 */
     color: var(--primary);
 }
 

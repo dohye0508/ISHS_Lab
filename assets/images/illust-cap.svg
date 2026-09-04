@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 170" fill="none">
+  <ellipse cx="100" cy="150" rx="70" ry="9" fill="#17181F" opacity=".10"/>
+
+  <!-- cap band -->
+  <path d="M62 90 L138 90 L146 122 Q100 136 54 122 Z" fill="#17181F" opacity=".88"/>
+
+  <!-- cap top (diamond) -->
+  <polygon points="100,26 176,64 100,102 24,64" fill="url(#capGrad)"/>
+  <circle cx="100" cy="64" r="9" fill="#FDFBF6"/>
+  <circle cx="100" cy="64" r="4" fill="#17181F" opacity=".7"/>
+
+  <!-- tassel -->
+  <path d="M100 64 L100 118" stroke="#17181F" stroke-width="2.5" opacity=".8"/>
+  <path d="M100 118 q10 6 4 18" stroke="#5EEAD4" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <circle cx="104" cy="140" r="7" fill="#5EEAD4"/>
+
+  <!-- sparkles -->
+  <path d="M40 30 l3 7 7 3 -7 3 -3 7 -3-7 -7-3 7-3z" fill="#F472B6" opacity=".85"/>
+  <path d="M168 100 l2.5 6 6 2.5 -6 2.5 -2.5 6 -2.5-6 -6-2.5 6-2.5z" fill="#60A5FA" opacity=".85"/>
+  <circle cx="30" cy="96" r="4" fill="#60A5FA" opacity=".8"/>
+  <circle cx="176" cy="46" r="4.5" fill="#F472B6" opacity=".8"/>
+
+  <defs>
+    <linearGradient id="capGrad" x1="24" y1="26" x2="176" y2="102" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F472B6"/>
+      <stop offset=".55" stop-color="#60A5FA"/>
+      <stop offset="1" stop-color="#5EEAD4"/>
+    </linearGradient>
+  </defs>
+</svg>

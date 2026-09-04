@@ -53,6 +53,12 @@ $year = date('Y');
     --accent:#DB4C8C;
     --accent-soft:rgba(219,76,140,.11);
 
+    --mesh-a:rgba(244,114,182,.13);
+    --mesh-a2:rgba(244,114,182,.11);
+    --mesh-b:rgba(96,165,250,.11);
+    --mesh-b2:rgba(96,165,250,.10);
+    --mesh-c:rgba(94,234,212,.08);
+
     --sans:'Pretendard',system-ui,-apple-system,'Apple SD Gothic Neo',sans-serif;
     --pen:'Nanum Pen Script',cursive;
 
@@ -74,6 +80,12 @@ $year = date('Y');
     --mint-soft:rgba(94,234,212,.13);
     --accent:#F48FBF;
     --accent-soft:rgba(244,143,191,.16);
+
+    --mesh-a:rgba(244,114,182,.16);
+    --mesh-a2:rgba(244,114,182,.13);
+    --mesh-b:rgba(96,165,250,.14);
+    --mesh-b2:rgba(96,165,250,.12);
+    --mesh-c:rgba(94,234,212,.10);
 }
 
 html{scroll-behavior:smooth;overflow-x:hidden}
@@ -82,10 +94,11 @@ html,body{margin:0;padding:0}
 body{
     background-color:var(--paper);
     background-image:
-        radial-gradient(ellipse 55% 45% at 8% 6%, var(--pink-soft) 0%, transparent 62%),
-        radial-gradient(ellipse 50% 42% at 92% 10%, var(--blue-soft) 0%, transparent 60%),
-        radial-gradient(ellipse 46% 48% at 18% 96%, var(--mint-soft) 0%, transparent 60%),
-        radial-gradient(ellipse 40% 38% at 96% 88%, var(--pink-soft) 0%, transparent 60%);
+        radial-gradient(ellipse 70% 62% at 10% 8%, var(--mesh-a) 0%, transparent 72%),
+        radial-gradient(ellipse 65% 58% at 88% 14%, var(--mesh-b) 0%, transparent 72%),
+        radial-gradient(ellipse 85% 75% at 50% 46%, var(--mesh-c) 0%, transparent 78%),
+        radial-gradient(ellipse 68% 60% at 14% 90%, var(--mesh-a2) 0%, transparent 72%),
+        radial-gradient(ellipse 68% 62% at 90% 86%, var(--mesh-b2) 0%, transparent 72%);
     background-repeat:no-repeat;
     background-attachment:fixed;
     color:var(--ink);
@@ -185,6 +198,7 @@ button{font-family:inherit}
     transition:background-color .16s ease,color .16s ease;
 }
 .nav-btn:hover{background:var(--ink);color:var(--paper)}
+.btn-label-short{display:none}
 
 .user-pill{
     display:none;align-items:center;gap:10px;
@@ -227,7 +241,14 @@ html[data-theme="dark"] .moon-icon{display:block!important}
 .hero-actions{margin-top:26px;display:flex;flex-wrap:wrap;align-items:center;gap:12px}
 
 /* ── 앱 목업 (실 스크린샷 대신, 카드 위에 그린 화면) ── */
-.figure{margin:0}
+.figure{margin:0;position:relative}
+
+/* ── 장식 일러스트 (투명 배경 SVG) ─────────────── */
+.illust{
+    position:absolute;pointer-events:none;user-select:none;
+    filter:drop-shadow(0 16px 26px rgba(23,24,31,.16));
+}
+@media (max-width:900px){.illust{display:none}}
 .frame{
     background:var(--patch);
     border:1px solid var(--rule);
@@ -241,12 +262,13 @@ html[data-theme="dark"] .moon-icon{display:block!important}
 .pill{
     font:600 12.5px/1 var(--sans);letter-spacing:.01em;
     padding:6px 12px;border-radius:99px;border:1px solid var(--rule-2);color:var(--ink-2);
+    background:var(--paper-2);
 }
 .pill--accent{color:var(--accent);border-color:transparent;background:var(--pink-soft)}
 .app-mock__eq{
-    min-height:64px;display:flex;align-items:center;
+    min-height:64px;display:flex;align-items:center;justify-content:center;
     font-size:clamp(19px,2.6vw,25px);color:var(--ink);
-    margin-bottom:22px;overflow-x:auto;
+    margin-bottom:22px;overflow-x:auto;text-align:center;
 }
 .app-mock__eq .katex{color:inherit}
 .app-mock__input{
@@ -258,14 +280,73 @@ html[data-theme="dark"] .moon-icon{display:block!important}
 @keyframes blink-caret{0%,100%{opacity:1}50%{opacity:0}}
 .app-mock__actions{display:flex;gap:10px}
 .app-mock__actions .btn{pointer-events:none}
+.app-mock__actions3{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.app-mock__actions3 .btn{pointer-events:none}
+
+.app-mock__bar2{
+    display:flex;align-items:center;gap:10px;
+    padding:14px clamp(20px,3vw,28px);border-bottom:1px solid var(--rule);
+}
+.app-mock__home{
+    width:30px;height:30px;border-radius:50%;flex:0 0 auto;
+    display:flex;align-items:center;justify-content:center;
+    border:1.5px solid var(--rule-2);color:var(--ink-3);font-size:15px;
+}
+.app-mock__title{font-weight:700;font-size:14.5px;color:var(--ink-2);flex:1 1 auto;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.app-mock__badges{display:flex;gap:6px;flex:0 0 auto}
+
+.voc-hint{
+    display:flex;align-items:center;gap:6px;justify-content:center;
+    padding:10px 14px;border-radius:12px;background:var(--paper-2);
+    color:var(--ink-3);font-size:13px;font-weight:600;margin-bottom:16px;
+}
+.voc-passage{
+    padding:16px;border-radius:14px;background:var(--paper-2);
+    font-size:14px;line-height:1.7;color:var(--ink-2);margin-bottom:16px;
+}
+.voc-blank{
+    display:inline-block;color:var(--accent);font-weight:700;
+    border-bottom:2px solid var(--accent);padding:0 2px;
+}
+.voc-blank em{font-style:normal;font-size:11px;color:var(--ink-3);font-weight:500;margin-left:2px}
+.voc-answer-row{display:flex;gap:10px}
+.voc-answer-row .app-mock__input{flex:1 1 auto;margin-bottom:0;color:var(--ink-3);font-size:14px}
+
+.result-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:20px}
+.result-chip{
+    font:700 12px/1 var(--sans);letter-spacing:.01em;
+    padding:9px 4px;border-radius:10px;text-align:center;border:1.5px solid transparent;
+}
+.result-chip.is-o{color:#0D9488;border-color:#5EEAD4;background:var(--mint-soft)}
+.result-chip.is-x{color:var(--accent);border-color:var(--pink);background:var(--pink-soft)}
+.result-detail{border-top:1px solid var(--rule);padding-top:16px}
+.result-detail__head{display:flex;align-items:center;gap:8px;margin-bottom:10px;font:700 14px/1 var(--sans);color:var(--ink)}
+.result-tag{font:700 11px/1 var(--sans);padding:4px 9px;border-radius:99px}
+.result-tag.is-o{background:var(--mint-soft);color:#0D9488}
+.result-detail__eq{font-size:19px;margin-bottom:14px;color:var(--ink)}
+.result-detail__eq .katex,.result-detail__row .katex{color:inherit}
+.result-detail__row{display:flex;align-items:baseline;gap:8px;font-size:13px;color:var(--ink-3);margin-bottom:6px}
+.result-detail__row b{color:var(--ink-2);font-weight:700;flex:0 0 auto}
+.result-detail__row span{font-size:15px;color:var(--ink-2)}
+
+.row__heading{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.mod-icon-img{
+    width:32px;height:32px;border-radius:9px;object-fit:cover;
+    border:1px solid var(--rule-2);background:#fff;flex:0 0 auto;
+}
 
 /* ── 섹션 헤더 ─────────────────────────────── */
 .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:clamp(20px,2.6vw,30px);flex-wrap:wrap}
 .sec-head .h2{flex:1 1 auto;min-width:0}
+#features .sec-head{
+    border-top:1px solid var(--rule);
+    padding:22px 0 0;
+}
 
 /* ── 기능 행 (specimen 포함) ───────────────── */
 .rows{display:flex;flex-direction:column;gap:clamp(34px,4vw,46px)}
-.row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.92fr);gap:clamp(24px,3.2vw,40px);align-items:center}
+.row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.92fr);gap:clamp(24px,3.2vw,40px);align-items:start;position:relative}
+.row>div:not(.row__media){padding-top:clamp(6px,1.2vw,14px)}
 .row--flip .row__media{order:-1}
 .row__num{font:700 13px/1 var(--sans);letter-spacing:.1em;color:var(--ink-3);margin-bottom:10px}
 .row h3{margin-bottom:12px}
@@ -287,6 +368,7 @@ html[data-theme="dark"] .moon-icon{display:block!important}
         var(--paper-2);
     color:var(--ink);
 }
+.ink .wrap{position:relative}
 .ink h2,.ink h3{color:var(--ink)}
 .ink p{color:var(--ink-2)}
 .steps{display:flex;flex-direction:column;gap:clamp(28px,3.4vw,40px)}
@@ -296,9 +378,14 @@ html[data-theme="dark"] .moon-icon{display:block!important}
     color:var(--ink-3);border-top:1px solid var(--rule-2);
     padding-top:10px;margin-bottom:14px;display:block;
 }
+.steps--compact{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(22px,3vw,32px)}
+.steps--compact .step__n{margin-bottom:10px}
+.steps--compact .h3{font-size:clamp(19px,2.2vw,22px)}
+@media (max-width:768px){.steps--compact{grid-template-columns:1fr}}
 
 /* ── 시작하기 ──────────────────────────────── */
 .dl{text-align:center}
+.dl .wrap{position:relative}
 .dl .h2{margin-bottom:14px}
 .dl p{margin:0 auto 26px;color:var(--ink-2);white-space:nowrap}
 .dl .cta{justify-content:center}
@@ -386,10 +473,15 @@ html.js .rv-fig.is-in .frame{transform:translateY(0) scale(1)}
     .nav-left a{display:none}
     .brand{font-size:22px}
     .dl p,.colophon{white-space:normal}
+    .colophon{margin-left:0}
     .note{font-size:23px}
     .lead{font-size:16.5px}
     .dday-pill{display:none}
     .foot nav{margin-left:0;width:100%}
+}
+@media (max-width:359px){
+    .btn-label-full{display:none}
+    .btn-label-short{display:inline}
 }
 @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto}
@@ -406,12 +498,12 @@ html.js .rv-fig.is-in .frame{transform:translateY(0) scale(1)}
         <a class="brand" href="#top">ISHS<span class="brand-sub">LAB</span></a>
         <nav class="nav-left">
             <a href="#features">기능</a>
-            <a href="modules.php">모듈</a>
+            <a href="modules.php">스튜디오</a>
             <a href="#guide">이용 안내</a>
             <span id="dday-counter" class="dday-pill"></span>
         </nav>
         <div class="nav-right">
-            <button id="btn-login-open" class="nav-btn" onclick="openAuthModal()">로그인 · 가입</button>
+            <button id="btn-login-open" class="nav-btn" onclick="openAuthModal()"><span class="btn-label-full">로그인 · 가입</span><span class="btn-label-short">로그인</span></button>
             <div id="user-profile" class="user-pill">
                 <span id="user-nickname" class="nickname">-</span>
                 <button onclick="handleLogout()" title="로그아웃">
@@ -445,9 +537,9 @@ html.js .rv-fig.is-in .frame{transform:translateY(0) scale(1)}
         <div class="wrap hero-grid">
             <div>
                 <h1>복습이 귀찮다면,<br><span class="ul">ISHS LAB<svg viewBox="0 0 200 10" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="ulGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#F472B6"/><stop offset="55%" stop-color="#60A5FA"/><stop offset="100%" stop-color="#5EEAD4"/></linearGradient></defs><path d="M2 7.2C33 3.4 66 2.3 100 3.6c31 1.2 63 3.4 98 1.1" fill="none" stroke="url(#ulGrad)" stroke-width="3" stroke-linecap="round"/></svg></span></h1>
-                <p class="lead"><span class="nb">적분부터 알고리즘, 단어까지 —</span> <span class="nb">채점과 피드백을 대신 해주는 자기주도 학습 공간</span></p>
+                <p class="lead"><span class="nb">적분부터 알고리즘, 단어까지 —</span> <span class="nb">문제 출제도 채점도, 전부 자동으로 끝나요</span></p>
                 <div class="hero-actions">
-                    <a class="btn btn--fill" href="modules.php">모듈 둘러보기</a>
+                    <a class="btn btn--fill" href="modules.php">스튜디오 둘러보기</a>
                     <button class="btn btn--line" onclick="openAuthModal()">로그인 · 가입</button>
                 </div>
                 <p class="note"><svg class="arw" viewBox="0 0 40 24" aria-hidden="true"><path d="M2 4c10 12 20 15 34 14M27 12l9 6-8 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>문제마다 새로 생성되고, 제출 즉시 채점까지 끝나요</span></p>
@@ -455,19 +547,25 @@ html.js .rv-fig.is-in .frame{transform:translateY(0) scale(1)}
 
             <figure class="figure rv-fig">
                 <div class="frame" aria-hidden="true">
+                    <div class="app-mock__bar2">
+                        <span class="app-mock__home"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span>
+                        <span class="app-mock__title">Integrate your skills</span>
+                        <span class="app-mock__badges">
+                            <span class="pill">Level 5</span>
+                            <span class="pill pill--accent">16 / 19</span>
+                        </span>
+                    </div>
                     <div class="app-mock__body">
-                        <div class="app-mock__row">
-                            <span class="pill pill--accent">LV.4</span>
-                            <span class="pill">15 / 20</span>
-                        </div>
                         <div class="app-mock__eq" id="heroEq"></div>
                         <div class="app-mock__input"><span class="caret"></span></div>
-                        <div class="app-mock__actions">
-                            <span class="btn btn--fill btn--sm">채점하기</span>
-                            <span class="btn btn--line btn--sm">다음 문제</span>
+                        <div class="app-mock__actions3">
+                            <span class="btn btn--line btn--sm">&larr; Previous</span>
+                            <span class="btn btn--line btn--sm">적포(적분 포기)</span>
+                            <span class="btn btn--fill btn--sm">Next &rarr;</span>
                         </div>
                     </div>
                 </div>
+                <img class="illust" src="assets/images/illust-laptop.svg" alt="" style="width:112px;right:-38px;bottom:-26px;transform:rotate(9deg)">
                 <figcaption class="note"><span>정답까지 과정도 같이 확인해요</span></figcaption>
             </figure>
         </div>
@@ -477,7 +575,6 @@ html.js .rv-fig.is-in .frame{transform:translateY(0) scale(1)}
     <section class="sec" id="features">
         <div class="wrap">
             <div class="sec-head">
-                <p class="label">기능</p>
                 <h2 class="h2">혼자 풀어도 확인까지 다 해줘요</h2>
             </div>
 
@@ -487,32 +584,70 @@ html.js .rv-fig.is-in .frame{transform:translateY(0) scale(1)}
                         <p class="row__num">01</p>
                         <h3 class="h3">문제는 무한, 피드백은 즉시</h3>
                         <p>부정적분부터 고급수학까지, 풀 때마다 새로운 문제가 생성되고 제출 즉시 채점돼요. 정답이 아니어도 어디서 틀렸는지 확인할 수 있어요.</p>
-                        <p class="fact">SymPy 기반 수식 동치 검증 &middot; 자동 난이도 조절</p>
                     </div>
-                    <div class="specimen row__media">
-                        <h4>문제 유형</h4>
-                        <ul>
-                            <li><span>01</span>부정적분</li>
-                            <li><span>02</span>쌍곡선함수&middot;역함수 미적분</li>
-                            <li><span>03</span>행렬과 연립일차방정식</li>
-                        </ul>
-                    </div>
+                    <figure class="figure row__media rv-fig">
+                        <div class="frame" aria-hidden="true">
+                            <div class="app-mock__bar2">
+                                <span class="app-mock__home"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span>
+                                <span class="app-mock__title">Test Result</span>
+                                <span class="app-mock__badges"><span class="pill pill--accent">Score: 15 / 20</span></span>
+                            </div>
+                            <div class="app-mock__body">
+                                <div class="result-grid">
+                                    <span class="result-chip is-o">Q1 O</span>
+                                    <span class="result-chip is-o">Q2 O</span>
+                                    <span class="result-chip is-x">Q3 X</span>
+                                    <span class="result-chip is-o">Q4 O</span>
+                                    <span class="result-chip is-o">Q5 O</span>
+                                    <span class="result-chip is-x">Q6 X</span>
+                                    <span class="result-chip is-o">Q7 O</span>
+                                    <span class="result-chip is-o">Q8 O</span>
+                                </div>
+                                <div class="result-detail">
+                                    <div class="result-detail__head">
+                                        <span>Q2</span>
+                                        <span class="result-tag is-o">정답</span>
+                                    </div>
+                                    <div class="result-detail__eq" id="resultEq"></div>
+                                    <p class="result-detail__row"><b>내가 쓴 답</b><span id="resultMyAns"></span></p>
+                                    <p class="result-detail__row"><b>정답</b><span id="resultAns"></span></p>
+                                </div>
+                            </div>
+                        </div>
+                        <img class="illust" src="assets/images/illust-notebook.svg" alt="" style="width:92px;right:-56px;top:-32px;transform:rotate(8deg)">
+                    </figure>
                 </article>
 
                 <article class="row row--flip">
                     <div>
                         <p class="row__num">02</p>
-                        <h3 class="h3">학번 인증으로, 우리 학교 학생만</h3>
-                        <p>리로스쿨 계정으로 딱 한 번 본인 확인을 거치면 닉네임으로 활동할 수 있어요. 리로스쿨 비밀번호는 인증에만 쓰이고 서버에 저장되지 않아요.</p>
+                        <div class="row__heading">
+                            <img class="mod-icon-img" src="assets/images/vocabicon.jpg" alt="Vocabulary Studio 아이콘">
+                            <h3 class="h3" style="margin:0">지문 속에서 바로 암기해요</h3>
+                        </div>
+                        <p>단어만 따로 외우지 않아요. 실제 지문 속 빈칸을 채우면서 문맥과 함께 기억하도록 만들었어요.</p>
                     </div>
-                    <div class="specimen row__media">
-                        <h4>가입 절차</h4>
-                        <ul>
-                            <li><span>01</span>리로스쿨 계정으로 학번 확인</li>
-                            <li><span>02</span>닉네임&middot;비밀번호 설정</li>
-                            <li><span>03</span>바로 이용 시작</li>
-                        </ul>
-                    </div>
+                    <figure class="figure row__media rv-fig">
+                        <div class="frame" aria-hidden="true">
+                            <div class="app-mock__bar2">
+                                <span class="app-mock__home"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span>
+                                <span class="pill pill--accent">#12</span>
+                                <span class="app-mock__badges">
+                                    <span class="pill">Word Input</span>
+                                    <span class="pill">Score: 0</span>
+                                </span>
+                            </div>
+                            <div class="app-mock__body">
+                                <div class="voc-hint">&#128065; 한글 해석 보기 (Show Hint)</div>
+                                <div class="voc-passage">&hellip;traditional media is either strictly monitored or controlled by those in power under <span class="voc-blank">a__________<em>(13자)</em></span> governments. On the other hand, in democratic societies&hellip;</div>
+                                <div class="voc-answer-row">
+                                    <div class="app-mock__input">단어를 입력하세요...</div>
+                                    <span class="btn btn--fill btn--sm">확인</span>
+                                </div>
+                            </div>
+                        </div>
+                        <img class="illust" src="assets/images/illust-book.svg" alt="" style="width:120px;left:-78px;bottom:-38px;transform:rotate(-7deg)">
+                    </figure>
                 </article>
             </div>
         </div>
@@ -521,32 +656,23 @@ html.js .rv-fig.is-in .frame{transform:translateY(0) scale(1)}
     <!-- ─────────── 이용 안내 (잉크 반전) ─────────── -->
     <section class="sec ink" id="guide">
         <div class="wrap">
+            <img class="illust" src="assets/images/illust-cap.svg" alt="" style="width:100px;top:-6px;right:6px;transform:rotate(6deg)">
             <div class="sec-head">
-                <p class="label label--dark">이용 안내</p>
                 <h2 class="h2">가입부터 학습까지, 3단계면 충분해요</h2>
             </div>
 
-            <div class="steps">
-                <article class="step rv">
+            <div class="steps steps--compact">
+                <article class="step step--compact rv">
                     <span class="step__n">STEP 01</span>
-                    <div class="step__text">
-                        <h3 class="h3">리로스쿨 계정으로 학번 인증</h3>
-                        <p>가입할 때 한 번, 리로스쿨 아이디와 비밀번호로 본인을 확인해요. 비밀번호는 인증에만 쓰이고 저장되지 않아요.</p>
-                    </div>
+                    <h3 class="h3">학번 인증</h3>
                 </article>
-                <article class="step rv">
+                <article class="step step--compact rv">
                     <span class="step__n">STEP 02</span>
-                    <div class="step__text">
-                        <h3 class="h3">닉네임과 비밀번호로 로그인</h3>
-                        <p>인증이 끝나면 그다음부터는 직접 정한 닉네임과 비밀번호로 로그인해요.</p>
-                    </div>
+                    <h3 class="h3">닉네임으로 로그인</h3>
                 </article>
-                <article class="step rv">
+                <article class="step step--compact rv">
                     <span class="step__n">STEP 03</span>
-                    <div class="step__text">
-                        <h3 class="h3">모듈을 골라 바로 시작</h3>
-                        <p>원하는 스튜디오에 들어가면 바로 문제 풀이가 시작돼요.</p>
-                    </div>
+                    <h3 class="h3">바로 시작</h3>
                 </article>
             </div>
         </div>
@@ -555,12 +681,12 @@ html.js .rv-fig.is-in .frame{transform:translateY(0) scale(1)}
     <!-- ─────────── 시작하기 ─────────── -->
     <section class="sec rule-top dl" id="start">
         <div class="wrap">
-            <p class="label">시작하기</p>
+            <img class="illust" src="assets/images/illust-rocket.svg" alt="" style="width:96px;top:-16px;right:26px;transform:rotate(9deg)">
             <h2 class="h2">지금, 학번 인증 한 번으로 시작하세요</h2>
-            <p>가입은 1분이면 충분해요. 로그인하면 모든 모듈을 바로 이용할 수 있어요.</p>
+            <p>가입은 1분이면 충분해요. 로그인하면 모든 스튜디오를 바로 이용할 수 있어요.</p>
             <div class="cta">
                 <button class="btn btn--fill" onclick="openAuthModal()">로그인 · 가입</button>
-                <a class="btn btn--line" href="modules.php">모듈 둘러보기</a>
+                <a class="btn btn--line" href="modules.php">스튜디오 둘러보기</a>
             </div>
             <p class="cta-tip" id="dday-tip"></p>
         </div>
@@ -572,7 +698,7 @@ html.js .rv-fig.is-in .frame{transform:translateY(0) scale(1)}
         <p class="colophon">&copy; <?= $year ?> ISHS 32nd — Developed by Dohye Lee. All rights reserved.</p>
         <nav>
             <a href="#features">기능</a>
-            <a href="modules.php">모듈</a>
+            <a href="modules.php">스튜디오</a>
             <a href="#guide">이용 안내</a>
             <a onclick="openAuthModal()">로그인 · 가입</a>
         </nav>
@@ -641,7 +767,7 @@ html.js .rv-fig.is-in .frame{transform:translateY(0) scale(1)}
     }
     function enterModule(url) {
         if (isUserLoggedIn) { location.href = url; }
-        else { alert('이 모듈을 이용하려면 로그인이 필요합니다.'); openAuthModal(); }
+        else { alert('이 스튜디오를 이용하려면 로그인이 필요합니다.'); openAuthModal(); }
     }
     async function submitLogin() {
         const nickname = document.getElementById('login-nickname').value;
@@ -691,19 +817,23 @@ html.js .rv-fig.is-in .frame{transform:translateY(0) scale(1)}
             const pill = document.getElementById('dday-counter');
             if (pill) pill.innerText = label;
             const tip = document.getElementById('dday-tip');
-            if (tip) tip.innerText = label + (diff > 0 ? ' — 모듈로 미리 준비해두세요' : '');
+            if (tip) tip.innerText = label + (diff > 0 ? ' — 스튜디오로 미리 준비해두세요' : '');
         };
         updateDday();
 
-        const eqEl = document.getElementById('heroEq');
-        if (eqEl) {
-            const tex = '\\displaystyle\\int e^{x}\\sin x \\; dx';
+        const renderMath = (id, tex, fallback, display) => {
+            const el = document.getElementById(id);
+            if (!el) return;
             if (window.katex) {
-                katex.render(tex, eqEl, { throwOnError: false, displayMode: true });
+                katex.render(tex, el, { throwOnError: false, displayMode: !!display });
             } else {
-                eqEl.textContent = '∫ eˣ sin x dx';
+                el.textContent = fallback;
             }
-        }
+        };
+        renderMath('heroEq', '\\displaystyle\\int \\ln\\!\\left(x+\\sqrt{x^2+1}\\right)\\,dx', '∫ ln(x+√(x²+1)) dx', true);
+        renderMath('resultEq', '\\displaystyle\\int x^2 e^{x}\\,dx', '∫ x²eˣ dx', true);
+        renderMath('resultMyAns', '(x^2-2x+2)e^{x}+C', '(x²−2x+2)eˣ + C', false);
+        renderMath('resultAns', '(x^2-2x+2)e^{x}+C', '(x²−2x+2)eˣ + C', false);
     });
     document.getElementById('theme-toggle').addEventListener('click', () => {
         const cur = document.documentElement.getAttribute('data-theme');

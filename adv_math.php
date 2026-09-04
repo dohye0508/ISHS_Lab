@@ -22,11 +22,41 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
     <meta property="og:description" content="쌍곡선함수·역함수 미적분부터 행렬과 연립일차방정식까지, 고급수학 심화 트레이닝.">
     <meta property="og:image" content="assets/images/advmath.jpg">
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
     <link rel="stylesheet" href="assets/css/style.css?v=lab_final_v6">
     <script src="https://unpkg.com/mathlive"></script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
     <style>
+        /* ISHS LAB 공통 톤 — Advanced Math Studio는 바이올렛(핑크+블루) */
+        :root{
+            --primary:#7C3AED;
+            --primary-rgb:124,58,237;
+            --mesh-a:rgba(244,114,182,.20);
+            --mesh-a2:rgba(244,114,182,.17);
+            --mesh-b:rgba(96,165,250,.20);
+            --mesh-b2:rgba(96,165,250,.17);
+            --mesh-c:rgba(94,234,212,.09);
+        }
+        html[data-theme="dark"]{
+            --primary:#A78BFA;
+            --primary-rgb:167,139,250;
+            --mesh-a:rgba(244,114,182,.24);
+            --mesh-a2:rgba(244,114,182,.21);
+            --mesh-b:rgba(96,165,250,.24);
+            --mesh-b2:rgba(96,165,250,.21);
+            --mesh-c:rgba(94,234,212,.12);
+        }
+        body{
+            background-image:
+                radial-gradient(ellipse 70% 62% at 10% 8%, var(--mesh-a) 0%, transparent 72%),
+                radial-gradient(ellipse 65% 58% at 88% 14%, var(--mesh-b) 0%, transparent 72%),
+                radial-gradient(ellipse 85% 75% at 50% 46%, var(--mesh-c) 0%, transparent 78%),
+                radial-gradient(ellipse 68% 60% at 14% 90%, var(--mesh-a2) 0%, transparent 72%),
+                radial-gradient(ellipse 68% 62% at 90% 86%, var(--mesh-b2) 0%, transparent 72%);
+            background-repeat:no-repeat;
+            background-attachment:fixed;
+        }
         .collection-grid {
             max-height: none !important;
             overflow-y: visible !important;
@@ -111,12 +141,9 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
     <div id="auth-header"
         style="position: fixed; top: 20px; left: 20px; z-index: 10000; display: flex; align-items: center; gap: 10px;">
         <a href="modules.php"
-            style="background: rgba(var(--surface-rgb), 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text); padding: 8px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05);"
-            title="모듈 목록으로">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                <polyline points="9 22 9 12 15 12 15 22"></polyline>
-            </svg>
+            style="display: flex; align-items: center; text-decoration: none; font-weight: 800; font-size: 21px; letter-spacing: -.03em; line-height: 1; filter: drop-shadow(0 1px 3px rgba(0,0,0,.12));"
+            title="스튜디오 목록으로">
+            <span style="background: linear-gradient(100deg, #F472B6 0%, #60A5FA 55%, #5EEAD4 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">ISHS<span style="font-weight: 400; -webkit-text-fill-color: var(--text); opacity: .6;">LAB</span></span>
         </a>
 
         <div id="user-profile"
@@ -190,6 +217,12 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                     </div>
                     <input type="hidden" id="sel-collection-value" value="">
                     <input type="hidden" id="sel-collection-value-algebra" value="">
+                </div>
+
+                <div class="landing-right">
+                    <div class="hero-visual">
+                        <canvas id="hero-canvas"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -307,6 +340,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
     <script src="data/math/algebra_collections.js?v=20260820_v1"></script>
     <script src="scripts/grader.js?v=debug_v7"></script>
     <script src="scripts/logic.js?v=debug_v7"></script>
+    <script src="scripts/adv_anim.js?v=debug_v2"></script>
     <!-- Global Theme Toggle (Top-Right) -->
     <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Dark Mode">
         <svg class="sun-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"

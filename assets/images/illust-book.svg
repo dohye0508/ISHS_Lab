@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 190" fill="none">
+  <ellipse cx="110" cy="170" rx="78" ry="9" fill="#17181F" opacity=".10"/>
+
+  <!-- open book -->
+  <path d="M110 60 L110 152 Q64 138 24 148 L24 66 Q64 54 110 60Z" fill="#FDF2F8" stroke="#F472B6" stroke-width="2"/>
+  <path d="M110 60 L110 152 Q156 138 196 148 L196 66 Q156 54 110 60Z" fill="#F0FDFA" stroke="#5EEAD4" stroke-width="2"/>
+  <path d="M110 60 L110 152" stroke="#60A5FA" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- left page lines -->
+  <rect x="40" y="82" width="54" height="5" rx="2.5" fill="#F472B6" opacity=".45"/>
+  <rect x="40" y="94" width="46" height="5" rx="2.5" fill="#F472B6" opacity=".3"/>
+  <rect x="40" y="106" width="50" height="5" rx="2.5" fill="#F472B6" opacity=".3"/>
+  <rect x="40" y="118" width="38" height="5" rx="2.5" fill="#F472B6" opacity=".3"/>
+
+  <!-- right page big letter -->
+  <text x="153" y="115" font-family="Georgia, 'Times New Roman', serif" font-size="46" font-weight="700" fill="#2DD4BF" text-anchor="middle">A</text>
+
+  <!-- floating flashcards -->
+  <g transform="rotate(-10 60 34)">
+    <rect x="36" y="16" width="48" height="34" rx="7" fill="url(#bookGrad1)"/>
+    <text x="60" y="39" font-family="Pretendard, sans-serif" font-size="18" font-weight="800" fill="#ffffff" text-anchor="middle">A</text>
+  </g>
+  <g transform="rotate(9 152 30)">
+    <rect x="128" y="10" width="48" height="34" rx="7" fill="url(#bookGrad2)"/>
+    <text x="152" y="33" font-family="Pretendard, sans-serif" font-size="18" font-weight="800" fill="#ffffff" text-anchor="middle">B</text>
+  </g>
+
+  <circle cx="16" cy="150" r="4.5" fill="#60A5FA" opacity=".7"/>
+  <circle cx="204" cy="160" r="4" fill="#F472B6" opacity=".7"/>
+
+  <defs>
+    <linearGradient id="bookGrad1" x1="36" y1="16" x2="84" y2="50" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F472B6"/><stop offset="1" stop-color="#DB4C8C"/>
+    </linearGradient>
+    <linearGradient id="bookGrad2" x1="128" y1="10" x2="176" y2="44" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#60A5FA"/><stop offset="1" stop-color="#2563EB"/>
+    </linearGradient>
+  </defs>
+</svg>

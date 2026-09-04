@@ -20,68 +20,67 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
     <meta property="og:title" content="Vocabulary Studio">
     <meta property="og:description" content="나만의 단어장 관리 & 플래시카드 테스트로 영어 어휘를 체계적으로 암기하세요.">
     <meta property="og:image" content="assets/images/vocab.jpg">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
     <link rel="stylesheet" href="assets/css/style.css?v=lab_final_v6">
     <script>
         window.userRole = '<?php echo $_SESSION['role'] ?? 'user'; ?>';
     </script>
 
     <style>
-        /* (Style overrides kept same) */
+        /* ISHS LAB 공통 톤 — Vocabulary Studio는 핑크 */
         :root {
-            --primary: #ea4335;
-            /* Google Red */
-            --primary-rgb: 234, 67, 53;
-            --surface-variant: #fdf2f2;
-            /* Very light red tint for alternating rows */
+            --primary: #DB2777;
+            --primary-rgb: 219, 39, 119;
+            --surface-variant: #FDF2F8;
+            /* Very light pink tint for alternating rows */
             --accent-blue: #4285f4;
             --accent-green: #34a853;
+            --mesh-a: rgba(244,114,182,.22);
+            --mesh-a2: rgba(244,114,182,.18);
+            --mesh-b: rgba(94,234,212,.18);
+            --mesh-b2: rgba(94,234,212,.16);
+            --mesh-c: rgba(96,165,250,.10);
         }
 
-        [data-theme="dark"] :root {
-            --surface-variant: #2d1a1a;
+        html[data-theme="dark"] {
+            --primary: #F472B6;
+            --primary-rgb: 244, 114, 182;
+            --surface-variant: #2D1A24;
+            --mesh-a: rgba(244,114,182,.26);
+            --mesh-a2: rgba(244,114,182,.22);
+            --mesh-b: rgba(94,234,212,.22);
+            --mesh-b2: rgba(94,234,212,.20);
+            --mesh-c: rgba(96,165,250,.13);
+        }
+
+        body {
+            background-image:
+                radial-gradient(ellipse 70% 62% at 10% 8%, var(--mesh-a) 0%, transparent 72%),
+                radial-gradient(ellipse 65% 58% at 88% 14%, var(--mesh-b) 0%, transparent 72%),
+                radial-gradient(ellipse 85% 75% at 50% 46%, var(--mesh-c) 0%, transparent 78%),
+                radial-gradient(ellipse 68% 60% at 14% 90%, var(--mesh-a2) 0%, transparent 72%),
+                radial-gradient(ellipse 68% 62% at 90% 86%, var(--mesh-b2) 0%, transparent 72%);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
         }
 
         .btn.primary {
-            background: linear-gradient(135deg, #ea4335 0%, #f28b82 100%);
-            box-shadow: 0 4px 12px rgba(234, 67, 53, 0.25);
+            background: linear-gradient(135deg, #DB2777 0%, #F472B6 100%);
+            box-shadow: 0 4px 12px rgba(219, 39, 119, 0.25);
         }
 
         .btn.primary:hover {
-            box-shadow: 0 6px 16px rgba(234, 67, 53, 0.35);
+            box-shadow: 0 6px 16px rgba(219, 39, 119, 0.35);
         }
 
         .loader-spinner {
             border-top-color: var(--primary);
         }
 
-        /* Home Button Style inline */
-        .home-btn-global {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: transparent;
-            color: var(--text);
-            opacity: 0.6;
-            transition: all 0.2s;
-            padding: 10px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .home-btn-global:hover {
-            opacity: 1;
-            background: var(--surface);
-            transform: scale(1.1);
-        }
-
-        /* Override Start Button Hover to Red */
+        /* Start Button Hover — 진한 핑크 */
         .start-btn:hover {
-            background: #d32f2f !important;
-            /* Darker Red */
-            box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3) !important;
+            background: #BE185D !important;
+            box-shadow: 0 4px 12px rgba(219, 39, 119, 0.3) !important;
         }
 
         /* Practice Cards Layout */
@@ -733,14 +732,6 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
 
 <body>
 
-    <!-- Go Home Button (Back Arrow) -->
-    <a href="modules.php" class="home-btn-global" aria-label="Go Home">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="19" y1="12" x2="5" y2="12"></line>
-            <polyline points="12 19 5 12 12 5"></polyline>
-        </svg>
-    </a>
-
     <div class="container">
         <!-- Main Landing View -->
         <div id="landing-view">
@@ -933,12 +924,9 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
     <div id="auth-header"
         style="position: fixed; top: 20px; left: 20px; z-index: 10000; display: flex; align-items: center; gap: 10px;">
         <a href="modules.php"
-            style="background: var(--surface); backdrop-filter: blur(10px); color: var(--text); padding: 8px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05);"
-            title="모듈 목록으로">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                <polyline points="9 22 9 12 15 12 15 22"></polyline>
-            </svg>
+            style="display: flex; align-items: center; text-decoration: none; font-weight: 800; font-size: 21px; letter-spacing: -.03em; line-height: 1; filter: drop-shadow(0 1px 3px rgba(0,0,0,.12));"
+            title="스튜디오 목록으로">
+            <span style="background: linear-gradient(100deg, #F472B6 0%, #60A5FA 55%, #5EEAD4 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">ISHS<span style="font-weight: 400; -webkit-text-fill-color: var(--text); opacity: .6;">LAB</span></span>
         </a>
 
         <div id="user-profile"

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 220" fill="none">
+  <ellipse cx="85" cy="204" rx="46" ry="8" fill="#17181F" opacity=".10"/>
+
+  <!-- flame -->
+  <path d="M85 158 Q98 178 85 202 Q72 178 85 158Z" fill="url(#flameGrad)"/>
+
+  <!-- fins -->
+  <path d="M60 120 L36 158 L64 148 Z" fill="#5EEAD4"/>
+  <path d="M110 120 L134 158 L106 148 Z" fill="#5EEAD4"/>
+
+  <!-- body -->
+  <path d="M85 14 C118 40 122 96 112 150 L58 150 C48 96 52 40 85 14Z" fill="url(#bodyGrad)"/>
+
+  <!-- window -->
+  <circle cx="85" cy="86" r="21" fill="#17181F" opacity=".85"/>
+  <circle cx="85" cy="86" r="14" fill="#F0FDFA"/>
+  <circle cx="80" cy="81" r="4" fill="#ffffff" opacity=".8"/>
+
+  <!-- body highlight -->
+  <path d="M85 150 L58 150 C50 108 52 60 72 28" stroke="#ffffff" stroke-width="4" opacity=".18" fill="none" stroke-linecap="round"/>
+
+  <!-- stars -->
+  <path d="M18 60 l3 7 7 3 -7 3 -3 7 -3-7 -7-3 7-3z" fill="#F472B6" opacity=".85"/>
+  <circle cx="146" cy="46" r="5" fill="#60A5FA" opacity=".8"/>
+  <circle cx="24" cy="120" r="4" fill="#5EEAD4" opacity=".8"/>
+  <path d="M150 96 l2.5 6 6 2.5 -6 2.5 -2.5 6 -2.5-6 -6-2.5 6-2.5z" fill="#F472B6" opacity=".75"/>
+
+  <defs>
+    <linearGradient id="bodyGrad" x1="52" y1="14" x2="122" y2="150" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F472B6"/>
+      <stop offset="1" stop-color="#60A5FA"/>
+    </linearGradient>
+    <linearGradient id="flameGrad" x1="85" y1="158" x2="85" y2="202" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5EEAD4"/>
+      <stop offset="1" stop-color="#F472B6"/>
+    </linearGradient>
+  </defs>
+</svg>

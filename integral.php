@@ -19,10 +19,42 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
     <title>Indefinite Integral Studio</title>
     <link rel="icon" type="image/jpeg" href="assets/images/inticon.jpg">
     <meta property="og:title" content="Indefinite Integral Studio">
-    <meta property="og:description" content="부정적분 트레이닝 모듈. 무한 생성 문제와 즉각 피드백으로 실력을 극대화하세요.">
+    <meta property="og:description" content="부정적분 트레이닝 스튜디오. 무한 생성 문제와 즉각 피드백으로 실력을 극대화하세요.">
     <meta property="og:image" content="assets/images/int.jpg">
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
     <link rel="stylesheet" href="assets/css/style.css?v=lab_final_v6">
+    <style>
+        /* ISHS LAB 공통 톤 — Integral Studio는 블루 */
+        :root{
+            --primary:#2563EB;
+            --primary-rgb:37,99,235;
+            --mesh-a:rgba(96,165,250,.22);
+            --mesh-a2:rgba(96,165,250,.18);
+            --mesh-b:rgba(94,234,212,.17);
+            --mesh-b2:rgba(94,234,212,.15);
+            --mesh-c:rgba(244,114,182,.10);
+        }
+        html[data-theme="dark"]{
+            --primary:#60A5FA;
+            --primary-rgb:96,165,250;
+            --mesh-a:rgba(96,165,250,.26);
+            --mesh-a2:rgba(96,165,250,.22);
+            --mesh-b:rgba(94,234,212,.21);
+            --mesh-b2:rgba(94,234,212,.19);
+            --mesh-c:rgba(244,114,182,.13);
+        }
+        body{
+            background-image:
+                radial-gradient(ellipse 70% 62% at 10% 8%, var(--mesh-a) 0%, transparent 72%),
+                radial-gradient(ellipse 65% 58% at 88% 14%, var(--mesh-b) 0%, transparent 72%),
+                radial-gradient(ellipse 85% 75% at 50% 46%, var(--mesh-c) 0%, transparent 78%),
+                radial-gradient(ellipse 68% 60% at 14% 90%, var(--mesh-a2) 0%, transparent 72%),
+                radial-gradient(ellipse 68% 62% at 90% 86%, var(--mesh-b2) 0%, transparent 72%);
+            background-repeat:no-repeat;
+            background-attachment:fixed;
+        }
+    </style>
     <script src="https://unpkg.com/mathlive"></script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
@@ -42,12 +74,9 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
     <div id="auth-header"
         style="position: fixed; top: 20px; left: 20px; z-index: 10000; display: flex; align-items: center; gap: 10px;">
         <a href="modules.php"
-            style="background: rgba(var(--surface-rgb), 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text); padding: 8px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05);"
-            title="모듈 목록으로">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                <polyline points="9 22 9 12 15 12 15 22"></polyline>
-            </svg>
+            style="display: flex; align-items: center; text-decoration: none; font-weight: 800; font-size: 21px; letter-spacing: -.03em; line-height: 1; filter: drop-shadow(0 1px 3px rgba(0,0,0,.12));"
+            title="스튜디오 목록으로">
+            <span style="background: linear-gradient(100deg, #F472B6 0%, #60A5FA 55%, #5EEAD4 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">ISHS<span style="font-weight: 400; -webkit-text-fill-color: var(--text); opacity: .6;">LAB</span></span>
         </a>
 
         <div id="user-profile"

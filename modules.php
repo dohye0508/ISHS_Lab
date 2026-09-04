@@ -7,11 +7,11 @@ $year = date('Y');
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>모듈 &middot; ISHS LAB</title>
-<meta name="description" content="ISHS LAB의 학습 모듈을 한눈에 둘러보고 바로 시작하세요.">
+<title>스튜디오 &middot; ISHS LAB</title>
+<meta name="description" content="ISHS LAB의 학습 스튜디오를 한눈에 둘러보고 바로 시작하세요.">
 <meta name="theme-color" content="#FFFFFF">
 <link rel="icon" type="image/jpeg" href="assets/images/inticon.jpg">
-<meta property="og:title" content="모듈 · ISHS LAB">
+<meta property="og:title" content="스튜디오 · ISHS LAB">
 <meta property="og:description" content="원하는 과목을 골라 바로 시작하세요.">
 <meta property="og:image" content="assets/images/int.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -50,6 +50,12 @@ $year = date('Y');
     --accent:#DB4C8C;
     --accent-soft:rgba(219,76,140,.11);
 
+    --mesh-a:rgba(244,114,182,.22);
+    --mesh-a2:rgba(244,114,182,.18);
+    --mesh-b:rgba(96,165,250,.19);
+    --mesh-b2:rgba(96,165,250,.17);
+    --mesh-c:rgba(94,234,212,.13);
+
     --sans:'Pretendard',system-ui,-apple-system,'Apple SD Gothic Neo',sans-serif;
 
     --wrap:1180px;
@@ -70,6 +76,12 @@ $year = date('Y');
     --mint-soft:rgba(94,234,212,.13);
     --accent:#F48FBF;
     --accent-soft:rgba(244,143,191,.16);
+
+    --mesh-a:rgba(244,114,182,.26);
+    --mesh-a2:rgba(244,114,182,.22);
+    --mesh-b:rgba(96,165,250,.23);
+    --mesh-b2:rgba(96,165,250,.20);
+    --mesh-c:rgba(94,234,212,.16);
 }
 
 html{scroll-behavior:smooth;overflow-x:hidden}
@@ -78,10 +90,11 @@ html,body{margin:0;padding:0}
 body{
     background-color:var(--paper);
     background-image:
-        radial-gradient(ellipse 55% 45% at 8% 6%, var(--pink-soft) 0%, transparent 62%),
-        radial-gradient(ellipse 50% 42% at 92% 10%, var(--blue-soft) 0%, transparent 60%),
-        radial-gradient(ellipse 46% 48% at 18% 96%, var(--mint-soft) 0%, transparent 60%),
-        radial-gradient(ellipse 40% 38% at 96% 88%, var(--pink-soft) 0%, transparent 60%);
+        radial-gradient(ellipse 70% 62% at 10% 8%, var(--mesh-a) 0%, transparent 72%),
+        radial-gradient(ellipse 65% 58% at 88% 14%, var(--mesh-b) 0%, transparent 72%),
+        radial-gradient(ellipse 85% 75% at 50% 46%, var(--mesh-c) 0%, transparent 78%),
+        radial-gradient(ellipse 68% 60% at 14% 90%, var(--mesh-a2) 0%, transparent 72%),
+        radial-gradient(ellipse 68% 62% at 90% 86%, var(--mesh-b2) 0%, transparent 72%);
     background-repeat:no-repeat;
     background-attachment:fixed;
     color:var(--ink);
@@ -162,6 +175,7 @@ button{font-family:inherit}
     transition:background-color .16s ease,color .16s ease;
 }
 .nav-btn:hover{background:var(--ink);color:var(--paper)}
+.btn-label-short{display:none}
 
 .user-pill{
     display:none;align-items:center;gap:10px;
@@ -211,11 +225,12 @@ html[data-theme="dark"] .moon-icon{display:block!important}
 .mod-card__head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:18px}
 .mod-icon{
     width:56px;height:56px;flex:0 0 auto;
-    border-radius:18px;
+    border-radius:18px;padding:8px;
     display:flex;align-items:center;justify-content:center;
     font:700 24px/1 var(--sans);color:#fff;
     transition:transform .22s cubic-bezier(.2,1,.3,1);
 }
+.mod-icon img{width:100%;height:100%;object-fit:contain;border-radius:11px;background:#fff}
 .mod-card:hover .mod-icon{transform:scale(1.06) rotate(-3deg)}
 .mod-icon--pb{background:linear-gradient(135deg,var(--pink),var(--blue));box-shadow:0 12px 22px -10px rgba(244,114,182,.55)}
 .mod-icon--bm{background:linear-gradient(135deg,var(--blue),var(--mint));box-shadow:0 12px 22px -10px rgba(96,165,250,.5)}
@@ -317,9 +332,13 @@ html.js .rv-drop.is-in{opacity:1;transform:none}
     body{font-size:16px}
     .nav-left a{display:none}
     .brand{font-size:22px}
-    .colophon{white-space:normal}
+    .colophon{white-space:normal;margin-left:0}
     .dday-pill{display:none}
     .foot nav{margin-left:0;width:100%}
+}
+@media (max-width:359px){
+    .btn-label-full{display:none}
+    .btn-label-short{display:inline}
 }
 @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto}
@@ -336,12 +355,12 @@ html.js .rv-drop.is-in{opacity:1;transform:none}
         <a class="brand" href="index.php">ISHS<span class="brand-sub">LAB</span></a>
         <nav class="nav-left">
             <a href="index.php#features">기능</a>
-            <a href="modules.php">모듈</a>
+            <a href="modules.php">스튜디오</a>
             <a href="index.php#guide">이용 안내</a>
             <span id="dday-counter" class="dday-pill"></span>
         </nav>
         <div class="nav-right">
-            <button id="btn-login-open" class="nav-btn" onclick="openAuthModal()">로그인 · 가입</button>
+            <button id="btn-login-open" class="nav-btn" onclick="openAuthModal()"><span class="btn-label-full">로그인 · 가입</span><span class="btn-label-short">로그인</span></button>
             <div id="user-profile" class="user-pill">
                 <span id="user-nickname" class="nickname">-</span>
                 <button onclick="handleLogout()" title="로그아웃">
@@ -374,7 +393,7 @@ html.js .rv-drop.is-in{opacity:1;transform:none}
     <section class="sec" id="modules">
         <div class="wrap">
             <div class="sec-head">
-                <p class="label">모듈</p>
+                <p class="label">스튜디오</p>
                 <h2 class="h2">원하는 과목을 골라 시작하세요</h2>
             </div>
             <p class="modules-note">로그인하면 바로 시작할 수 있어요.</p>
@@ -382,7 +401,7 @@ html.js .rv-drop.is-in{opacity:1;transform:none}
             <div class="mod-grid">
                 <article class="mod-card rv-drop" tabindex="0" role="button" onclick="enterModule('integral.php')">
                     <div class="mod-card__head">
-                        <span class="mod-icon mod-icon--pb">&int;</span>
+                        <span class="mod-icon mod-icon--pb"><img src="assets/images/inticon.jpg" alt="Integral Studio"></span>
                     </div>
                     <h4 class="mod-name">Integral Studio</h4>
                     <p class="mod-desc">컬렉션 기반 실전 부정적분 트레이닝. 무한 생성 문제와 즉각 피드백으로 실력을 극대화하세요.</p>
@@ -395,7 +414,7 @@ html.js .rv-drop.is-in{opacity:1;transform:none}
 
                 <article class="mod-card rv-drop" tabindex="0" role="button" onclick="enterModule('adv_math.php')">
                     <div class="mod-card__head">
-                        <span class="mod-icon mod-icon--bm">&Sigma;</span>
+                        <span class="mod-icon mod-icon--bm"><img src="assets/images/advmathicon.jpg" alt="Advanced Math Studio"></span>
                         <span class="mod-badge mod-badge--new">NEW</span>
                     </div>
                     <h4 class="mod-name">Advanced Math Studio</h4>
@@ -409,7 +428,7 @@ html.js .rv-drop.is-in{opacity:1;transform:none}
 
                 <article class="mod-card rv-drop" tabindex="0" role="button" onclick="enterModule('vocabulary.php')">
                     <div class="mod-card__head">
-                        <span class="mod-icon mod-icon--pm">Aa</span>
+                        <span class="mod-icon mod-icon--pm"><img src="assets/images/vocabicon.jpg" alt="Vocabulary Studio"></span>
                     </div>
                     <h4 class="mod-name">Vocabulary Studio</h4>
                     <p class="mod-desc">나만의 단어장 관리 &amp; 플래시카드 테스트로 영어 어휘를 체계적으로 암기하세요.</p>
@@ -422,7 +441,7 @@ html.js .rv-drop.is-in{opacity:1;transform:none}
 
                 <article class="mod-card rv-drop" tabindex="0" role="button" onclick="enterModule('coding_test.php')">
                     <div class="mod-card__head">
-                        <span class="mod-icon mod-icon--bm">&lt;/&gt;</span>
+                        <span class="mod-icon mod-icon--bm"><img src="assets/images/codingtesticon.jpg" alt="Coding Test"></span>
                     </div>
                     <h4 class="mod-name">Coding Test</h4>
                     <p class="mod-desc">파이썬 알고리즘 템플릿 &amp; 예제 모음. 코딩 테스트 핵심 로직을 한눈에 확인하세요.</p>
@@ -444,7 +463,7 @@ html.js .rv-drop.is-in{opacity:1;transform:none}
         <p class="colophon">&copy; <?= $year ?> ISHS 32nd — Developed by Dohye Lee. All rights reserved.</p>
         <nav>
             <a href="index.php#features">기능</a>
-            <a href="modules.php">모듈</a>
+            <a href="modules.php">스튜디오</a>
             <a href="index.php#guide">이용 안내</a>
             <a onclick="openAuthModal()">로그인 · 가입</a>
         </nav>
@@ -511,7 +530,7 @@ html.js .rv-drop.is-in{opacity:1;transform:none}
     }
     function enterModule(url) {
         if (isUserLoggedIn) { location.href = url; }
-        else { alert('이 모듈을 이용하려면 로그인이 필요합니다.'); openAuthModal(); }
+        else { alert('이 스튜디오를 이용하려면 로그인이 필요합니다.'); openAuthModal(); }
     }
     async function submitLogin() {
         const nickname = document.getElementById('login-nickname').value;

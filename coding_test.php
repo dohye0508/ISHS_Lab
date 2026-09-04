@@ -45,16 +45,21 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
             --content-bg: #151822;
             --text-main: #e2e8f0;
             --text-muted: #94a3b8;
-            --accent-color: #6366f1;
-            --accent-hover: #818cf8;
-            --folder-color: #38bdf8;
+            --accent-color: #2DD4BF;
+            --accent-hover: #5EEAD4;
+            --folder-color: #22D3EE;
             --border-color: rgba(255, 255, 255, 0.08);
             --glass-blur: 12px;
             --pre-bg: #1e212b;
             --doc-bg: rgba(30, 33, 43, 0.6);
-            --io-bg: rgba(99, 102, 241, 0.1);
-            --io-border: rgba(99, 102, 241, 0.2);
+            --io-bg: rgba(45, 212, 191, 0.1);
+            --io-border: rgba(45, 212, 191, 0.2);
             --shadow-color: rgba(0, 0, 0, 0.2);
+            --mesh-a: rgba(94, 234, 212, .20);
+            --mesh-a2: rgba(94, 234, 212, .16);
+            --mesh-b: rgba(96, 165, 250, .18);
+            --mesh-b2: rgba(96, 165, 250, .15);
+            --mesh-c: rgba(244, 114, 182, .12);
         }
 
         :root[data-theme="light"] {
@@ -63,16 +68,21 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
             --content-bg: #ffffff;
             --text-main: #0f172a;
             --text-muted: #1e293b; /* DARKENED for better contrast */
-            --accent-color: #4f46e5;
-            --accent-hover: #4338ca;
-            --folder-color: #0284c7;
+            --accent-color: #0D9488;
+            --accent-hover: #0F766E;
+            --folder-color: #0891B2;
             --border-color: rgba(0, 0, 0, 0.12);
             --glass-blur: 12px;
             --pre-bg: #f8fafc;
             --doc-bg: #ffffff;
-            --io-bg: #f1f5f9;
-            --io-border: rgba(79, 70, 229, 0.2);
+            --io-bg: #F0FDFA;
+            --io-border: rgba(13, 148, 136, 0.2);
             --shadow-color: rgba(0, 0, 0, 0.08);
+            --mesh-a: rgba(94, 234, 212, .16);
+            --mesh-a2: rgba(94, 234, 212, .13);
+            --mesh-b: rgba(96, 165, 250, .14);
+            --mesh-b2: rgba(96, 165, 250, .12);
+            --mesh-c: rgba(244, 114, 182, .09);
         }
 
         * {
@@ -86,8 +96,11 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
             background-image:
-                radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.08), transparent 25%),
-                radial-gradient(circle at 85% 30%, rgba(56, 189, 248, 0.08), transparent 25%);
+                radial-gradient(ellipse 70% 62% at 10% 8%, var(--mesh-a) 0%, transparent 72%),
+                radial-gradient(ellipse 65% 58% at 88% 14%, var(--mesh-b) 0%, transparent 72%),
+                radial-gradient(ellipse 85% 75% at 50% 46%, var(--mesh-c) 0%, transparent 78%),
+                radial-gradient(ellipse 68% 60% at 14% 90%, var(--mesh-a2) 0%, transparent 72%),
+                radial-gradient(ellipse 68% 62% at 90% 86%, var(--mesh-b2) 0%, transparent 72%);
             color: var(--text-main);
             display: flex;
             height: 100vh;
@@ -105,7 +118,10 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
 
         .sidebar {
             width: 300px;
-            background: var(--sidebar-bg);
+            background-color: var(--sidebar-bg);
+            background-image:
+                radial-gradient(ellipse 90% 55% at 20% 0%, var(--mesh-a) 0%, transparent 72%),
+                radial-gradient(ellipse 90% 60% at 30% 100%, var(--mesh-b2) 0%, transparent 75%);
             backdrop-filter: blur(var(--glass-blur));
             border-right: 1px solid var(--border-color);
             display: flex;
@@ -278,6 +294,10 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
             display: flex;
             flex-direction: column;
             background-color: var(--content-bg);
+            background-image:
+                radial-gradient(ellipse 65% 55% at 14% 8%, var(--mesh-b) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 55% at 90% 18%, var(--mesh-a) 0%, transparent 70%),
+                radial-gradient(ellipse 70% 60% at 55% 100%, var(--mesh-c) 0%, transparent 75%);
             position: relative;
             overflow: hidden;
         }
@@ -514,11 +534,8 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
 
     <!-- Auth UI Elements (Top-Left) -->
     <div id="auth-header" style="position: fixed; top: 12px; left: 12px; z-index: 10000; display: flex; align-items: center; gap: 10px;">
-        <a href="modules.php" style="background: var(--sidebar-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text-main); padding: 8px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-color); box-shadow: 0 4px 12px var(--shadow-color);" title="모듈 목록으로">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                <polyline points="9 22 9 12 15 12 15 22"></polyline>
-            </svg>
+        <a href="modules.php" style="display: flex; align-items: center; text-decoration: none; font-weight: 800; font-size: 21px; letter-spacing: -.03em; line-height: 1; filter: drop-shadow(0 1px 3px rgba(0,0,0,.12));" title="스튜디오 목록으로">
+            <span style="background: linear-gradient(100deg, #F472B6 0%, #60A5FA 55%, #5EEAD4 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">ISHS<span style="font-weight: 400; -webkit-text-fill-color: var(--text-main); opacity: .6;">LAB</span></span>
         </a>
         
         <div id="user-profile" style="display: none; align-items: center; gap: 12px; background: var(--sidebar-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 5px 15px; border-radius: 25px; border: 1px solid var(--border-color); box-shadow: 0 4px 12px var(--shadow-color);">
