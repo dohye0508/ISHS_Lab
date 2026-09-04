@@ -72,9 +72,9 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
 
     <!-- Auth UI Elements (Top-Left) -->
     <div id="auth-header"
-        style="position: fixed; top: 20px; left: 20px; z-index: 10000; display: flex; align-items: center; gap: 10px;">
+        style="position: fixed; top: 26px; left: 30px; z-index: 10000; display: flex; align-items: center; gap: 10px;">
         <a href="modules.php"
-            style="display: flex; align-items: center; text-decoration: none; font-weight: 800; font-size: 21px; letter-spacing: -.03em; line-height: 1; filter: drop-shadow(0 1px 3px rgba(0,0,0,.12));"
+            style="display: flex; align-items: center; text-decoration: none; font-weight: 800; font-size: 27px; letter-spacing: -.03em; line-height: 1; filter: drop-shadow(0 1px 3px rgba(0,0,0,.12));"
             title="스튜디오 목록으로">
             <span style="background: linear-gradient(100deg, #F472B6 0%, #60A5FA 55%, #5EEAD4 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">ISHS<span style="font-weight: 400; -webkit-text-fill-color: var(--text); opacity: .6;">LAB</span></span>
         </a>
