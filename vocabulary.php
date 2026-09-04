@@ -922,7 +922,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
     </div>
     <!-- Auth UI Elements (Top-Left) -->
     <div id="auth-header"
-        style="position: fixed; top: 26px; left: 30px; z-index: 10000; display: flex; align-items: center; gap: 10px;">
+        style="position: fixed; top: 26px; left: 46px; z-index: 10000; display: flex; align-items: center; gap: 10px;">
         <a href="modules.php"
             style="display: flex; align-items: center; text-decoration: none; font-weight: 800; font-size: 27px; letter-spacing: -.03em; line-height: 1; filter: drop-shadow(0 1px 3px rgba(0,0,0,.12));"
             title="스튜디오 목록으로">
