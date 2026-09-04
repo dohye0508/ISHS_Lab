@@ -95,7 +95,12 @@ body{
 html:not([data-theme="dark"]) .sun-icon{display:block!important}
 html[data-theme="dark"] .moon-icon{display:block!important}
 
-.auth-shell{display:flex;align-items:stretch;min-height:100vh}
+/* Fixed to exactly the viewport height (not min-height) so the page itself never
+   scrolls -- the signup form has more fields than login and would otherwise stretch
+   this whole row taller than the screen, dragging the hero's centered content down
+   with it. Only .auth-form-side is allowed to scroll internally when its content
+   doesn't fit; the hero always stays a stable, fully-visible 100vh. */
+.auth-shell{display:flex;align-items:stretch;height:100vh}
 
 /* Left hero: fixed dark "brand moment" panel, independent of light/dark theme,
    reusing the same pink/blue/mint palette as the rest of the site. Content is
@@ -104,7 +109,7 @@ html[data-theme="dark"] .moon-icon{display:block!important}
 .auth-hero{
     position:relative;flex:0 0 44%;min-width:0;overflow:hidden;
     display:flex;flex-direction:column;justify-content:center;
-    padding:80px clamp(32px,4vw,64px) 56px;background:#15161E;
+    padding:48px clamp(32px,4vw,64px) 56px;background:#15161E;
 }
 .auth-hero-bg{
     position:absolute;inset:-20%;z-index:0;
@@ -139,12 +144,17 @@ html[data-theme="dark"] .moon-icon{display:block!important}
 
 /* Right side: the actual form, theme-aware and vertically centered so switching
    between the (short) login form and the (taller) signup form never resizes a
-   container -- the content just recenters, no jarring height jump. */
+   container -- the content just recenters, no jarring height jump. Capped to the
+   same 100vh as the hero and scrollable ON ITS OWN when the signup form's extra
+   fields don't fit a short screen, so the page itself never grows or scrolls --
+   "justify-content: safe center" is what keeps the top of the content reachable by
+   scrolling instead of getting clipped above the fold the way plain "center" would. */
 .auth-form-side{
-    flex:1;min-width:0;display:flex;align-items:center;justify-content:center;
-    padding:96px clamp(24px,6vw,72px) 40px;
+    flex:1;min-width:0;height:100vh;overflow-y:auto;box-sizing:border-box;
+    display:flex;flex-direction:column;justify-content:safe center;align-items:center;
+    padding:40px clamp(24px,6vw,72px);
 }
-.auth-form-inner{width:100%;max-width:480px}
+.auth-form-inner{width:100%;max-width:480px;flex:0 0 auto}
 .auth-tabs{display:flex;align-items:center;gap:22px;border-bottom:1px solid var(--rule);padding-bottom:14px;margin-bottom:26px}
 .auth-tab{
     background:none;border:none;cursor:pointer;padding:0;
