@@ -1380,3 +1380,114 @@ body, .btn, .math-card, .sel-group, input, math-field, .detail-item, .header, .b
     color: #8ab4f8 !important; /* Lighter blue for dark mode */
 }
 
+/* --- Result summary & detail-list redesign ---
+   Was: "Q1: X" plain text inside a bordered box, and a per-item "Q1 (X)" strong
+   tag -- both just literal text with a color, no real visual weight. Replaced
+   with icon+tint badges everywhere the same "correct/incorrect/skipped" status
+   is shown, sharing one set of .success/.error/.warning tint rules. Declared
+   last in the file (after the two earlier duplicate .mini-badge/.detail-item
+   blocks above) so the cascade guarantees these win regardless of source order. */
+:root {
+    --warning: #b8860b;
+}
+[data-theme="dark"] {
+    --warning: #f2b84b;
+}
+
+#simple-result-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.mini-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-width: 54px;
+    height: 54px;
+    padding: 4px;
+    border: none;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--text) 6%, transparent);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.mini-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+.mini-badge-icon {
+    font-size: 1.15rem;
+    font-weight: 800;
+    line-height: 1;
+}
+.mini-badge-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    opacity: 0.65;
+}
+.mini-badge.success { background: color-mix(in srgb, var(--success) 16%, transparent); }
+.mini-badge.success .mini-badge-icon { color: var(--success); }
+.mini-badge.error { background: color-mix(in srgb, var(--error) 16%, transparent); }
+.mini-badge.error .mini-badge-icon { color: var(--error); }
+.mini-badge.warning { background: color-mix(in srgb, var(--warning) 18%, transparent); }
+.mini-badge.warning .mini-badge-icon { color: var(--warning); }
+
+.detail-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 14px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 14px;
+}
+.detail-status-icon { font-size: 0.95em; }
+.detail-status.success { background: color-mix(in srgb, var(--success) 15%, transparent); color: var(--success); }
+.detail-status.error { background: color-mix(in srgb, var(--error) 15%, transparent); color: var(--error); }
+.detail-status.warning { background: color-mix(in srgb, var(--warning) 18%, transparent); color: var(--warning); }
+
+.detail-problem {
+    margin-bottom: 14px;
+}
+.detail-answer-row {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 6px 0;
+    font-size: 0.95rem;
+}
+.detail-answer-label {
+    flex: 0 0 auto;
+    font-weight: 600;
+    opacity: 0.6;
+    font-size: 0.85rem;
+}
+
+/* The word-problem prose/formula split (buildProblemHtml, adv_math.php only) is
+   sized for the full-width live quiz view -- unscaled, it dwarfed this compact
+   card. mjx-container's own default ~1em display margin was the other half of
+   the oversized gap the detail card had between the problem and the answers. */
+.detail-item .problem-statement-text {
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+.detail-item .problem-statement-formula {
+    margin-top: 10px;
+}
+.detail-item mjx-container[display] {
+    margin: 0.35em 0 !important;
+}
+
+/* #detail-list's <li class="detail-item"> elements are inserted straight into a
+   <div>, with no wrapping <ul> -- "#detail-list ul { list-style: none }" above
+   never matches, so the browser's default list-item bullet was showing next to
+   every card. Suppress it on the item itself instead of relying on an ancestor. */
+.detail-item {
+    list-style: none;
+}
+

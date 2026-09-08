@@ -23,7 +23,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
     <meta property="og:image" content="assets/images/advmath.jpg">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=lab_final_v6">
+    <link rel="stylesheet" href="assets/css/style.css?v=lab_final_v7">
     <script src="https://unpkg.com/mathlive"></script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
@@ -123,6 +123,58 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
             color: #fff;
             border-color: var(--primary);
         }
+
+        /* 증명 감상 (Proof Gallery) -- #proof-view reuses the exact same visual language
+           as the real quiz's #app-view (.header/.badges/.action-bar, and the same
+           .problem-statement-text/.problem-statement-formula split used for word
+           problems), just with its own #proof-problem-area box (a real quiz #problem-area
+           can't be reused directly -- IDs must stay unique while both views exist in the
+           DOM) and no math-input/give-up/finish at all, since there is nothing to answer. */
+        #proof-problem-area {
+            font-size: 2rem;
+            text-align: center;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            background: #ffffff;
+            padding: 0 20px;
+            box-sizing: border-box;
+            overflow-x: auto;
+            max-width: 100%;
+            font-family: 'KoPubWorld Dotum Pro', 'Pretendard', system-ui, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            font-weight: 500;
+        }
+        [data-theme="dark"] #proof-problem-area {
+            background-color: transparent;
+        }
+        /* .brand is deliberately width:0 (see style.css) so #slogan-text can center itself
+           over the header via position:absolute -- #proof-chapter-title sits in that same
+           zero-width box but never got the same absolute-positioning rule, so it was stuck
+           rendering inside a 0px-wide flex item and wrapped one character per line. */
+        #proof-chapter-title {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin: 0;
+            white-space: nowrap;
+            letter-spacing: -0.02em;
+            max-width: 60vw;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            pointer-events: none;
+        }
+        @media (max-width: 768px) {
+            #proof-chapter-title {
+                font-size: 1.05rem;
+                max-width: 50vw;
+            }
+        }
     </style>
 
     <!-- ANTI-FOUC SCRIPT: Must be in HEAD and before body renders -->
@@ -188,18 +240,12 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                             <div class="rules-section">
                                 <h3 class="rules-title">💡 이용 가이드</h3>
                                 <ul class="rules-list">
-                                    <li>본 서비스는 <strong>데스크탑 및 태블릿</strong> 환경에 최적화되어 있습니다.</li>
-                                    <li>수식 입력란 클릭 시 <strong>가상 키보드</strong>를 사용하실 수 있습니다.</li>
-                                    <li>(중요) <strong>미적분</strong> 문제는 정답 입력 시 <strong>적분상수 C</strong>를 포함해 주세요.</li>
-                                    <li>(중요) <strong>대수</strong> 문제에서 정답이 행렬/벡터면 답 입력란 아래 <strong>행렬 입력 버튼</strong>을
-                                        사용하세요. 해가 무수히 많으면 자유변수를 <strong>t</strong>로 나타내세요.</li>
-                                    <li>(중요) 일정 레벨 이상 문제에는 <strong>"포기"</strong> 버튼이 나타납니다. 초등함수로
-                                        <strong>적분이 불가능</strong>하거나, <strong>역행렬이 존재하지 않거나</strong>, <strong>해가 없는</strong>
-                                        문제는 직접 입력하지 않고 이 버튼으로 처리할 수 있습니다.</li>
-                                    <li><strong>sech, csch, coth</strong>를 입력하실 때 가끔 화면에 <strong>이상하게 보일 수 있습니다</strong>
-                                        (MathLive 자체 자동완성 충돌 때문). 그래도 <strong>채점은 정상적으로 동작</strong>하니 안심하고 그대로 제출하세요.</li>
-                                    <li><strong>역함수</strong>는 <strong>-1 표기</strong>(예: sin⁻¹(x), sinh⁻¹(x))와 <strong>arc 표기</strong>
-                                        (예: arcsin(x), arsinh(x)) <strong>둘 다 정답으로 인정</strong>됩니다. 편한 쪽으로 입력하세요.</li>
+                                    <li><strong>미적분</strong> 문제는 정답에 <strong>적분상수 C</strong>를 포함하세요.</li>
+                                    <li><strong>대수</strong> 문제의 답이 행렬/벡터면 <strong>행렬 입력 버튼</strong>을 사용하고, 자유변수는 <strong>t</strong>로 나타내세요.</li>
+                                    <li><strong>적분 불가능·역행렬 없음·해 없음</strong>인 문제는 <strong>"포기"</strong> 버튼으로 처리하세요.</li>
+                                    <li><strong>sech, csch, coth</strong> 입력 시 화면이 이상해 보일 수 있지만 <strong>채점은 정상 동작합니다</strong>.</li>
+                                    <li><strong>역함수</strong>는 <strong>-1 표기</strong>와 <strong>arc 표기</strong> 모두 정답으로 인정됩니다.</li>
+                                    <li>그 외에는 <strong>Integral Studio</strong>와 동일합니다.</li>
                                 </ul>
                             </div>
                         </div>
@@ -245,8 +291,9 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                     <button type="button" id="subject-tab-hyp" class="subject-tab" onclick="switchModalSubject('hyp')">고급미적분-쌍곡함수</button>
                     <button type="button" id="subject-tab-polar" class="subject-tab" onclick="switchModalSubject('polar')">고급미적분-극좌표</button>
                     <button type="button" id="subject-tab-algebra" class="subject-tab" onclick="switchModalSubject('algebra')">고급대수</button>
+                    <button type="button" id="subject-tab-proof" class="subject-tab" onclick="switchModalSubject('proof')">증명</button>
                 </div>
-                <div style="flex: 1; overflow-y: auto; padding-right: 5px;">
+                <div style="flex: 1; overflow-y: auto; padding: 0 25px 0 30px;">
                     <div id="collection-grid" style="display:none;"></div> <!-- logic.js compatibility -->
 
                     <div id="modal-section-trig">
@@ -269,7 +316,12 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                         <div id="collection-grid-algebra" class="collection-grid"></div>
                     </div>
 
-                    <div style="padding: 15px; text-align: center; border-top: 1px solid var(--border); margin-top: 20px;">
+                    <div id="modal-section-proof" class="hidden">
+                        <h3 style="margin-top: 10px; margin-bottom: 15px; color: var(--text); padding-left: 10px;">▶ 증명</h3>
+                        <div id="collection-grid-proof" class="collection-grid"></div>
+                    </div>
+
+                    <div id="collection-footnote" style="padding: 15px; text-align: center; border-top: 1px solid var(--border); margin-top: 20px;">
                         <p style="font-size: 0.85em; color: var(--text-secondary); margin: 0;">
                             * 각 컬렉션은 여러 문제로 구성되어 있습니다.
                         </p>
@@ -281,7 +333,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
 
         <div id="app-view">
             <div class="header">
-                <button class="btn-home" onclick="goHome()" title="메인으로">
+                <button class="btn-home" onclick="returnToCollections()" title="메인으로">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                         <polyline points="9 22 9 12 15 12 15 22"></polyline>
@@ -331,15 +383,40 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
             </div>
         </div>
 
+        <div id="proof-view" style="display:none;">
+            <div class="header">
+                <button class="btn-home" onclick="returnToCollections()" title="메인으로">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                </button>
+                <span class="brand">
+                    <h2 id="proof-chapter-title">증명</h2>
+                </span>
+                <div class="badges">
+                    <span id="proof-progress-badge" class="badge progress">1 / 1</span>
+                </div>
+            </div>
+
+            <div id="proof-problem-area"></div>
+            <div class="action-bar">
+                <button id="proof-btn-prev" class="btn secondary hidden" onclick="prevProofTheorem()">← Previous</button>
+                <div style="flex-grow: 1;"></div>
+                <button id="proof-btn-next" class="btn primary" onclick="nextProofTheorem()">Next →</button>
+            </div>
+        </div>
+
         <div class="footer">
             © 2026 ISHS 32nd - Developed by Dohye Lee. All rights reserved.
         </div>
     </div>
 
     <script src="data/math/adv_collections_final.js?v=20260813_v7"></script>
-    <script src="data/math/algebra_collections.js?v=20260820_v1"></script>
+    <script src="data/math/algebra_collections.js?v=20260907_v3"></script>
+    <script src="data/math/proof_theorems.js?v=20260908_v4"></script>
     <script src="scripts/grader.js?v=debug_v7"></script>
-    <script src="scripts/logic.js?v=debug_v7"></script>
+    <script src="scripts/logic.js?v=debug_v8"></script>
     <script src="scripts/adv_anim.js?v=debug_v2"></script>
     <!-- Global Theme Toggle (Top-Right) -->
     <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Dark Mode">
@@ -492,9 +569,8 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
         }
 
         // Override logic.js's renderResult (same "only this page" scoping as renderMath
-        // above). The post-test detail list had its own independent `$$${p.latex}$$`
-        // rendering for the "문제:" line -- same unbroken-block overflow bug, different
-        // code path, so it needed the same buildProblemHtml() fix applied here too.
+        // above). The detail list needs buildProblemHtml() (not a bare `$$${p.latex}$$`)
+        // for the same word-problem overflow fix used in the live quiz view.
         function renderResult(res) {
             const score = res.details.filter(d => d.isCorrect).length;
             document.getElementById('score-area').innerText = `Score: ${score} / ${state.totalCount}`;
@@ -502,22 +578,31 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
 
             document.getElementById('simple-result-list').innerHTML = res.details.map(d => {
                 let cls = d.isCorrect ? 'success' : 'error';
-                let mark = d.isCorrect ? 'O' : 'X';
-                if (d.isSkipped) { cls = 'warning'; mark = 'S'; }
-                return `<div class="mini-badge" style="border-color:var(--${cls}); color:var(--${cls}); font-weight:bold;">Q${d.id}: ${mark}</div>`;
+                let icon = d.isCorrect ? '✓' : '✗';
+                if (d.isSkipped) { cls = 'warning'; icon = '—'; }
+                return `<div class="mini-badge ${cls}">
+                    <span class="mini-badge-icon">${icon}</span>
+                    <span class="mini-badge-label">Q${d.id}</span>
+                </div>`;
             }).join("");
 
             document.getElementById('detail-list').innerHTML = res.details.map(d => {
                 const p = state.problems.find(prob => prob.id === d.id);
-                const mark = d.isSkipped ? 'SKIP' : (d.isCorrect ? 'O' : 'X');
-                const color = d.isSkipped ? 'orange' : (d.isCorrect ? '#4CAF50' : '#F44336');
+                const cls = d.isSkipped ? 'warning' : (d.isCorrect ? 'success' : 'error');
+                const icon = d.isSkipped ? '—' : (d.isCorrect ? '✓' : '✗');
+                const label = d.isSkipped ? '건너뜀' : (d.isCorrect ? '정답' : '오답');
                 const cLabel = p.solution.includes("적포") || p.latex.includes("\\text{") ? "" : " + C";
                 return `<li class="detail-item">
-                    <strong style="color:${color}; font-size: 1.2em;">Q${d.id} (${mark})</strong>
-                    <div>문제: ${buildProblemHtml(p.latex)}</div>
-                    <p>내가 쓴 답: $$${p.userAnswer || "\\text{(비어있음)}"}$$</p>
-                    <p style="font-family: monospace; font-size: 0.75rem; opacity: 0.55; word-break: break-all;">(raw: ${escapeHtmlText(p.userAnswer || "")})</p>
-                    <p>정답: $$${p.solution}${cLabel}$$</p>
+                    <div class="detail-status ${cls}"><span class="detail-status-icon">${icon}</span>Q${d.id} · ${label}</div>
+                    <div class="detail-problem">${buildProblemHtml(p.latex)}</div>
+                    <div class="detail-answer-row">
+                        <span class="detail-answer-label">내가 쓴 답</span>
+                        <span>$$${p.userAnswer || "\\text{(비어있음)}"}$$</span>
+                    </div>
+                    <div class="detail-answer-row">
+                        <span class="detail-answer-label">정답</span>
+                        <span>$$${p.solution}${cLabel}$$</span>
+                    </div>
                 </li>`;
             }).join("");
             if (window.MathJax) MathJax.typesetPromise([document.getElementById('detail-list')]);
@@ -563,12 +648,80 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
         // through the same startGame()/selectCollection() engine; only algebra differs.
         let selectedSubject = 'calc';
 
-        const MODAL_SUBJECTS = ['trig', 'hyp', 'polar', 'algebra'];
+        const MODAL_SUBJECTS = ['trig', 'hyp', 'polar', 'algebra', 'proof'];
+        let lastModalTab = 'trig'; // so the home button can reopen the modal on the same tab
         function switchModalSubject(subject) {
+            lastModalTab = subject;
             MODAL_SUBJECTS.forEach(s => {
                 document.getElementById(`subject-tab-${s}`).classList.toggle('active', s === subject);
                 document.getElementById(`modal-section-${s}`).classList.toggle('hidden', s !== subject);
             });
+            // "* 각 컬렉션은 여러 문제로 구성되어 있습니다" only makes sense for the
+            // collection tabs -- the proof tab isn't a collection you start a quiz from.
+            document.getElementById('collection-footnote')?.classList.toggle('hidden', subject === 'proof');
+        }
+
+        // 증명 감상 (Proof Gallery) -- read-only, no grading, no math-input. The modal tab
+        // is just 5 chapter cards (same .collection-card look as every other tab); picking
+        // one jumps straight into #proof-view, which reuses the real quiz's header/badge/
+        // action-bar layout so a theorem reads exactly like a normal problem -- just with
+        // only a Prev/Next pair instead of an answer field.
+        function buildProofChapterCard(chapter, idx) {
+            const card = document.createElement('div');
+            card.className = 'collection-card';
+            card.onclick = () => startProofChapter(idx);
+            card.innerHTML = `<div><h3>${escapeHtmlText(chapter.chapter)}</h3></div>
+            <div class="problem-preview">정리 ${chapter.theorems.length}개</div>`;
+            return card;
+        }
+
+        const proofState = { theorems: [], index: 0, chapterName: '' };
+
+        function startProofChapter(idx) {
+            const chapter = window.proofTheorems?.[idx];
+            if (!chapter) return;
+            proofState.theorems = chapter.theorems;
+            proofState.index = 0;
+            proofState.chapterName = chapter.chapter;
+            document.getElementById('proof-chapter-title').innerText = chapter.chapter;
+            closeCollectionModal();
+            document.getElementById('landing-view').style.display = 'none';
+            document.getElementById('proof-view').style.display = 'block';
+            loadCurrentProofTheorem();
+        }
+
+        // Home button (both #app-view and #proof-view) -- not a plain goHome(), which just
+        // drops you on the bare landing page. The actual complaint was having to click
+        // "문제집 선택" and then re-pick the same tab every time; this instead reopens the
+        // collection modal immediately, already on whichever tab (lastModalTab) was last
+        // active, so going home is a straight shot back into the picker, not a full reset.
+        function returnToCollections() {
+            document.getElementById('app-view').style.display = 'none';
+            document.getElementById('proof-view').style.display = 'none';
+            document.getElementById('landing-view').style.display = 'block';
+            switchModalSubject(lastModalTab);
+            openCollectionModal();
+        }
+
+        function loadCurrentProofTheorem() {
+            const t = proofState.theorems[proofState.index];
+            if (!t) return;
+            document.getElementById('proof-progress-badge').innerText = `${proofState.index + 1} / ${proofState.theorems.length}`;
+            const area = document.getElementById('proof-problem-area');
+            area.innerHTML = `
+                <div class="problem-statement-text"><strong>정리 ${t.num}. ${escapeHtmlText(t.title)}</strong><br>${t.hypothesis}</div>
+                ${t.statement ? `<div class="problem-statement-formula">$$${t.statement}$$</div>` : ''}
+            `;
+            document.getElementById('proof-btn-prev').classList.toggle('hidden', proofState.index === 0);
+            document.getElementById('proof-btn-next').classList.toggle('hidden', proofState.index === proofState.theorems.length - 1);
+            if (window.MathJax) MathJax.typesetPromise([area]);
+        }
+
+        function prevProofTheorem() {
+            if (proofState.index > 0) { proofState.index--; loadCurrentProofTheorem(); }
+        }
+        function nextProofTheorem() {
+            if (proofState.index < proofState.theorems.length - 1) { proofState.index++; loadCurrentProofTheorem(); }
         }
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -599,6 +752,12 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                     algGrid.appendChild(buildCollectionCard(col, () => { selectedSubject = 'algebra'; selectAlgebraCollection(col.id); }));
                 });
                 if (window.MathJax) MathJax.typesetPromise([algGrid]);
+            }
+
+            const proofGrid = document.getElementById('collection-grid-proof');
+            if (proofGrid && window.proofTheorems) {
+                proofGrid.innerHTML = "";
+                window.proofTheorems.forEach((ch, idx) => proofGrid.appendChild(buildProofChapterCard(ch, idx)));
             }
         });
 

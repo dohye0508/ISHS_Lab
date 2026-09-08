@@ -23,7 +23,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
     <meta property="og:image" content="assets/images/int.jpg">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=lab_final_v6">
+    <link rel="stylesheet" href="assets/css/style.css?v=lab_final_v7">
     <style>
         /* ISHS LAB 공통 톤 — Integral Studio는 블루 */
         :root{
@@ -178,7 +178,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
 
         <div id="app-view">
             <div class="header">
-                <button class="btn-home" onclick="goHome()" title="메인으로">
+                <button class="btn-home" onclick="returnToCollections()" title="메인으로">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                         <polyline points="9 22 9 12 15 12 15 22"></polyline>
@@ -230,7 +230,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
 
     <script src="data/math/collections.js?v=<?php echo time(); ?>"></script>
     <script src="scripts/grader.js?v=debug_v7"></script>
-    <script src="scripts/logic.js?v=debug_v7"></script>
+    <script src="scripts/logic.js?v=debug_v8"></script>
     <script src="scripts/bg_funcs.js?v=debug_v7"></script>
     <script src="scripts/bg_anim.js?v=debug_v7"></script>
     <!-- Global Theme Toggle (Top-Right) -->
@@ -279,6 +279,14 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
         }
 
         document.addEventListener('DOMContentLoaded', updateAuthUI);
+
+        // Home button -- goHome() (logic.js, shared) just drops you on the bare landing
+        // page; reopen the collection modal right away instead, same as adv_math.php's
+        // returnToCollections(), so going home is a straight shot back into the picker.
+        function returnToCollections() {
+            goHome();
+            openCollectionModal();
+        }
 
         // Global Theme Toggle Script
         (function () {

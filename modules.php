@@ -236,16 +236,12 @@ html[data-theme="dark"] .moon-icon{display:block!important}
 .mod-icon--bm{background:linear-gradient(135deg,var(--blue),var(--mint));box-shadow:0 12px 22px -10px rgba(96,165,250,.5)}
 .mod-icon--pm{background:linear-gradient(135deg,var(--pink),var(--mint));box-shadow:0 12px 22px -10px rgba(94,234,212,.5)}
 .mod-icon--soon{background:var(--rule);color:var(--ink-3);box-shadow:none}
-.mod-name{font-size:18.5px;margin-bottom:8px}
-.mod-desc{font-size:14px;line-height:1.6;color:var(--ink-3);margin-bottom:18px}
-.mod-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;margin-bottom:16px}
-.mod-chip{
-    font:600 11.5px/1 var(--sans);letter-spacing:.01em;
-    padding:5px 10px;border-radius:99px;background:var(--paper-2);color:var(--ink-3);border:1px solid var(--rule);
-}
+.mod-name{font-size:18.5px;margin-bottom:4px}
+.mod-name-ko{font-size:14px;color:var(--ink-3);margin-bottom:8px}
+.mod-desc{font-size:13.5px;color:var(--ink-3);opacity:.85}
 .mod-cta{
     display:flex;align-items:center;gap:6px;
-    padding-top:16px;border-top:1px solid var(--rule);
+    margin-top:auto;padding-top:16px;border-top:1px solid var(--rule);
     font:700 14.5px/1 var(--sans);color:var(--ink);
 }
 .mod-arr{margin-left:auto;font-size:16px;color:var(--ink-3);transition:transform .18s ease,color .18s ease}
@@ -367,11 +363,8 @@ html.js .rv-drop.is-in{opacity:1;transform:none}
                         <span class="mod-icon mod-icon--pb"><img src="assets/images/inticon.jpg" alt="Integral Studio"></span>
                     </div>
                     <h4 class="mod-name">Integral Studio</h4>
-                    <p class="mod-desc">컬렉션 기반 실전 부정적분 트레이닝. 무한 생성 문제와 즉각 피드백으로 실력을 극대화하세요.</p>
-                    <div class="mod-chips">
-                        <span class="mod-chip">무한 생성</span>
-                        <span class="mod-chip">즉시 채점</span>
-                    </div>
+                    <p class="mod-name-ko">적분 스튜디오</p>
+                    <p class="mod-desc">다양한 부정적분 문제로 실력을 다져보세요.</p>
                     <div class="mod-cta">시작하기<span class="mod-arr">&rarr;</span></div>
                 </article>
 
@@ -381,11 +374,8 @@ html.js .rv-drop.is-in{opacity:1;transform:none}
                         <span class="mod-badge mod-badge--new">NEW</span>
                     </div>
                     <h4 class="mod-name">Advanced Math Studio</h4>
-                    <p class="mod-desc">쌍곡선함수&middot;역함수 미적분부터 행렬과 연립일차방정식까지, 고급수학 심화 트레이닝.</p>
-                    <div class="mod-chips">
-                        <span class="mod-chip">쌍곡선함수</span>
-                        <span class="mod-chip">행렬</span>
-                    </div>
+                    <p class="mod-name-ko">고급수학 스튜디오</p>
+                    <p class="mod-desc">쌍곡선함수부터 행렬까지 심화 학습.</p>
                     <div class="mod-cta">시작하기<span class="mod-arr">&rarr;</span></div>
                 </article>
 
@@ -394,11 +384,8 @@ html.js .rv-drop.is-in{opacity:1;transform:none}
                         <span class="mod-icon mod-icon--pm"><img src="assets/images/vocabicon.jpg" alt="Vocabulary Studio"></span>
                     </div>
                     <h4 class="mod-name">Vocabulary Studio</h4>
-                    <p class="mod-desc">나만의 단어장 관리 &amp; 플래시카드 테스트로 영어 어휘를 체계적으로 암기하세요.</p>
-                    <div class="mod-chips">
-                        <span class="mod-chip">플래시카드</span>
-                        <span class="mod-chip">나만의 단어장</span>
-                    </div>
+                    <p class="mod-name-ko">영단어/지문 스튜디오</p>
+                    <p class="mod-desc">플래시카드로 나만의 단어장을 암기하세요.</p>
                     <div class="mod-cta">시작하기<span class="mod-arr">&rarr;</span></div>
                 </article>
 
@@ -407,11 +394,8 @@ html.js .rv-drop.is-in{opacity:1;transform:none}
                         <span class="mod-icon mod-icon--bm"><img src="assets/images/codingtesticon.jpg" alt="Coding Test"></span>
                     </div>
                     <h4 class="mod-name">Coding Test</h4>
-                    <p class="mod-desc">파이썬 알고리즘 템플릿 &amp; 예제 모음. 코딩 테스트 핵심 로직을 한눈에 확인하세요.</p>
-                    <div class="mod-chips">
-                        <span class="mod-chip">14+ 카테고리</span>
-                        <span class="mod-chip">표준 코드</span>
-                    </div>
+                    <p class="mod-name-ko">코테 스튜디오</p>
+                    <p class="mod-desc">알고리즘 템플릿과 예제를 확인하세요.</p>
                     <div class="mod-cta">시작하기<span class="mod-arr">&rarr;</span></div>
                 </article>
             </div>

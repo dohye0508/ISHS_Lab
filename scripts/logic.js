@@ -390,22 +390,32 @@ function renderResult(res) {
     
     document.getElementById('simple-result-list').innerHTML = res.details.map(d => {
         let cls = d.isCorrect ? 'success' : 'error';
-        let mark = d.isCorrect ? 'O' : 'X';
-        if (d.isSkipped) { cls = 'warning'; mark = 'S'; }
-        
-        return `<div class="mini-badge" style="border-color:var(--${cls}); color:var(--${cls}); font-weight:bold;">Q${d.id}: ${mark}</div>`;
+        let icon = d.isCorrect ? '✓' : '✗';
+        if (d.isSkipped) { cls = 'warning'; icon = '—'; }
+
+        return `<div class="mini-badge ${cls}">
+            <span class="mini-badge-icon">${icon}</span>
+            <span class="mini-badge-label">Q${d.id}</span>
+        </div>`;
     }).join("");
 
     document.getElementById('detail-list').innerHTML = res.details.map(d => {
         const p = state.problems.find(prob => prob.id === d.id);
-        const mark = d.isSkipped ? 'SKIP' : (d.isCorrect ? 'O' : 'X');
-        const color = d.isSkipped ? 'orange' : (d.isCorrect ? '#4CAF50' : '#F44336'); // Green or Red
-        
+        const cls = d.isSkipped ? 'warning' : (d.isCorrect ? 'success' : 'error');
+        const icon = d.isSkipped ? '—' : (d.isCorrect ? '✓' : '✗');
+        const label = d.isSkipped ? '건너뜀' : (d.isCorrect ? '정답' : '오답');
+
         return `<li class="detail-item">
-            <strong style="color:${color}; font-size: 1.2em;">Q${d.id} (${mark})</strong>
-            <p>문제: $$${p.latex}$$</p>
-            <p>내가 쓴 답: $$${p.userAnswer || "\\text{(비어있음)}"}$$</p>
-            <p>정답: $$${p.solution}${p.solution.includes("적포") || p.latex.includes("\\text{") ? "" : " + C"}$$</p>
+            <div class="detail-status ${cls}"><span class="detail-status-icon">${icon}</span>Q${d.id} · ${label}</div>
+            <div class="detail-problem">$$${p.latex}$$</div>
+            <div class="detail-answer-row">
+                <span class="detail-answer-label">내가 쓴 답</span>
+                <span>$$${p.userAnswer || "\\text{(비어있음)}"}$$</span>
+            </div>
+            <div class="detail-answer-row">
+                <span class="detail-answer-label">정답</span>
+                <span>$$${p.solution}${p.solution.includes("적포") || p.latex.includes("\\text{") ? "" : " + C"}$$</span>
+            </div>
         </li>`;
     }).join("");
     if (window.MathJax) MathJax.typesetPromise([document.getElementById('detail-list')]);
@@ -414,7 +424,13 @@ function renderResult(res) {
 
 function toggleDetails() { document.getElementById('result-view').classList.toggle('expanded'); }
 function normalizeLatex(l) { return `\\int ${l.replace(/^\\int|dx$/g, '').trim()} \\, dx`; }
-function goHome() { if (confirm("메인 화면으로 이동하시겠습니까? 진행 상황은 저장되지 않습니다.")) location.reload(); }
+// Used to just location.reload() -- simple, but a full reload is unnecessary (no
+// server round-trip involved) and not what adv_math.php's home button uses any more
+// (it calls returnToCollections() to reopen the collection modal directly instead).
+function goHome() {
+    document.getElementById('app-view').style.display = 'none';
+    document.getElementById('landing-view').style.display = 'block';
+}
 function toggleTheme() {
     const darkChk = document.getElementById('chk-dark-mode');
     const currentTheme = document.body.getAttribute('data-theme');
