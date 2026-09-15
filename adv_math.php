@@ -191,7 +191,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
 
     <!-- Auth UI Elements (Top-Left) -->
     <div id="auth-header"
-        style="position: fixed; top: 26px; left: 46px; z-index: 10000; display: flex; align-items: center; gap: 10px;">
+        style="position: fixed; top: 26px; left: 46px; z-index: 10000; display: flex; align-items: center; gap: 10px; transform: translateZ(0); will-change: transform;">
         <a href="modules.php"
             style="display: flex; align-items: center; text-decoration: none; font-weight: 800; font-size: 27px; letter-spacing: -.03em; line-height: 1; filter: drop-shadow(0 1px 3px rgba(0,0,0,.12));"
             title="스튜디오 목록으로">
@@ -290,6 +290,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                     <button type="button" id="subject-tab-trig" class="subject-tab active" onclick="switchModalSubject('trig')">고급미적분-역삼각함수</button>
                     <button type="button" id="subject-tab-hyp" class="subject-tab" onclick="switchModalSubject('hyp')">고급미적분-쌍곡함수</button>
                     <button type="button" id="subject-tab-polar" class="subject-tab" onclick="switchModalSubject('polar')">고급미적분-극좌표</button>
+                    <button type="button" id="subject-tab-apps" class="subject-tab" onclick="switchModalSubject('apps')">정적분의 활용</button>
                     <button type="button" id="subject-tab-algebra" class="subject-tab" onclick="switchModalSubject('algebra')">고급대수</button>
                     <button type="button" id="subject-tab-proof" class="subject-tab" onclick="switchModalSubject('proof')">증명</button>
                 </div>
@@ -309,6 +310,11 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                     <div id="modal-section-polar" class="hidden">
                         <h3 style="margin-top: 10px; margin-bottom: 15px; color: var(--text); padding-left: 10px;">▶ 극좌표와 극곡선</h3>
                         <div id="collection-grid-polar" class="collection-grid"></div>
+                    </div>
+
+                    <div id="modal-section-apps" class="hidden">
+                        <h3 style="margin-top: 10px; margin-bottom: 15px; color: var(--text); padding-left: 10px;">▶ 정적분의 활용 (고난도)</h3>
+                        <div id="collection-grid-apps" class="collection-grid"></div>
                     </div>
 
                     <div id="modal-section-algebra" class="hidden">
@@ -412,10 +418,10 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
         </div>
     </div>
 
-    <script src="data/math/adv_collections_final.js?v=20260813_v7"></script>
+    <script src="data/math/adv_collections_final.js?v=20260909_v11"></script>
     <script src="data/math/algebra_collections.js?v=20260907_v3"></script>
     <script src="data/math/proof_theorems.js?v=20260908_v4"></script>
-    <script src="scripts/grader.js?v=debug_v7"></script>
+    <script src="scripts/grader.js?v=debug_v8"></script>
     <script src="scripts/logic.js?v=debug_v8"></script>
     <script src="scripts/adv_anim.js?v=debug_v2"></script>
     <!-- Global Theme Toggle (Top-Right) -->
@@ -648,7 +654,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
         // through the same startGame()/selectCollection() engine; only algebra differs.
         let selectedSubject = 'calc';
 
-        const MODAL_SUBJECTS = ['trig', 'hyp', 'polar', 'algebra', 'proof'];
+        const MODAL_SUBJECTS = ['trig', 'hyp', 'polar', 'apps', 'algebra', 'proof'];
         let lastModalTab = 'trig'; // so the home button can reopen the modal on the same tab
         function switchModalSubject(subject) {
             lastModalTab = subject;
@@ -728,21 +734,25 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
             const trigGrid = document.getElementById('collection-grid-trig');
             const hypGrid = document.getElementById('collection-grid-hyp');
             const polGrid = document.getElementById('collection-grid-polar');
-            if (trigGrid && hypGrid && polGrid && window.generatedCollections) {
+            const appsGrid = document.getElementById('collection-grid-apps');
+            if (trigGrid && hypGrid && polGrid && appsGrid && window.generatedCollections) {
                 trigGrid.innerHTML = "";
                 hypGrid.innerHTML = "";
                 polGrid.innerHTML = "";
+                appsGrid.innerHTML = "";
                 window.generatedCollections.forEach(col => {
                     const card = buildCollectionCard(col, () => { selectedSubject = 'calc'; selectCollection(col.id); });
                     if (col.id.includes('adv_col1a')) {
                         trigGrid.appendChild(card);
                     } else if (col.id.includes('adv_col1b')) {
                         hypGrid.appendChild(card);
+                    } else if (col.id.includes('adv_col3')) {
+                        appsGrid.appendChild(card);
                     } else {
                         polGrid.appendChild(card);
                     }
                 });
-                if (window.MathJax) MathJax.typesetPromise([trigGrid, hypGrid, polGrid]);
+                if (window.MathJax) MathJax.typesetPromise([trigGrid, hypGrid, polGrid, appsGrid]);
             }
 
             const algGrid = document.getElementById('collection-grid-algebra');

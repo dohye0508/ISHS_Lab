@@ -69,8 +69,9 @@ body{
 }
 
 .auth-topbar{
-    position:absolute;top:0;right:0;z-index:5;
+    position:absolute;top:0;left:0;right:0;z-index:5;
     padding:20px clamp(20px,4vw,40px);
+    display:flex;align-items:center;justify-content:flex-end;
 }
 /* Matches the real site wordmark (.brand in index.php/modules.php) exactly --
    gradient-filled "ISHS" + muted "LAB" -- placed inside the hero panel (rather than
@@ -84,6 +85,18 @@ body{
     margin-bottom:auto;
 }
 .auth-brand-sub{font-weight:400;color:rgba(255,255,255,.55);margin-left:4px;-webkit-text-fill-color:rgba(255,255,255,.55)}
+/* Once .auth-hero (and the wordmark living inside it) is hidden below 900px, the
+   page had no logo anywhere -- this is index.php/modules.php's own .brand style
+   (theme-aware gradient, proven to read fine in both themes on that body
+   background), reused here inside the topbar so branding survives on mobile/tablet
+   too. Hidden by default/desktop since the hero copy already covers it there. */
+.auth-topbar-brand{
+    display:none;text-decoration:none;align-items:center;
+    font:800 22px/1 var(--sans);letter-spacing:-.03em;margin-right:auto;
+    background:linear-gradient(100deg,var(--pink) 0%,var(--blue) 55%,var(--mint) 100%);
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.auth-topbar-brand-sub{font-weight:400;color:var(--ink-3);margin-left:4px;-webkit-text-fill-color:var(--ink-3)}
 .theme-toggle-btn{
     background:transparent;border:1px solid var(--rule-2);color:var(--ink);
     cursor:pointer;padding:8px;border-radius:50%;
@@ -200,9 +213,11 @@ html[data-theme="dark"] .moon-icon{display:block!important}
 .btn--fill:hover{box-shadow:0 8px 22px -6px rgba(96,165,250,.45),0 8px 22px -10px rgba(244,114,182,.4);transform:translateY(-1px)}
 .btn--fill:disabled{opacity:.6;cursor:default;transform:none;box-shadow:none}
 
-@media (max-width:760px){
+@media (max-width:900px){
     .auth-hero{display:none}
     .auth-form-side{padding:88px 20px 40px}
+    .auth-topbar{justify-content:space-between}
+    .auth-topbar-brand{display:inline-flex}
 }
 </style>
 </head>
@@ -210,6 +225,7 @@ html[data-theme="dark"] .moon-icon{display:block!important}
 <body>
 
 <div class="auth-topbar">
+    <a class="auth-topbar-brand" href="index.php">ISHS<span class="auth-topbar-brand-sub">LAB</span></a>
     <button id="theme-toggle" class="theme-toggle-btn" aria-label="다크모드 전환">
         <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="5"></circle>

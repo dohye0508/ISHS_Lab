@@ -442,6 +442,8 @@ html.js .rv-fig.is-in .frame{transform:translateY(0) scale(1)}
     .lead{font-size:16.5px}
     .dday-pill{display:none}
     .foot nav{margin-left:0;width:100%}
+    .app-mock__actions3{gap:6px}
+    .app-mock__actions3 .btn{padding:8px 9px;font-size:11.5px}
 }
 @media (max-width:359px){
     .btn-label-full{display:none}

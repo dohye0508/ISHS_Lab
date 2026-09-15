@@ -575,6 +575,32 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
             }
         }
 
+        /* Phone: the tablet rule above forces .practice-cards into a row so the two
+           cards sit side by side -- fine down to ~1024px, but on a real phone width
+           each card shrinks to ~150px while .eng-mode-selector still holds all of its
+           mode-btn children in one non-wrapping flex row (문장 연습 has six), so the
+           buttons overflowed straight out of the card instead of fitting inside it.
+           Stack the cards instead, and let the mode selector wrap as a safety net for
+           whichever card ends up with the most buttons. */
+        @media screen and (max-width: 600px) {
+            .practice-cards {
+                flex-direction: column !important;
+            }
+
+            .practice-card {
+                min-height: 0;
+            }
+
+            .eng-mode-selector {
+                flex-wrap: wrap;
+            }
+
+            .mode-btn {
+                flex: 1 1 auto;
+                min-width: 64px;
+            }
+        }
+
         /* Memorize List Enhancements */
         .memorize-list {
             display: grid;
@@ -922,7 +948,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
     </div>
     <!-- Auth UI Elements (Top-Left) -->
     <div id="auth-header"
-        style="position: fixed; top: 26px; left: 46px; z-index: 10000; display: flex; align-items: center; gap: 10px;">
+        style="position: fixed; top: 26px; left: 46px; z-index: 10000; display: flex; align-items: center; gap: 10px; transform: translateZ(0); will-change: transform;">
         <a href="modules.php"
             style="display: flex; align-items: center; text-decoration: none; font-weight: 800; font-size: 27px; letter-spacing: -.03em; line-height: 1; filter: drop-shadow(0 1px 3px rgba(0,0,0,.12));"
             title="스튜디오 목록으로">

@@ -72,7 +72,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
 
     <!-- Auth UI Elements (Top-Left) -->
     <div id="auth-header"
-        style="position: fixed; top: 26px; left: 46px; z-index: 10000; display: flex; align-items: center; gap: 10px;">
+        style="position: fixed; top: 26px; left: 46px; z-index: 10000; display: flex; align-items: center; gap: 10px; transform: translateZ(0); will-change: transform;">
         <a href="modules.php"
             style="display: flex; align-items: center; text-decoration: none; font-weight: 800; font-size: 27px; letter-spacing: -.03em; line-height: 1; filter: drop-shadow(0 1px 3px rgba(0,0,0,.12));"
             title="스튜디오 목록으로">
@@ -229,7 +229,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
     </div>
 
     <script src="data/math/collections.js?v=<?php echo time(); ?>"></script>
-    <script src="scripts/grader.js?v=debug_v7"></script>
+    <script src="scripts/grader.js?v=debug_v8"></script>
     <script src="scripts/logic.js?v=debug_v8"></script>
     <script src="scripts/bg_funcs.js?v=debug_v7"></script>
     <script src="scripts/bg_anim.js?v=debug_v7"></script>

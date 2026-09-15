@@ -217,6 +217,14 @@ def grade_matrix_or_special(u_in, s_in):
         markers = ["해없음", "없음", "불능", "포기"]
         return "CORRECT" if any(mk in u_nospace for mk in markers) else "INCORRECT"
 
+    # 이상적분(improper integral)이 발산하는 경우 -- Gabriel's Horn 겉넓이처럼 유한한 수치
+    # 자체가 존재하지 않는 문제를 위한 sentinel. "발산"뿐 아니라 "무한"/영어 "diverge"도
+    # 인정한다.
+    if s_nospace == "발산":
+        u_nospace = u_in.replace(" ", "")
+        markers = ["발산", "무한", "diverge", "포기"]
+        return "CORRECT" if any(mk in u_nospace for mk in markers) else "INCORRECT"
+
     if "matrix" in s_in:
         try:
             Mu = parse_matrix_latex(u_in)

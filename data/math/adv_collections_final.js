@@ -7216,5 +7216,161 @@ window.generatedCollections = [
                 "solution": "\\frac{\\sqrt{26}}{5}\\left(e^{5\\pi}-1\\right)"
             }
         ]
+    },
+    {
+        "id": "adv_col3_1",
+        "name": "정적분의 활용 1",
+        "problems": [
+            {
+                "level": 5,
+                "template": "shell_ftc_volume",
+                "latex": "\\text{함수 } f:[0,\\infty)\\to(-\\infty,\\infty) \\text{ 를 } f(x)=\\dfrac{\\sin x}{x}\\ (x>0),\\ 1\\ (x=0) \\text{ 로 정의하자. 곡선 } y=\\displaystyle\\int_{x}^{\\pi} f(t)\\,dt\\ (0\\le x\\le \\pi) \\text{ 와 } x\\text{축, } y\\text{축으로 둘러싸인 도형을 } y\\text{축 둘레로 회전시킨 회전체의 부피를 구하시오.}",
+                "solution": "\\pi^2"
+            },
+            {
+                "level": 5,
+                "template": "shell_ftc_volume",
+                "latex": "\\text{함수 } f:[0,\\infty)\\to(-\\infty,\\infty) \\text{ 를 } f(x)=\\dfrac{1-\\cos x}{x}\\ (x>0),\\ 0\\ (x=0) \\text{ 로 정의하자. 곡선 } y=\\displaystyle\\int_{x}^{2\\pi} f(t)\\,dt\\ (0\\le x\\le 2\\pi) \\text{ 와 } x\\text{축, } y\\text{축으로 둘러싸인 도형을 } y\\text{축 둘레로 회전시킨 회전체의 부피를 구하시오.}",
+                "solution": "2\\pi^3"
+            },
+            {
+                "level": 5,
+                "template": "surface_of_revolution_line",
+                "latex": "\\text{곡선 } y=x^2\\ (0\\le x\\le 1) \\text{ 를 직선 } y=x \\text{ 둘레로 회전시킨 회전면의 겉넓이를 구하시오.}",
+                "solution": "\\sqrt{2}\\pi\\left(\\frac{13\\sqrt{5}}{96}-\\frac{1}{12}+\\frac{\\ln(2+\\sqrt{5})}{64}\\right)"
+            },
+            {
+                "level": 5,
+                "template": "surface_of_revolution_line",
+                "latex": "\\text{곡선 } y=x^3\\ (0\\le x\\le 1) \\text{ 를 직선 } y=x \\text{ 둘레로 회전시킨 회전면의 겉넓이를 구하시오.}",
+                "solution": "\\sqrt{2}\\pi\\left(\\frac{7\\sqrt{10}}{108}+\\frac{1}{54}+\\frac{\\ln(3+\\sqrt{10})}{12}\\right)"
+            },
+            {
+                "level": 5,
+                "template": "surface_of_revolution_line",
+                "latex": "\\text{곡선 } y=\\dfrac{x^2}{2}\\ (0\\le x\\le 2) \\text{ 를 직선 } y=2x \\text{ 둘레로 회전시킨 회전면의 겉넓이를 구하시오.}",
+                "solution": "\\sqrt{5}\\pi\\left(\\frac{53\\sqrt{5}}{60}-\\frac{4}{15}+\\frac{\\ln(2+\\sqrt{5})}{40}\\right)"
+            }
+        ]
+    },
+    {
+        "id": "adv_col3_2",
+        "name": "정적분의 활용 2 (회전체의 부피)",
+        "problems": [
+            {
+                "level": 4,
+                "template": "disk_volume_xaxis",
+                "latex": "\\text{양수 } r=3 \\text{ 에 대하여 곡선 } y=\\sqrt{r^2-x^2} \\text{ 과 } x\\text{축으로 둘러싸인 영역을 } x\\text{축의 둘레로 회전시켜 생기는 회전체의 부피를 구하시오.}",
+                "solution": "36\\pi"
+            },
+            {
+                "level": 4,
+                "template": "disk_volume_yaxis",
+                "latex": "\\text{곡선 } y=\\ln x \\text{ 와 } y=1 \\text{ 및 } x\\text{축과 } y\\text{축으로 둘러싸인 영역을 } y\\text{축의 둘레로 회전시켜 생기는 회전체의 부피를 구하시오.}",
+                "solution": "\\frac{\\pi\\left(e^2-1\\right)}{2}"
+            },
+            {
+                "level": 4,
+                "template": "shell_volume",
+                "latex": "\\text{곡선 } y=x-x^2 \\text{ 과 } x\\text{축으로 둘러싸인 영역을 } y\\text{축의 둘레로 회전시켜 생기는 회전체의 부피 } V_y \\text{ 를 구하시오.}",
+                "solution": "\\frac{\\pi}{6}"
+            },
+            {
+                "level": 4,
+                "template": "two_curve_volume",
+                "latex": "\\text{두 곡선 } y=x^2 \\text{ 과 } y=x\\ (0\\le x\\le 1) \\text{ 로 둘러싸인 영역을 } x\\text{축의 둘레로 회전시켜 생기는 회전체의 부피를 구하시오.}",
+                "solution": "\\frac{2\\pi}{15}"
+            },
+            {
+                "level": 5,
+                "template": "ellipsoid_volume",
+                "latex": "\\text{타원 } \\dfrac{x^2}{9}+\\dfrac{y^2}{4}=1 \\text{ 을 } x\\text{축의 둘레로 회전시켜 생기는 회전 타원체의 부피를 구하시오.}",
+                "solution": "16\\pi"
+            }
+        ]
+    },
+    {
+        "id": "adv_col3_3",
+        "name": "정적분의 활용 3 (회전체의 겉넓이)",
+        "problems": [
+            {
+                "level": 4,
+                "template": "surface_xaxis_sphere",
+                "latex": "\\text{양수 } r=3 \\text{ 에 대하여 곡선 } y=\\sqrt{r^2-x^2} \\text{ 을 } x\\text{축의 둘레로 회전시켜 생기는 회전체(구)의 겉넓이를 구하시오.}",
+                "solution": "36\\pi"
+            },
+            {
+                "level": 5,
+                "template": "surface_yaxis",
+                "latex": "\\text{곡선 } y=\\sqrt{x}\\ (0\\le x\\le 1) \\text{ 를 } y\\text{축의 둘레로 회전시켜 생기는 회전체의 겉넓이를 구하시오.}",
+                "solution": "\\frac{9\\sqrt{5}\\pi}{16}-\\frac{\\pi\\ln(2+\\sqrt{5})}{32}"
+            },
+            {
+                "level": 5,
+                "template": "surface_log_curve",
+                "latex": "\\text{곡선 } y=\\dfrac{1}{4}x^2-\\dfrac{1}{2}\\ln x\\ (1\\le x\\le 2) \\text{ 를 } x\\text{축의 둘레로 회전시켜 생기는 회전체의 겉넓이를 구하시오.}",
+                "solution": "\\frac{27\\pi}{16}-\\pi\\ln 2-\\frac{\\pi(\\ln 2)^2}{4}"
+            },
+            {
+                "level": 5,
+                "template": "surface_xgy_yaxis",
+                "latex": "\\text{곡선 } 6xy=y^4+3\\ (1\\le y\\le 2) \\text{ 을 } y\\text{축의 둘레로 회전시켜 생기는 회전체의 겉넓이를 구하시오.}",
+                "solution": "\\frac{47\\pi}{16}"
+            }
+        ]
+    },
+    {
+        "id": "adv_col3_4",
+        "name": "정적분의 활용 4 (이상적분과의 융합)",
+        "problems": [
+            {
+                "level": 5,
+                "template": "gabriel_horn_volume",
+                "latex": "\\text{함수 } f(x)=\\dfrac{1}{x}\\ (x\\ge 1) \\text{ 에 대하여, 곡선 } y=f(x) \\text{ 를 구간 } [1,\\infty) \\text{ 에서 } x\\text{축 둘레로 회전시킨 회전체('토리첼리의 나팔')의 부피를 이상적분을 이용하여 구하시오.}",
+                "solution": "\\pi"
+            },
+            {
+                "level": 5,
+                "template": "gabriel_horn_surface",
+                "latex": "\\text{위 '토리첼리의 나팔'의 겉넓이는 이상적분을 이용할 때 수렴하는가, 발산하는가? 수렴하면 그 값을, 발산하면 '발산'이라고 입력하시오.}",
+                "solution": "발산"
+            },
+            {
+                "level": 5,
+                "template": "constant_sum_volume",
+                "latex": "\\text{닫힌구간 } [0,1] \\text{ 에서 } f(x)=3-x,\\ g(x)=1+x \\text{ 는 } f(x)\\ge g(x)\\ge 0 \\text{ 이고 } f(x)+g(x)=4 \\text{ (일정)을 만족한다. 두 곡선과 직선 } x=0,\\ x=1 \\text{ 로 둘러싸인 영역을 } x\\text{축 둘레로 회전시킨 회전체의 부피 } V_x \\text{ 를 구하시오.}",
+                "solution": "4\\pi"
+            }
+        ]
+    },
+    {
+        "id": "adv_col3_5",
+        "name": "정적분의 활용 5 (단면의 넓이·호의 길이)",
+        "problems": [
+            {
+                "level": 4,
+                "template": "cross_section_volume",
+                "latex": "\\text{밑면이 반지름 } 3 \\text{ 인 원이고, } x\\text{축에 수직인 평면으로 자른 단면이 모두 정사각형인 입체의 부피를 구하시오.}",
+                "solution": "144"
+            },
+            {
+                "level": 4,
+                "template": "cross_section_volume",
+                "latex": "\\text{밑면이 반지름 } 3 \\text{ 인 원이고, } x\\text{축에 수직인 평면으로 자른 단면이 모두 정삼각형인 입체의 부피를 구하시오.}",
+                "solution": "36\\sqrt{3}"
+            },
+            {
+                "level": 4,
+                "template": "arc_length",
+                "latex": "\\text{곡선 } y=\\dfrac{2}{3}x^{\\frac{3}{2}}\\ (0\\le x\\le 3) \\text{ 의 호의 길이를 구하시오.}",
+                "solution": "\\frac{14}{3}"
+            },
+            {
+                "level": 4,
+                "template": "arc_length",
+                "latex": "\\text{곡선 } y=\\dfrac{x^3}{6}+\\dfrac{1}{2x}\\ (1\\le x\\le 2) \\text{ 의 호의 길이를 구하시오.}",
+                "solution": "\\frac{17}{12}"
+            }
+        ]
     }
 ];
