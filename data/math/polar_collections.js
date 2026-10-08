@@ -1,0 +1,272 @@
+// Curated polar-coordinate problems. $...$ delimits mathematics; all prose is escaped
+// by Advanced Math Studio's existing renderer. IDs are versioned to isolate old scores.
+(() => {
+    const tex = (s) => s.split('$').map((part, i) => i % 2 ? part : (part.trim() ? `\\text{${part.trim()}}` : '')).join(' ');
+    const q = (id, level, title, statement, solution, explanation) => ({
+        id, level, template: id, title, latex: tex(statement), solution, explanation: tex(explanation)
+    });
+    const R = String.raw;
+    const collections = [
+        {
+            id: 'adv_col2_v2_1', name: '극좌표 심화 1 · 식 뒤에 숨은 도형',
+            description: '정의역, 음의 반지름, 이차곡선과 반전',
+            problems: [
+                q('polar_hidden_circles', 5, '삼각식의 약분과 도형의 복원',
+                    R`극방정식 $r^2=\frac{\cos5\theta-\sin5\theta}{\cos\theta-\sin\theta}-2\cos4\theta+3$ 에서 $r\ge0$ 이고 분모가 0인 각은 제외한다. 이 곡선의 폐포가 둘러싸는 유계 영역 중 제1사분면에 놓인 부분의 넓이를 구하시오. 폐포란 곡선에 모든 극한점을 추가한 집합이다.`,
+                    R`\frac{\pi}{2}-1`,
+                    R`삼각항등식으로 우변을 정리하면 $2(\cos\theta-\sin\theta)^2$ 이다. 따라서 $(x^2+y^2)^2=2(x-y)^2$ 이고 폐포는 중심이 $(\frac{1}{\sqrt{2}},-\frac{1}{\sqrt{2}})$, $(-\frac{1}{\sqrt{2}},\frac{1}{\sqrt{2}})$ 인 반지름 1의 두 원이다. 원래 식에서는 원점이 빠진다. 제1사분면에는 각 원에서 하나씩 서로 겹치지 않는 작은 활꼴이 들어간다. 각각의 중심각은 $\pi/2$ 이므로 부채꼴에서 삼각형을 뺀 넓이는 $\pi/4-1/2$ 이다. 두 조각을 더하면 $\pi/2-1$ 이다.`),
+                q('polar_parabola_secant', 4, '극점과 초점을 구별하는 할선',
+                    R`$r=\frac{2}{1-\cos\theta}$, $r\ge0$ 인 극곡선과 직선 $x+y=3$ 의 두 교점을 $P,Q$, 극점을 $O$ 라 하자. 두 거리의 곱 $OP\,OQ$ 를 구하시오. 분모가 0인 각은 제외한다.`,
+                    R`29`,
+                    R`$r-x=2$ 이므로 제곱하여 $y^2=4(x+1)$ 을 얻는다. 이때 $r=x+2$ 라는 부호 조건도 유지한다. 직선을 대입하면 $y^2+4y-16=0$ 이므로 두 교점의 세로좌표의 합은 $-4$, 곱은 $-16$ 이다. 각 교점에서 $r=5-y>0$ 이므로 거리의 곱은 $25-5(-4)-16=29$ 이다.`),
+                q('polar_ellipse_chord', 4, '극점을 지나는 현은 지름인가',
+                    R`극곡선 $r=\frac{3}{2-\cos\theta}$, $r\ge0$ 과 직선 $y=x$ 의 두 교점을 $P,Q$ 라 하자. 현의 길이의 제곱 $PQ^2$ 을 구하시오.`,
+                    R`\frac{576}{49}`,
+                    R`$2r-x=3$ 을 제곱하면 $3(x-1)^2+4y^2=12$ 이다. 타원의 중심은 극점과 다르다. $y=x$ 를 대입하면 $7x^2-6x-9=0$ 이고 두 근의 차는 $12\sqrt{2}/7$ 이다. 따라서 $PQ^2=2(12\sqrt{2}/7)^2=576/49$ 이다. 동경의 방향이 반대인 두 점이므로 두 양의 반지름을 빼면 안 된다.`),
+                q('polar_inversion_cap', 5, '반전으로 원판의 안팎 읽기',
+                    R`극곡선 $r=4\cos\theta+2\sin\theta$ 가 둘러싼 원판에서 극점 $O$ 를 제외한 각 점 $P$ 에 대하여, 같은 반직선 $OP$ 위에 $OP\,OQ=2$ 인 점 $Q$ 를 잡는다. 이렇게 얻는 점 $Q$ 중 $OQ\le1$ 인 점들이 이루는 영역의 넓이를 구하시오.`,
+                    R`\arctan(2)-\frac{2}{5}`,
+                    R`점 $P$ 의 양의 반지름을 $\rho$ 라 하면 원판 내부 조건은 $0<\rho\le4\cos\theta+2\sin\theta$ 이다. $Q$ 의 반지름 $s=2/\rho$ 로 바꾸면 $2x+y\ge1$ 이 된다. 따라서 단위원판을 직선 $2x+y=1$ 로 잘라낸 작은 활꼴이다. 중심에서 직선까지 거리는 $1/\sqrt{5}$ 이므로 넓이는 $\arccos(1/\sqrt{5})-2/5=\arctan2-2/5$ 이다.`),
+                q('polar_absolute_radius', 5, '제곱근이 바꾸는 자취',
+                    R`두 극곡선 $r=\sqrt{2+2\cos2\theta}$ 와 $r=1+\cos\theta$ 를 각각 $0\le\theta<2\pi$ 에서 그린다. 극점이 아닌 서로 다른 모든 교점을 $P_1,\ldots,P_n$ 이라 할 때 $\sum_{k=1}^{n}OP_k^2$ 을 구하시오. 제곱근은 음이 아닌 값이다.`,
+                    R`\frac{44}{9}`,
+                    R`첫 곡선은 $r=2|\cos\theta|$ 이다. $\cos\theta\ge0$ 에서는 $2\cos\theta=1+\cos\theta$ 로부터 반지름 2인 점 하나를 얻는다. $\cos\theta<0$ 에서는 $-2\cos\theta=1+\cos\theta$ 이므로 $\cos\theta=-1/3$, 반지름 $2/3$ 인 점 두 개를 얻는다. 따라서 합은 $4+2(2/3)^2=44/9$ 이다. 원점은 두 번째 곡선에는 있지만 첫 번째 곡선의 다른 매개각에서 나타나므로 교점이며, 문제에서 제외했다.`)
+            ]
+        },
+        {
+            id: 'adv_col2_v2_2', name: '극좌표 심화 2 · 추적·대칭·교점',
+            description: '반지름 함수의 주기와 실제 점의 주기를 구별하기',
+            problems: [
+                q('polar_position_period', 5, '음의 반지름과 최소 주기',
+                    R`$r(\theta)=\cos\frac{4\theta}{7}-\sin\frac{4\theta}{7}$ 이고 $P(\theta)=(r(\theta)\cos\theta,r(\theta)\sin\theta)$ 이다. 모든 실수 $\theta$ 에 대하여 $P(\theta+T)=P(\theta)$ 를 만족하는 최소 양수 $T$ 를 구하시오. 반지름 함수만의 주기를 묻는 것이 아니다.`,
+                    R`14\pi`,
+                    R`반지름이 0이 아닌 점에서 같은 점을 나타내려면 $T=k\pi$ 이어야 하며 $r(\theta+T)=(-1)^k r(\theta)$ 가 모든 각에서 성립해야 한다. 따라서 $4k\pi/7\equiv k\pi\pmod{2\pi}$, 즉 $3k$ 가 14의 배수여야 한다. 최소 양의 정수는 $k=14$ 이므로 $T=14\pi$ 이다. 반지름 함수의 주기 $7\pi/2$ 와 다르다.`),
+                q('polar_reflection_axis', 5, '매개변수의 반사와 도형의 대칭',
+                    R`$r=\cos\frac{5\theta}{7}-\sin\frac{5\theta}{7}$ 를 모든 실수 $\theta$ 에서 그린 전체 자취를 생각하자. 직선 $\theta=\alpha$, $0\le\alpha<\pi$ 가 이 자취의 대칭축이 되는 값 중 가장 작은 $\alpha$ 를 구하시오. 대칭은 매개각이 아니라 평면 위 점에 대한 반사이다.`,
+                    R`\frac{\pi}{20}`,
+                    R`$r=\sqrt{2}\cos(5\theta/7+\pi/4)$ 이다. 최대 거리의 점들은 음의 반지름까지 반영하면 방향 $-7\pi/20+2k\pi/5$ 의 정오각형을 이룬다. 따라서 대칭축 후보는 $\alpha=-7\pi/20+j\pi/5\pmod\pi$ 로 제한된다. 충분성도 확인하자. $\theta'=21\pi/10-\theta$ 를 대입하면 $r(\theta')=r(\theta)$ 이고 실제 방향은 $\pi/10-\theta$ 가 되어 $\alpha=\pi/20$ 에 대한 반사이다. 또한 $r(\theta+7\pi/5)=-r(\theta)$ 이므로 이 매개각 이동은 평면에서 $2\pi/5$ 회전이다. 이 회전과 반사를 합성하면 후보 5개가 모두 대칭축이다. 정리하면 $\pi/20,\pi/4,9\pi/20,13\pi/20,17\pi/20$ 이다.`),
+                q('polar_rose_crossing_angle', 5, '두 장미곡선이 만나는 각',
+                    R`극곡선 $r=\cos3\theta$ 와 $r=\sin3\theta$ 의 극점이 아닌 교점에서 두 접선이 이루는 예각을 $\beta$ 라 하자. $\tan\beta$ 를 구하시오. 두 곡선은 각각 전체 자취를 생각한다.`,
+                    R`\frac{3}{4}`,
+                    R`음의 반지름을 양의 반지름으로 다시 나타내어도 홀수 장미곡선의 식은 유지된다. 따라서 교점에서는 $\cos3\theta=\sin3\theta>0$ 이다. 접선의 동경 방향 성분과 수직 성분은 $(r',r)$ 이므로 두 접선 방향을 공통 상수로 나누면 $(-3,1)$ 과 $(3,1)$ 이 된다. 외적의 크기는 6, 내적의 절댓값은 8이므로 예각의 탄젠트는 $6/8=3/4$ 이다.`),
+                q('polar_even_rose_intersections', 5, '같은 각을 대입하면 빠지는 교점',
+                    R`극곡선 $r=\cos2\theta$ 와 $r=\sin2\theta$ 의 전체 자취에서 극점이 아닌 모든 교점을 꼭짓점으로 하는 볼록다각형의 넓이를 구하시오.`,
+                    R`\sqrt{2}`,
+                    R`실제 방향을 $\varphi$ 라 할 때 각 곡선의 양의 반지름은 $|\cos2\varphi|$, $|\sin2\varphi|$ 이다. 따라서 $\varphi=\pi/8+k\pi/4$ 에서 반지름 $1/\sqrt{2}$ 인 서로 다른 교점 8개가 생긴다. 이들은 정팔각형을 이루므로 넓이는 $8\times\frac12\times\frac12\sin(\pi/4)=\sqrt{2}$ 이다. 단순히 두 원래 식의 우변을 같게 두면 일부 교점을 놓친다.`),
+                q('polar_support_line', 4, '반지름 최대와 좌표 최대의 차이',
+                    R`극곡선 $r=\sin2\theta$ 의 전체 자취를 포함하는 수직 띠 $a\le x\le b$ 중 폭이 가장 작은 것을 잡는다. 그 폭 $b-a$ 를 구하시오.`,
+                    R`\frac{8\sqrt{3}}{9}`,
+                    R`$x=r\cos\theta=2\sin\theta\cos^2\theta$ 이다. $u=\sin\theta$ 로 놓으면 $x=2u(1-u^2)$, $-1\le u\le1$ 이다. 도함수는 $2-6u^2$ 이므로 최댓값과 최솟값은 $\pm4/(3\sqrt{3})$ 이다. 따라서 폭은 $8\sqrt{3}/9$ 이다. 반지름이 최대인 꽃잎 끝이 가장 오른쪽 점인 것은 아니다.`)
+            ]
+        },
+        {
+            id: 'adv_col2_v2_3', name: '극좌표 심화 3 · 영역을 분해하는 적분',
+            description: '경계 교체, 고리의 중복, 세 영역의 공통 조건',
+            problems: [
+                q('polar_circle_cardioid_overlap', 5, '적분 도중 바뀌는 안쪽 경계',
+                    R`카디오이드 $r=1+\cos\theta$ 가 둘러싼 영역과 원 $r=3\cos\theta$ 가 둘러싼 영역의 공통부분 넓이를 구하시오.`,
+                    R`\frac{5\pi}{4}`,
+                    R`원의 내부는 $-\pi/2\le\theta\le\pi/2$ 에서만 존재한다. 두 경계는 $\cos\theta=1/2$ 에서 바뀐다. 위아래 대칭을 쓰면 넓이는 $\int_0^{\pi/3}(1+\cos\theta)^2\,d\theta+\int_{\pi/3}^{\pi/2}9\cos^2\theta\,d\theta$ 이다. 첫 적분은 $\pi/2+9\sqrt{3}/8$, 둘째는 $3\pi/4-9\sqrt{3}/8$ 이므로 합은 $5\pi/4$ 이다.`),
+                q('polar_limacon_between_loops', 5, '고리를 더할 것인가 뺄 것인가',
+                    R`리마송 $r=1+2\cos\theta$ 의 바깥 고리 내부이면서 안쪽 고리 외부인 영역의 넓이를 구하시오. 고리의 경계는 넓이에 영향을 주지 않는다.`,
+                    R`\pi+3\sqrt{3}`,
+                    R`안쪽 고리는 $2\pi/3\le\theta\le4\pi/3$ 의 음의 반지름으로 그려진다. 그 넓이는 $\frac12\int_{2\pi/3}^{4\pi/3}(1+2\cos\theta)^2\,d\theta=\pi-3\sqrt{3}/2$ 이다. 전체 매개구간 적분 $\frac12\int_0^{2\pi}r^2\,d\theta=3\pi$ 는 두 고리의 넓이를 더한 값이다. 원하는 넓이는 전체 적분에서 안쪽 고리 넓이를 두 번 빼야 하므로 $\pi+3\sqrt{3}$ 이다.`),
+                q('polar_lemniscate_disk_difference', 4, '실수 반지름과 두 고리',
+                    R`렘니스케이트 $r^2=4\cos2\theta$ 의 두 고리 내부 중 원 $r=\sqrt{2}$ 의 외부에 놓인 부분의 넓이의 합을 구하시오.`,
+                    R`2\sqrt{3}-\frac{2\pi}{3}`,
+                    R`오른쪽 고리에서 두 경계의 교점은 $\theta=\pm\pi/6$ 이다. 해당 구간 밖에서는 렘니스케이트가 원보다 안쪽에 있다. 왼쪽 고리까지 반영하면 넓이는 $2\times\frac12\int_{-\pi/6}^{\pi/6}(4\cos2\theta-2)\,d\theta=2\sqrt{3}-2\pi/3$ 이다.`),
+                q('polar_rose_clipped_petals', 5, '두 번 추적되는 꽃잎의 실제 넓이',
+                    R`$r=\sin3\theta$ 를 $0\le\theta\le2\pi$ 에서 그렸을 때, 꽃잎 내부이면서 원 $r=1/2$ 의 외부인 점들의 집합의 넓이를 구하시오. 같은 영역을 여러 번 지나도 넓이는 한 번만 센다.`,
+                    R`\frac{\pi}{12}+\frac{\sqrt{3}}{8}`,
+                    R`한 꽃잎에서 원 밖인 구간은 $\pi/18\le\theta\le5\pi/18$ 이다. 서로 다른 꽃잎은 3개이므로 넓이는 $\frac32\int_{\pi/18}^{5\pi/18}(\sin^23\theta-1/4)\,d\theta=\pi/12+\sqrt{3}/8$ 이다. 길이 $2\pi$ 인 매개구간은 이 홀수 장미곡선을 두 번 추적하므로 그 전체에서 기계적으로 적분하면 두 배가 된다.`),
+                q('polar_three_boundary_region', 5, '세 원 사이에 남는 영역',
+                    R`제1사분면에서 원 $r=2$ 의 내부이면서 두 원 $r=2\cos\theta$, $r=2\sin\theta$ 의 내부에는 어느 쪽에도 속하지 않는 영역의 넓이를 구하시오.`,
+                    R`\frac{\pi}{2}-1`,
+                    R`각 방향에서 반지름의 범위는 $\max(2\cos\theta,2\sin\theta)\le r\le2$ 이다. 두 안쪽 경계는 $\theta=\pi/4$ 에서 교체되고 그 직선에 대해 대칭이다. 따라서 넓이는 $2\times\frac12\int_0^{\pi/4}(4-4\cos^2\theta)\,d\theta=\pi/2-1$ 이다. 두 원의 넓이를 단순히 빼면 두 원의 공통부분까지 두 번 제거한다.`)
+            ]
+        },
+        {
+            id: 'adv_col2_v2_4', name: '극좌표 심화 4 · 접선과 경계의 길이',
+            description: '외점의 접선, 변곡점, 선택된 호와 매개변환',
+            problems: [
+                q('polar_external_tangents', 5, '주어진 점을 지나는 두 접선',
+                    R`점 $A=(-1,0)$ 에서 카디오이드 $r=1+\cos\theta$ 에 그은 접선 중, 극점이 아닌 매끄러운 점에서 접하는 두 직선의 접점을 $P,Q$ 라 하자. 삼각형 $APQ$ 의 넓이를 구하시오. 극점의 첨점에서의 접선은 제외한다.`,
+                    R`1`,
+                    R`$c=\cos\theta$, $s=\sin\theta$ 로 놓으면 $x=c+c^2$, $y=(1+c)s$, $x'=-s(1+2c)$, $y'=2c^2+c-1$ 이다. 접선이 $A$ 를 지나려면 $(x+1)y'-yx'=0$ 이어야 하며 이는 $3c(c+1)=0$ 으로 정리된다. $c=-1$ 은 첨점이므로 제외하면 접점은 $(0,1)$ 과 $(0,-1)$ 이다. 밑변 2와 높이 1을 이용하면 넓이는 1이다.`),
+                q('polar_inflection_pair', 5, '기울기 미분의 영점과 특이점',
+                    R`극곡선 $r=\sqrt{2}+\cos\theta$ 에서 $dx/d\theta\ne0$ 이고 $d^2y/dx^2=0$ 인 서로 다른 두 점을 $P,Q$ 라 하자. $PQ^2$ 을 구하시오.`,
+                    R`\frac{8}{81}`,
+                    R`$r=a+\cos\theta$ 에 대해 $x'y''-y'x''=a^2+3a\cos\theta+2$ 이다. $a=\sqrt{2}$ 를 넣으면 $\cos\theta=-2\sqrt{2}/3$ 이고 $\sin\theta=\pm1/3$ 이다. 이때 $r=\sqrt{2}/3$ 이므로 두 점은 $(-4/9,\pm\sqrt{2}/9)$ 이다. 두 점에서 $x'\ne0$ 임을 확인할 수 있으며, 두 번째 미분의 분자는 단순근이어서 실제 오목·볼록도 바뀐다. 따라서 $PQ^2=(2\sqrt{2}/9)^2=8/81$ 이다.`),
+                q('polar_overlap_perimeter', 5, '공통영역의 경계는 어느 호인가',
+                    R`두 카디오이드 $r=1+\cos\theta$, $r=1-\cos\theta$ 가 둘러싼 영역의 공통부분의 전체 경계 길이를 구하시오. 경계를 이루는 호를 중복하여 세지 않는다.`,
+                    R`16-8\sqrt{2}`,
+                    R`공통영역의 바깥 반지름은 $1-|\cos\theta|$ 이다. 왼쪽 반평면의 경계는 $r=1+\cos\theta$, $\pi/2\le\theta\le3\pi/2$ 의 호이며 속력은 $2|\cos(\theta/2)|$ 이다. 이 호의 길이는 $8-4\sqrt{2}$ 이고, 오른쪽 경계도 대칭으로 같은 길이이다. 원점에서 만나는 위아래 영역의 경계호를 각각 한 번만 합하면 $16-8\sqrt{2}$ 이다.`),
+                q('polar_fractional_arc', 4, '분수각과 속력의 완전제곱',
+                    R`극곡선 $r=\cos^3(\theta/3)$ 위에서 $\theta=0$ 인 점부터 처음 극점에 도달할 때까지, $\theta$ 가 증가하는 방향으로 이동한 호의 길이를 구하시오.`,
+                    R`\frac{3\pi}{4}`,
+                    R`처음 극점에 도달하는 각은 $3\pi/2$ 이다. $u=\theta/3$ 로 놓으면 $r'= -\cos^2u\sin u$ 이므로 $\sqrt{r^2+(r')^2}=\cos^2u$ 이다. 따라서 호의 길이는 $3\int_0^{\pi/2}\cos^2u\,du=3\pi/4$ 이다. 반지름의 지수와 각의 배율이 함께 작용해 제곱근이 정리된다.`),
+                q('polar_parabola_arc', 5, '극각의 경계를 직교좌표로 옮기기',
+                    R`극곡선 $r=\frac{1}{1+\cos\theta}$, $-\pi<\theta<\pi$ 위에서 두 직선 $y=-2$, $y=2$ 사이에 놓인 호의 길이를 구하시오.`,
+                    R`2\sqrt{5}+\ln(2+\sqrt{5})`,
+                    R`$r+x=1$ 이므로 $x=(1-y^2)/2$ 이다. 이 포물선은 주어진 각의 범위에서 한 번씩 추적된다. $y$ 를 매개변수로 바꾸면 $dx/dy=-y$ 이므로 길이는 $\int_{-2}^{2}\sqrt{1+y^2}\,dy$ 이다. 원시함수 $\frac12(y\sqrt{1+y^2}+\ln(y+\sqrt{1+y^2}))$ 를 이용하면 $2\sqrt{5}+\ln(2+\sqrt{5})$ 이다.`)
+            ]
+        },
+        {
+            id: 'adv_col2_v2_5', name: '극좌표 심화 5 · 허위 교점과 다중 표현',
+            description: '부호가 바뀐 반지름이 만들어내는 숨겨진 교점과 자취',
+            problems: [
+                q('polar_phantom_intersection_1', 4, '은폐된 교점의 개수',
+                    R`극곡선 $r=\sin2\theta$ 와 원 $r=\cos\theta$ 를 그릴 때, 극점이 아닌 서로 다른 모든 교점의 개수를 구하시오.`,
+                    R`2`,
+                    R`직교좌표로 변환하면 원은 $x^2+y^2=x$ 즉 $r^2=x$ 이다. 여기에 곡선 $r^2=\sin^2 2\theta$ 를 대입하고 $x=r\cos\theta$ 를 쓰면, $\sin^2 2\theta = \sin2\theta \cos\theta$ 가 된다. $4\sin^2\theta\cos^2\theta = 2\sin\theta\cos^2\theta$ 이고 극점을 제외하면 $\sin\theta=1/2$ 이다. 따라서 $\theta=\pi/6, 5\pi/6$ 에서 두 개의 서로 다른 교점 $(3/4, \pm\sqrt{3}/4)$ 을 가진다. 단순히 $r$을 같게 놓는 연립방정식으로는 $\theta=5\pi/6$ 에서의 교점을 바로 찾기 어렵다.`),
+                q('polar_double_origin_tangent', 4, '극점에서의 공통 접선',
+                    R`두 리마송 $r=1-2\cos\theta$ 와 $r=1+2\cos\theta$ 가 극점에서 가지는 모든 접선 중 서로 다른 직선의 개수를 구하시오.`,
+                    R`2`,
+                    R`극점을 지날 조건은 $r=0$ 이다. $1-2\cos\theta=0$ 이면 $\theta=\pi/3, 5\pi/3$ 이고, $1+2\cos\theta=0$ 이면 $\theta=2\pi/3, 4\pi/3$ 이다. 이 각도들은 극점에서의 접선이 극축과 이루는 방향이다. $\theta=\pi/3$ 와 $4\pi/3$ 는 방향이 반대일 뿐 같은 직선 $y=\sqrt{3}x$ 를 나타낸다. 마찬가지로 $5\pi/3$ 와 $2\pi/3$ 는 같은 직선 $y=-\sqrt{3}x$ 이다. 따라서 접선은 2개이다.`),
+                q('polar_identical_trace', 5, '위상 이동과 궤적의 일치',
+                    R`극곡선 $r=1+\sin\theta$ 와 $r=1+\cos\theta$ 의 자취는 회전 변환으로 일치한다. 두 곡선의 극점이 아닌 교점 중, $x>0, y>0$ 인 제1사분면 위의 교점의 방위각 $\theta$ 를 구하시오. ($0 < \theta < \pi/2$)`,
+                    R`\frac{\pi}{4}`,
+                    R`두 곡선의 교점을 찾기 위해 $1+\sin\theta = 1+\cos\theta$ 를 풀면 $\sin\theta = \cos\theta$ 이므로 제1사분면에서 $\theta=\pi/4$ 이다. 이때 $r=1+1/\sqrt{2}>0$ 이므로 이는 실제 교점이다. 다른 부호 조건 $1+\sin\theta = -(1+\cos(\theta+\pi))$ 을 확인해도 본질적으로 같은 교점을 나타낸다.`),
+                q('polar_lemniscate_symmetry', 5, '기호가 숨긴 대칭성',
+                    R`방정식 $r^2=\sin2\theta$ 로 정의되는 렘니스케이트는 $y=x$ 직선에 대하여 대칭임을 증명하고자 한다. $(r, \theta)$ 가 곡선 위의 점일 때, $y=x$ 대칭점의 좌표로 올바른 것을 모두 고르지 말고, 이 대칭점에서의 $\theta'$ 값으로 가장 적절한 변환을 하나 적으시오. (단, $\theta' = \pi/2 - \theta$)`,
+                    R`\frac{\pi}{2}-\theta`,
+                    R`점 $(r, \theta)$ 를 직선 $y=x$ 에 대하여 대칭이동하면 편각은 $\pi/2-\theta$ 가 된다. 대입해보면 $r^2 = \sin(2(\pi/2-\theta)) = \sin(\pi-2\theta) = \sin2\theta$ 가 성립하므로, 주어진 렘니스케이트는 직선 $y=x$ 에 대해 완벽한 선대칭 도형이다.`),
+                q('polar_multiple_leaves', 4, '주기와 중복 자취',
+                    R`극곡선 $r=\sin(\frac{4}{3}\theta)$ 의 전체 닫힌 자취가 가지는 잎(꽃잎)의 총 개수를 구하시오.`,
+                    R`8`,
+                    R`$r=\sin(\frac{m}{n}\theta)$ 형태의 장미곡선은 $m, n$ 이 서로소일 때, $m$과 $n$ 중 하나가 짝수이면 $2m$ 개의 잎을, 둘 다 홀수이면 $m$ 개의 잎을 가진다. 여기서는 $m=4, n=3$ 이고 4가 짝수이므로 $2 \times 4 = 8$ 개의 잎을 가진다. 자취를 완주하는 데 필요한 주기는 $6\pi$ 이다.`)
+            ]
+        },
+        {
+            id: 'adv_col2_v2_6', name: '극좌표 심화 6 · 접선과 수직의 기하학',
+            description: '특이점에서의 미분과 두 극곡선이 만나는 교각',
+            problems: [
+                q('polar_vertical_tangent_cardioid', 4, '심장형의 수직접선',
+                    R`카디오이드 $r=1+\cos\theta$ 에서 수직접선을 갖는 극점이 아닌 점들의 $x$ 좌표의 총합을 구하시오.`,
+                    R`\frac{3}{2}`,
+                    R`$x = r\cos\theta = \cos\theta + \cos^2\theta$ 이다. 수직접선 조건은 $dx/d\theta = 0$ 이며 $dy/d\theta \ne 0$ 이다. $x' = -\sin\theta(1+2\cos\theta)=0$ 에서 $\theta=0, \pi, 2\pi/3, 4\pi/3$ 이다. $\theta=\pi$ 는 극점(첨점)으로 제외된다. $\theta=0$ 일 때 $x=2$ 이고, $\theta=2\pi/3, 4\pi/3$ 일 때 $x=-1/4$ 이다. 서로 다른 세 점이 나오며, 좌표들의 합은 $2 - 1/4 - 1/4 = 3/2$ 이다.`),
+                q('polar_orthogonal_spirals', 4, '직교하는 로그나선',
+                    R`두 로그나선 $r=e^\theta$ 와 $r=e^{-\theta}$ 가 교점 $(1, 0)$ 에서 만날 때, 두 곡선의 접선이 이루는 예각을 구하시오.`,
+                    R`\frac{\pi}{2}`,
+                    R`극경과 접선이 이루는 각을 $\psi$ 라 하면 $\tan\psi = r/r'$ 이다. 첫 번째 곡선은 $\tan\psi_1 = e^\theta/e^\theta = 1$ 이므로 $\psi_1 = \pi/4$ 이고, 두 번째 곡선은 $\tan\psi_2 = e^{-\theta}/(-e^{-\theta}) = -1$ 이므로 $\psi_2 = -\pi/4$ 이다. 동경(극축)에서부터 측정한 두 접선의 방향이 각각 $\pi/4$ 와 $-\pi/4$ 이므로 두 접선이 이루는 예각은 $\pi/2$ (직교)이다.`),
+                q('polar_angle_between_curves', 5, '두 장미꽃잎의 교각',
+                    R`두 극곡선 $r=3\sin2\theta$ 와 $r=3\cos2\theta$ 가 제1사분면의 원점이 아닌 점에서 만날 때, 교점에서 두 곡선의 접선이 이루는 예각을 $\beta$ 라 하자. $\tan\beta$ 를 구하시오.`,
+                    R`\frac{4}{3}`,
+                    R`교점을 구하기 위해 $\sin2\theta = \cos2\theta$ 를 풀면 $\tan2\theta = 1$ 이므로 $\theta = \pi/8$ 이다. 이때 $r = 3/\sqrt{2}$ 이다. $\tan\psi_1 = \frac{3\sin2\theta}{6\cos2\theta} = \frac{1}{2}\tan2\theta = \frac{1}{2}$ 이고, $\tan\psi_2 = \frac{3\cos2\theta}{-6\sin2\theta} = -\frac{1}{2}\cot2\theta = -\frac{1}{2}$ 이다. 교각 $\beta = |\psi_1 - \psi_2|$ 이므로 $\tan\beta = |\frac{1/2 - (-1/2)}{1 + (1/2)(-1/2)}| = \frac{1}{3/4} = \frac{4}{3}$ 이다.`),
+                q('polar_normal_line_origin', 5, '원점을 지나는 법선',
+                    R`극곡선 $r=\theta^2$ ($0<\theta\le\pi$) 위의 점 중에서, 그 점에서의 법선(접선에 수직인 직선)이 극점을 지나는 점의 $\theta$ 값을 구하시오.`,
+                    R`\text{존재하지 않는다}`,
+                    R`어떤 점에서의 법선이 극점을 지나려면, 그 점에서의 접선이 극경(동경)과 직교해야 한다. 즉, 극경과 접선이 이루는 각 $\psi$ 가 $\pi/2$ 이어야 하므로 $\tan\psi = \infty$ 이어야 한다. $\tan\psi = r/r' = \theta^2 / (2\theta) = \theta/2$ 이다. $\theta/2 \to \infty$ 가 되는 유한한 $\theta$ 는 존재하지 않으므로, 주어진 구간 내에서 법선이 극점을 지나는 점은 없다. (원일 때만 모든 법선이 극점을 지난다)`),
+                q('polar_tangent_slope_limit', 5, '극점에서의 미분계수 한계',
+                    R`극곡선 $r=\theta\sin\theta$ 가 극점 $\theta=0$ 을 지날 때, 직교좌표계에서의 접선의 기울기 $\lim_{\theta\to 0} \frac{dy}{dx}$ 를 구하시오.`,
+                    R`0`,
+                    R`$x = r\cos\theta = \theta\sin\theta\cos\theta$, $y = r\sin\theta = \theta\sin^2\theta$ 이다. $dx/d\theta$ 와 $dy/d\theta$ 모두 $\theta=0$ 에서 0이 된다. 근사식($\sin\theta \approx \theta$, $\cos\theta \approx 1$)을 쓰면 0 부근에서 $x \approx \theta^2$, $y \approx \theta^3$ 이므로 $dy/dx \approx (3\theta^2)/(2\theta) = \frac{3}{2}\theta \to 0$ 이다. 따라서 접선의 기울기는 0이다. 극한이 명확하게 수평접선을 가리킨다.`)
+            ]
+        },
+        {
+            id: 'adv_col2_v2_7', name: '극좌표 심화 7 · 영역의 분할과 적분 기법',
+            description: '복잡한 공통 영역과 루프 면적의 차이',
+            problems: [
+                q('polar_rose_inside_circle', 4, '원 내부의 장미 꽃잎',
+                    R`장미곡선 $r=\sin2\theta$ 의 한 잎 중, 원 $r=1/2$ 의 내부에 있는 영역의 넓이를 구하시오.`,
+                    R`\frac{\pi}{8} - \frac{\sqrt{3}}{8}`,
+                    R`교점은 $\sin2\theta = 1/2$ 에서 $\theta = \pi/12, 5\pi/12$ 이다. 구하는 넓이는 원점부터 $\pi/12$ 까지는 장미곡선의 넓이, $\pi/12$ 부터 $5\pi/12$ 까지는 원의 부채꼴 넓이, $5\pi/12$ 부터 $\pi/2$ 까지는 다시 장미곡선의 넓이로 구성된다. 대칭성에 의해 $2 \times \frac{1}{2}\int_0^{\pi/12} \sin^2 2\theta d\theta + \frac{1}{2}(1/2)^2(\frac{4\pi}{12})$ 이다. 첫 부분은 $\int_0^{\pi/12} \frac{1-\cos4\theta}{2} d\theta = [\frac{\theta}{2} - \frac{\sin4\theta}{8}]_0^{\pi/12} = \frac{\pi}{24} - \frac{\sqrt{3}}{16}$ 이다. 부채꼴은 $\frac{1}{8} \times \frac{\pi}{3} = \frac{\pi}{24}$ 이다. 총 넓이는 $2(\frac{\pi}{24} - \frac{\sqrt{3}}{16}) + \frac{\pi}{24} = \frac{\pi}{12} - \frac{\sqrt{3}}{8} + \frac{\pi}{24} = \frac{\pi}{8} - \frac{\sqrt{3}}{8}$ 이다.`),
+                q('polar_cardioid_bisect', 5, '심장형 넓이의 이등분',
+                    R`카디오이드 $r=1+\cos\theta$ 가 둘러싼 넓이를 $x=-1/4$ 인 수직선이 이등분함을 기하학적으로 확인할 수 있다. $x \le -1/4$ 인 영역의 넓이를 구하시오.`,
+                    R`\frac{3\pi}{4}`,
+                    R`$x = (1+\cos\theta)\cos\theta = -1/4$ 에서 $(\cos\theta + 1/2)^2 = 0$ 이므로 $\theta = 2\pi/3, 4\pi/3$ 이다. 수직선 $x=-1/4$ 로 잘린 순수 왼쪽 영역은 곡선의 극적분에서 두 점과 극점을 잇는 삼각형의 넓이를 더해주어야 한다. 적분값 $\frac{1}{2}\int_{2\pi/3}^{4\pi/3} (1+\cos\theta)^2 d\theta = \frac{\pi}{2} - \frac{9\sqrt{3}}{16}$ 이고 삼각형 넓이는 $\frac{3\sqrt{3}}{16}$ 이다. 이들의 합으로 전체 영역의 딱 절반인 $3\pi/4$ 가 나온다.`),
+                q('polar_circle_overlap', 4, '두 원의 비대칭 교집합',
+                    R`두 원 $r=2\sin\theta$ 와 $r=2\sqrt{3}\cos\theta$ 가 둘러싸는 공통 부분의 넓이를 구하시오.`,
+                    R`\frac{5\pi}{6} - \sqrt{3}`,
+                    R`교점은 $2\sin\theta = 2\sqrt{3}\cos\theta$ 에서 $\tan\theta = \sqrt{3}$, $\theta=\pi/3$ 이다. 공통 영역의 넓이는 $0 \le \theta \le \pi/3$ 에서는 $r=2\sin\theta$ 에 의해, $\pi/3 \le \theta \le \pi/2$ 에서는 $r=2\sqrt{3}\cos\theta$ 에 의해 둘러싸인다. $\frac{1}{2}\int_0^{\pi/3} 4\sin^2\theta d\theta = \frac{\pi}{3} - \frac{\sqrt{3}}{4}$ 이고, $\frac{1}{2}\int_{\pi/3}^{\pi/2} 12\cos^2\theta d\theta = \frac{\pi}{2} - \frac{3\sqrt{3}}{4}$ 이다. 두 값을 더하면 $\frac{5\pi}{6} - \sqrt{3}$ 이다.`),
+                q('polar_lemniscate_lobes', 5, '렘니스케이트와 원의 차집합',
+                    R`렘니스케이트 $r^2=\cos2\theta$ 의 두 고리 내부 영역 중 원 $r=1/\sqrt{2}$ 의 내부에 놓인 부분을 제외한 영역의 넓이 합을 구하시오.`,
+                    R`\frac{\sqrt{3}}{2} - \frac{\pi}{6}`,
+                    R`교점은 $\cos2\theta = 1/2$ 인 $\theta=\pm\pi/6$ 이다. 구하는 넓이는 오른쪽 고리에 대해 원 밖으로 튀어나온 부분이며, 대칭성을 이용해 제1사분면을 구하고 4배 한다. $4 \times \frac{1}{2} \int_0^{\pi/6} (\cos2\theta - 1/2) d\theta = 2 [ \frac{\sin2\theta}{2} - \frac{\theta}{2} ]_0^{\pi/6} = \frac{\sqrt{3}}{2} - \frac{\pi}{6}$ 이다. 렘니스케이트 전체 넓이인 1에서 원 내부 겹침 넓이를 빼는 방식과 동일하다.`),
+                q('polar_limacon_loop_area', 5, '리마송의 내부와 외부 고리 넓이',
+                    R`리마송 $r=1+2\cos\theta$ 의 바깥 고리의 넓이를 $A_{out}$, 안쪽 고리의 넓이를 $A_{in}$ 이라 할 때, 넓이의 차이 $A_{out} - A_{in}$ 를 구하시오. (단, 바깥 고리의 넓이는 안쪽 고리의 넓이를 포함하지 않은 순수 바깥 영역이다)`,
+                    R`\frac{9\sqrt{3}}{2}`,
+                    R`적분 $\frac{1}{2}\int_0^{2\pi} (1+2\cos\theta)^2 d\theta = 3\pi$ 는 안쪽 고리를 중복 적분한 값이다. 실제 바깥 테두리 넓이는 $A_{total} = A_{out} + A_{in} = 3\pi - A_{in}$ 이다. 곡선이 원점을 지나는 각은 $\theta=2\pi/3, 4\pi/3$ 이며 안쪽 고리의 넓이는 $A_{in} = \frac{1}{2}\int_{2\pi/3}^{4\pi/3} (1+2\cos\theta)^2 d\theta = \pi - \frac{3\sqrt{3}}{2}$ 이다. 전체 적분값 $3\pi = A_{out} + 2A_{in}$ 에서 $A_{out} = 3\pi - 2A_{in}$ 이므로, 차이 $A_{out} - A_{in} = 3\pi - 3A_{in} = 3\pi - 3(\pi - 3\sqrt{3}/2) = \frac{9\sqrt{3}}{2}$ 이다.`)
+            ]
+        },
+        {
+            id: 'adv_col2_v2_8', name: '극좌표 심화 8 · 적분 기법과 호의 길이',
+            description: '루트 안의 완전제곱식과 초월함수의 극한적분',
+            problems: [
+                q('polar_arc_length_cardioid', 4, '심장형의 전체 호의 길이',
+                    R`카디오이드 $r=1+\cos\theta$ 의 전체 호의 길이를 구하시오.`,
+                    R`8`,
+                    R`호의 길이는 $L = \int_0^{2\pi} \sqrt{r^2 + (r')^2} d\theta$ 이다. $r^2 + (r')^2 = (1+\cos\theta)^2 + (-\sin\theta)^2 = 2 + 2\cos\theta = 4\cos^2(\theta/2)$ 이다. 대칭성을 이용해 상반부의 2배를 계산하면 $2 \int_0^{\pi} \sqrt{4\cos^2(\theta/2)} d\theta = 4 \int_0^{\pi} \cos(\theta/2) d\theta = 4 [2\sin(\theta/2)]_0^{\pi} = 8(1 - 0) = 8$ 이다. 절댓값을 벗길 때 $\cos(\theta/2)$ 가 상반부에서 양수이므로 부호 오류를 방지할 수 있다.`),
+                q('polar_arc_length_log_spiral', 4, '나선의 한없는 감김과 유한한 길이',
+                    R`로그나선 $r=e^{-\theta}$ 가 $\theta=0$ 부터 무한대까지 원점을 향해 한없이 감겨 들어갈 때, 그려지는 전체 호의 길이를 구하시오.`,
+                    R`\sqrt{2}`,
+                    R`$L = \int_0^{\infty} \sqrt{(e^{-\theta})^2 + (-e^{-\theta})^2} d\theta = \int_0^{\infty} \sqrt{2e^{-2\theta}} d\theta = \sqrt{2} \int_0^{\infty} e^{-\theta} d\theta$. 이 이상적분을 계산하면 $\sqrt{2} [-e^{-\theta}]_0^{\infty} = \sqrt{2}(0 - (-1)) = \sqrt{2}$ 이다. 점은 무한히 회전하지만 유한한 거리 내에서 원점에 수렴한다.`),
+                q('polar_arc_length_cos3', 5, '삼각함수 지수와 분수각의 결합',
+                    R`극곡선 $r=\sin^3(\theta/3)$ 에 대하여, $\theta$가 $0$에서 $3\pi$까지 변할 때 그려지는 전체 호의 길이를 구하시오.`,
+                    R`\frac{3\pi}{2}`,
+                    R`$r' = \sin^2(\theta/3)\cos(\theta/3)$ 이다. $r^2 + (r')^2 = \sin^6(\theta/3) + \sin^4(\theta/3)\cos^2(\theta/3) = \sin^4(\theta/3)(\sin^2(\theta/3) + \cos^2(\theta/3)) = \sin^4(\theta/3)$ 이다. 따라서 호의 길이는 $\int_0^{3\pi} \sin^2(\theta/3) d\theta$ 이다. 반각 공식을 사용하면 $\int_0^{3\pi} \frac{1-\cos(2\theta/3)}{2} d\theta = [\frac{\theta}{2} - \frac{3}{4}\sin(2\theta/3)]_0^{3\pi} = \frac{3\pi}{2}$ 이다.`),
+                q('polar_arc_length_limacon', 5, '리마송의 일부 구간 길이',
+                    R`리마송 $r=3+3\cos\theta$ 와 $r=1+\cos\theta$ 는 모양이 닮았다. 두 곡선의 $0 \le \theta \le \pi/2$ 구간의 호의 길이의 차를 구하시오.`,
+                    R`4\sqrt{2}`,
+                    R`첫 번째 곡선은 카디오이드 $r=3(1+\cos\theta)$ 이므로 길이 요소는 $ds = 3\sqrt{2+2\cos\theta} = 6\cos(\theta/2) d\theta$ 이다. 두 번째 곡선은 $2\cos(\theta/2) d\theta$ 이다. 길이의 차이는 $\int_0^{\pi/2} 4\cos(\theta/2) d\theta = [8\sin(\theta/2)]_0^{\pi/2} = 8\sin(\pi/4) = 4\sqrt{2}$ 이다. 상사비(닮음비)가 3:1이므로 길이가 정확히 3배가 되어 빼면 2배가 됨을 직관적으로 이용해도 된다.`),
+                q('polar_secant_length', 5, '직선을 나타내는 극방정식의 호',
+                    R`극곡선 $r=\sec\theta$ ($-\pi/4 \le \theta \le \pi/4$) 의 호의 길이를 극좌표 적분을 통해 직접 구하시오.`,
+                    R`2`,
+                    R`$r=\sec\theta$ 는 직교좌표로 $x=1$ 이라는 수직선이다. 호의 길이는 기하학적으로 $-1 \le y \le 1$ 이므로 2가 되어야 한다. 극좌표 적분으로 확인하면 $r' = \sec\theta\tan\theta$ 이고 $r^2+(r')^2 = \sec^2\theta + \sec^2\theta\tan^2\theta = \sec^2\theta(1+\tan^2\theta) = \sec^4\theta$ 이다. $\int_{-\pi/4}^{\pi/4} \sec^2\theta d\theta = [\tan\theta]_{-\pi/4}^{\pi/4} = 1 - (-1) = 2$ 로 정확히 일치함을 확인할 수 있다.`)
+            ]
+        },
+        {
+            id: 'adv_col2_v2_9', name: '극좌표 심화 9 · 삼각함수 차수 확장과 기하',
+            description: '절댓값과 고차항이 만드는 기이한 곡선들의 분석',
+            problems: [
+                q('polar_sqrt_sin_area', 5, '루트 사인의 영역',
+                    R`극곡선 $r=\sqrt{\sin2\theta}$ ($0 \le \theta \le \pi/2$) 가 둘러싸는 닫힌 영역의 넓이를 구하시오.`,
+                    R`\frac{1}{2}`,
+                    R`부채꼴 면적 공식 $A = \frac{1}{2} \int_0^{\pi/2} r^2 d\theta = \frac{1}{2} \int_0^{\pi/2} \sin2\theta d\theta = \frac{1}{2} [-\frac{1}{2}\cos2\theta]_0^{\pi/2} = -\frac{1}{4}(-1 - 1) = \frac{1}{2}$ 이다. 이 곡선은 렘니스케이트 $r^2=\sin2\theta$ 의 한 고리와 완전히 동일하며 기하학적 넓이도 같다.`),
+                q('polar_absolute_sin_cos', 4, '절댓값이 만든 정사각형',
+                    R`극곡선 $r=1/(|\sin\theta| + |\cos\theta|)$ 이 둘러싸는 전체 닫힌 영역의 넓이를 구하시오.`,
+                    R`2`,
+                    R`$0 \le \theta \le \pi/2$ 구간에서 $r(\sin\theta + \cos\theta) = 1$ 이므로 직교좌표로 $x+y=1$ 인 선분이다. 대칭성에 의해 네 사분면 모두에서 선분이 그려지며 꼭짓점이 $(\pm1, 0), (0, \pm1)$ 인 마름모(정사각형)가 된다. 대각선 길이가 2이므로 넓이는 $\frac{1}{2} \times 2 \times 2 = 2$ 이다.`),
+                q('polar_inv_cos_sec', 5, '할선의 극적분',
+                    R`극곡선 $r=\frac{2}{\cos\theta + \sin\theta}$ 에 대하여 $0 \le \theta \le \pi/2$ 인 영역이 두 축과 만나는 점들로 구성하는 삼각형의 넓이를 구하시오.`,
+                    R`2`,
+                    R`직교좌표계로 바꾸면 $r\cos\theta + r\sin\theta = 2$ 즉 $x+y=2$ 인 직선이다. $\theta=0$ 일 때 $x=2$ 이고, $\theta=\pi/2$ 일 때 $y=2$ 이다. 원점과 이 두 절편을 잇는 삼각형의 면적은 밑변 2, 높이 2인 직각삼각형이므로 $\frac{1}{2} \times 2 \times 2 = 2$ 이다.`),
+                q('polar_area_sin2_cos2', 5, '제곱합의 역수 곡선',
+                    R`극곡선 $r=\frac{1}{\sqrt{\cos^2\theta + 4\sin^2\theta}}$ 이 둘러싸는 영역의 넓이를 구하시오.`,
+                    R`\frac{\pi}{2}`,
+                    R`직교좌표계로 바꾸면 $r^2(\cos^2\theta + 4\sin^2\theta) = 1 \implies x^2 + 4y^2 = 1$ 이다. 이는 장축이 $x$축을 따라 길이 2, 단축이 $y$축을 따라 길이 1인 타원이다. 타원의 넓이 공식 $A = \pi a b$ 에 의해 $\pi \times 1 \times (1/2) = \pi/2$ 이다. 특수 치환보다는 기하학적 의미를 파악하는 것이 빠르다.`),
+                q('polar_intersect_sin3_cos3', 5, '세 잎 장미의 기하',
+                    R`극곡선 $r=\sin3\theta$ 가 둘러싸는 세 잎 중 한 잎의 넓이는 전체 원 넓이의 몇 분의 몇인가? (원 $r=1$ 에 대하여)`,
+                    R`\frac{1}{12}`,
+                    R`장미곡선 $r=\sin3\theta$ 의 한 잎이 그려지는 매개구간은 $0 \le \theta \le \pi/3$ 이다. 넓이는 $\frac{1}{2} \int_0^{\pi/3} \sin^2 3\theta d\theta = \frac{1}{2} [ \frac{\theta}{2} - \frac{\sin 6\theta}{12} ]_0^{\pi/3} = \frac{\pi}{12}$ 이다. 단위원의 넓이는 $\pi$ 이므로, 그 비율은 정확히 $1/12$ 이다.`)
+            ]
+        },
+        {
+            id: 'adv_col2_v2_10', name: '극좌표 심화 10 · 극방정식으로 정의된 함수의 최적화',
+            description: '극곡선 위의 점에서 좌표와 거리의 최대최소',
+            problems: [
+                q('polar_max_x_cardioid', 4, '가장 오른쪽 끝점',
+                    R`심장형 $r=1+\sin\theta$ 에서 $x$ 좌표가 가장 큰 점의 $x$ 좌표 값을 구하시오.`,
+                    R`\frac{3\sqrt{3}}{4}`,
+                    R`$x = r\cos\theta = \cos\theta + \sin\theta\cos\theta$ 이다. 미분하면 $dx/d\theta = -\sin\theta + \cos^2\theta - \sin^2\theta = -\sin\theta + 1 - 2\sin^2\theta = -(2\sin\theta - 1)(\sin\theta + 1) = 0$ 이다. $\sin\theta = 1/2$ 일 때 극대이므로 $\theta = \pi/6$ (제1사분면) 이다. 이 때 $\cos\theta = \sqrt{3}/2$ 이므로 $x = \sqrt{3}/2 + (1/2)(\sqrt{3}/2) = \frac{3\sqrt{3}}{4}$ 이다.`),
+                q('polar_min_distance_line', 5, '원점에서 곡선까지의 거리',
+                    R`극곡선 $r=4\cos\theta - 3\sin\theta$ 의 자취 위 점 중 원점에서 가장 멀리 떨어진 점의 거리를 구하시오.`,
+                    R`5`,
+                    R`$r = 4\cos\theta - 3\sin\theta = 5\cos(\theta+\alpha)$ 이다. 따라서 $r$ 의 최댓값은 5이다. 기하학적으로 양변에 $r$을 곱하면 $x^2+y^2 = 4x - 3y$ 이고 이는 중심이 $(2, -3/2)$ 이고 반지름이 $5/2$ 인 원이다. 원점도 이 원 위에 있으므로, 원점에서 가장 먼 점은 지름의 반대쪽 끝점이며 거리는 지름의 길이인 5와 일치한다.`),
+                q('polar_max_area_triangle', 5, '내접 삼각형 넓이의 최대',
+                    R`원 $r=2\cos\theta$ 에서 점 $A(2,0)$ 과 원점 $O$, 곡선 위의 점 $P(r, \theta)$ ($0<\theta<\pi/2$) 로 이루어진 삼각형 $OAP$ 의 넓이가 최대가 되게 하는 $\theta$ 를 구하시오.`,
+                    R`\frac{\pi}{4}`,
+                    R`밑변 $OA$ 의 길이는 2로 일정하다. 넓이가 최대이려면 높이 즉 $P$ 의 $y$ 좌표가 최대여야 한다. $y = r\sin\theta = 2\sin\theta\cos\theta = \sin2\theta$ 이다. $\sin2\theta$ 는 $2\theta = \pi/2$ 일 때 최대이므로, $\theta = \pi/4$ 이다.`),
+                q('polar_shortest_chord_pole', 5, '극점을 지나는 현 중 최솟값',
+                    R`극곡선 $r=\frac{4}{2-\cos\theta}$ 에서 극점을 지나는 임의의 현의 길이 $L(\theta)$ 의 최솟값을 구하시오. (현은 곡선이 닫혀 있을 때 극점을 지나는 직선과 곡선의 두 교점을 이은 선분이다)`,
+                    R`4`,
+                    R`극점을 지나는 현은 방향 $\theta$ 와 $\theta+\pi$ 에 대응하는 두 점을 잇는다. $L(\theta) = r(\theta) + r(\theta+\pi) = \frac{4}{2-\cos\theta} + \frac{4}{2-\cos(\theta+\pi)} = \frac{4}{2-\cos\theta} + \frac{4}{2+\cos\theta}$ 이다. 통분하면 $\frac{4(2+\cos\theta + 2-\cos\theta)}{4-\cos^2\theta} = \frac{16}{4-\cos^2\theta}$ 이다. 이 값이 최소가 되려면 분모가 최대여야 하므로 $\cos^2\theta = 0$ 즉 $\theta = \pi/2$ 방향일 때이다. 최솟값은 $16/4 = 4$ 가 된다.`),
+                q('polar_constant_chord', 4, '길이가 일정한 현',
+                    R`리마송 $r=a+b\cos\theta$ ($a > b > 0$) 에서 극점을 지나는 모든 현의 길이는 $\theta$ 에 관계없이 일정함을 증명할 때, 그 일정한 길이를 $a, b$ 로 나타내시오.`,
+                    R`2a`,
+                    R`현의 길이는 반대 방향 반직선과의 거리 합이다. $L = r(\theta) + r(\theta+\pi)$ (단, 두 값이 모두 양수일 때). $a>b$ 이므로 $r$ 은 항상 양수이다. $L = (a+b\cos\theta) + (a+b\cos(\theta+\pi)) = a + b\cos\theta + a - b\cos\theta = 2a$ 이다. 리마송의 기하학적 성질 중 하나로, 궤적 상의 마주보는 두 점의 거리는 상수 $2a$ 이다.`)
+            ]
+        }
+    ];
+    window.generatedCollections.push(...collections);
+})();
