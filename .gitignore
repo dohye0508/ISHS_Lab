@@ -33,3 +33,8 @@ ENV/
 *.bak
 # Database Credentials
 db_config.php
+
+# KakaoTalk chat exports are private; never commit them
+KakaoTalk_*
+KakaoTalk*.txt
+KakaoTalk*.csv

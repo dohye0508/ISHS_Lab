@@ -411,6 +411,17 @@ html.js .rv-drop.is-in{opacity:1;transform:none}
                     <div class="mod-cta">시작하기<span class="mod-arr">&rarr;</span></div>
                 </article>
 
+                <article class="mod-card rv-drop" tabindex="0" role="button" onclick="enterModule('kakaotalk.php')">
+                    <div class="mod-card__head">
+                        <span class="mod-icon mod-icon--pm"><img src="assets/images/kakaotalk.svg" alt="KakaoTalk Analyzer"></span>
+                        <span class="mod-badge mod-badge--new">NEW</span>
+                    </div>
+                    <h4 class="mod-name">KakaoTalk Analyzer</h4>
+                    <p class="mod-name-ko">카톡 대화 분석기</p>
+                    <p class="mod-desc">내보낸 대화를 올려 참여자별 활동·키워드·성향을 분석하세요.</p>
+                    <div class="mod-cta">시작하기<span class="mod-arr">&rarr;</span></div>
+                </article>
+
                 <article class="mod-card rv-drop" tabindex="0" role="button" onclick="enterModule('coding_test.php')">
                     <div class="mod-card__head">
                         <span class="mod-icon mod-icon--bm"><img src="assets/images/codingtesticon.jpg" alt="Coding Test"></span>

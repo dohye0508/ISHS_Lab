@@ -22,6 +22,13 @@ A comprehensive algorithmic library and practice environment for competitive pro
 A systematic vocabulary management tool designed for efficient memorization.
 - **Customized Flashcards:** Allows users to create personal word lists and self-evaluate their progress through interactive testing interfaces.
 
+### 4. KakaoTalk Analyzer
+A client-side analyzer for KakaoTalk chat exports (`kakaotalk.php`). Files are parsed in a Web Worker inside the browser and are never uploaded.
+- **Filters:** pick the date range (drag on the timeline), exclude people (bots are detected automatically), limit message types and hours, and merge renamed users.
+- **Views:** participant ranking, activity trends and weekday x hour heatmap, keywords (frequent and person-specific, with search), personality titles, reply relationships, an auto-generated report and a searchable transcript.
+- **Export:** ranking CSV and a shareable PNG card. Supports the PC and mobile `.txt` exports and `Date,User,Message` CSV.
+- **Check:** `node scripts/check_kakaotalk.cjs [export.txt ...]` verifies the parser and the filters against independent line counts.
+
 ## Project Structure
 
 ```text
@@ -31,6 +38,7 @@ ISHS_Lab/
 ├── coding_test.php       # Algorithm viewer module
 ├── integral.php          # Integral practice module
 ├── vocabulary.php        # Vocabulary management module
+├── kakaotalk.php         # KakaoTalk chat export analyzer
 ├── data/
 │   ├── algorithms/       # Algorithm source codes and categorizations
 │   ├── math/             # Mathematics problem data
