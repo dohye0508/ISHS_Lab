@@ -389,17 +389,6 @@ html.js .rv-drop.is-in{opacity:1;transform:none}
                     <div class="mod-cta">시작하기<span class="mod-arr">&rarr;</span></div>
                 </article>
 
-                <article class="mod-card rv-drop" tabindex="0" role="button" onclick="enterModule('biology.php')">
-                    <div class="mod-card__head">
-                        <span class="mod-icon mod-icon--bm"><img src="assets/images/biology.svg" alt="Biology Studio"></span>
-                        <span class="mod-badge mod-badge--new">NEW</span>
-                    </div>
-                    <h4 class="mod-name">Biology Studio</h4>
-                    <p class="mod-name-ko">생물 스튜디오</p>
-                    <p class="mod-desc">발생학·세포·근육·식물 카드를 넘기며 암기하세요.</p>
-                    <div class="mod-cta">시작하기<span class="mod-arr">&rarr;</span></div>
-                </article>
-
                 <article class="mod-card rv-drop" tabindex="0" role="button" onclick="enterModule('korean_history.php')">
                     <div class="mod-card__head">
                         <span class="mod-icon mod-icon--pb"><img src="assets/images/korean_history.svg" alt="Korean History Studio"></span>
