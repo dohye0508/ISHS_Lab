@@ -179,7 +179,9 @@ for (const file of process.argv.slice(2)) {
     console.log('  global keywords: ' + all.keywords.global.slice(0, 15).map(k => k.t + ':' + k.c).join(' '));
     const t5 = all.persons[0];
     if (all.keywords.per[t5.id]) console.log('  distinct for ' + t5.name + ': ' + all.keywords.per[t5.id].distinct.slice(0, 10).map(k => k[0]).join(' '));
-    console.log('  titles: ' + all.persons.filter(p => p.titles.length).map(p => p.name + '=' + p.titles.map(t => t.title).join('/')).join(' | '));
+    const titled = all.persons.filter(p => p.title);
+    eq(new Set(titled.map(p => p.title.key)).size, titled.length, 'each title is held by one person');
+    console.log('  titles: ' + titled.map(p => p.name + '=' + p.title.title + ' (' + p.title.desc + ')').join(' | '));
 }
 
 console.log(failed ? '\n' + failed + ' check(s) FAILED' : '\nall checks passed');

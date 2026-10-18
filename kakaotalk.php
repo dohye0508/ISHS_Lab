@@ -8,7 +8,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
     http_response_code(403);
     exit();
 }
-$v = '20261018_1';
+$v = '20261018_2';
 ?>
 <!doctype html>
 <html lang="ko">
@@ -29,10 +29,6 @@ $v = '20261018_1';
     <header class="kt-nav">
         <a href="modules.php" class="kt-logo" title="스튜디오 목록으로"><span class="grad">ISHS<span class="lab">LAB</span></span></a>
         <span class="kt-nav-title">KakaoTalk Analyzer</span>
-        <span class="kt-privacy" title="파일은 이 브라우저 안에서만 분석되고 서버로 전송되지 않아요.">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3zm-1 14-4-4 1.4-1.4L11 13.2l4.6-4.6L17 10l-6 6z"/></svg>
-            내 기기에서만 분석
-        </span>
         <span class="kt-spacer"></span>
         <button id="reload" class="btn ghost" type="button" hidden>새 파일 불러오기</button>
         <button id="theme-toggle" type="button" aria-label="밝은 테마와 어두운 테마 전환">◐</button>
@@ -40,30 +36,15 @@ $v = '20261018_1';
 
     <main>
         <section id="landing" class="landing">
-            <p class="eyebrow">KAKAOTALK ANALYZER</p>
-            <h1>우리 대화방을 <em>숫자로 읽어요.</em></h1>
-            <p class="lede">카카오톡 대화 내보내기 파일을 올리면 참여자별 채팅 수, 자주 쓴 키워드, 활동 시간대와 성향을 한 번에 분석해요.
-                제외할 사람과 기간도 자유롭게 고를 수 있어요.</p>
-
+            <h1>카톡 대화 분석</h1>
+            <p class="lede">내보낸 대화 파일을 올리면 누가 많이 말하는지, 언제 활발한지, 어떤 말을 쓰는지 보여줘요.</p>
             <label id="drop" class="drop" for="file" tabindex="0">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.4 10.1A7.5 7.5 0 0 0 5 8.7 5.5 5.5 0 0 0 6 19.6h12.5a4.5 4.5 0 0 0 .9-9.5zM13 13v4h-2v-4H8l4-4.5 4 4.5h-3z"/></svg>
-                <strong>대화 파일을 끌어다 놓거나 클릭해서 선택하세요</strong>
-                <span>.txt 또는 .csv · 여러 개 선택 가능 · 8MB 이상도 문제없어요</span>
+                <strong>파일을 끌어다 놓거나 눌러서 선택</strong>
+                <span>채팅방 메뉴 → 대화 내용 내보내기 → .txt</span>
                 <input id="file" type="file" accept=".txt,.csv,text/plain,text/csv" multiple>
             </label>
             <p id="loadError" class="load-error" role="alert" hidden></p>
-
-            <div class="how">
-                <div><b>1</b><span>카톡 채팅방 메뉴에서 <em>대화 내용 내보내기</em>를 선택해요.</span></div>
-                <div><b>2</b><span><em>텍스트(.txt)</em>로 저장하고, 이 페이지에 올려요.</span></div>
-                <div><b>3</b><span>기간·제외 인물을 고르며 <em>순위·키워드·성향</em>을 살펴봐요.</span></div>
-            </div>
-
-            <ul class="features">
-                <li>참여자 순위</li><li>활동 추이</li><li>시간대 히트맵</li><li>핵심 키워드</li>
-                <li>성향 칭호</li><li>답장 관계도</li><li>자동 리포트</li><li>대화 원문 검색</li>
-            </ul>
-            <p class="fine">대화 내용은 서버에 업로드되거나 저장되지 않아요. 필터 설정(제외한 이름 등)만 이 브라우저에 기억해요.</p>
+            <p class="fine">파일은 서버로 보내지 않고 이 브라우저에서만 분석해요.</p>
         </section>
 
         <section id="app" class="app" hidden>

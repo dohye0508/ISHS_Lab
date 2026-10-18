@@ -461,7 +461,7 @@
         persons.forEach(function (q, k) { indexOfPerson[q.id] = k; });
 
         var keywords = buildKeywords(ds, kw, kwPerson, A.tokens, persons, stopOn);
-        attachTraits(persons, total, sessions);
+        attachTraits(persons, total);
 
         var peakDayIdx = 0;
         for (i = 0; i < D; i++) if (dailyTotal[i] > dailyTotal[peakDayIdx]) peakDayIdx = i;
@@ -527,33 +527,35 @@
 
     /* ---------- traits ---------- */
 
+    // Each trait can be held by one person only, and each person holds at most one title.
     var TRAITS = [
-        { key: 'night', icon: '🌙', title: '올빼미', label: '심야(0~5시) 비율', val: function (p) { return p.night / p.msgs; }, fmt: pct },
-        { key: 'morning', icon: '🌅', title: '아침형', label: '아침(5~10시) 비율', val: function (p) { return p.morning / p.msgs; }, fmt: pct },
-        { key: 'weekend', icon: '🏖️', title: '주말러', label: '주말 비율', val: function (p) { return p.weekend / p.msgs; }, fmt: pct },
-        { key: 'starter', icon: '🚀', title: '대화 시작러', label: '1천 메시지당 대화 시작', val: function (p) { return p.starters / p.msgs * 1000; }, fmt: function (v) { return v.toFixed(1) + '회'; } },
-        { key: 'ender', icon: '🔚', title: '마무리 담당', label: '1천 메시지당 마지막 발언', val: function (p) { return p.enders / p.msgs * 1000; }, fmt: function (v) { return v.toFixed(1) + '회'; } },
-        { key: 'burst', icon: '🔥', title: '연투러', label: '연속 발언 평균', val: function (p) { return p.avgBurst; }, fmt: function (v) { return v.toFixed(2) + '개'; } },
-        { key: 'question', icon: '❓', title: '질문러', label: '질문(?) 비율', val: function (p) { return p.text ? p.questions / p.text : 0; }, fmt: pct },
-        { key: 'laugh', icon: '😂', title: 'ㅋㅋ 장인', label: '메시지당 ㅋ·ㅎ', val: function (p) { return p.text ? p.laugh / p.text : 0; }, fmt: function (v) { return v.toFixed(2) + '자'; } },
-        { key: 'cry', icon: '🥲', title: '감성러', label: '메시지당 ㅠ·ㅜ', val: function (p) { return p.text ? p.cry / p.text : 0; }, fmt: function (v) { return v.toFixed(3) + '자'; } },
-        { key: 'link', icon: '🔗', title: '링크 셔틀', label: '링크 공유 비율', val: function (p) { return p.links / p.msgs; }, fmt: pct },
-        { key: 'photo', icon: '📸', title: '사진가', label: '사진 메시지 비율', val: function (p) { return p.photoMsgs / p.msgs; }, fmt: pct },
-        { key: 'emoticon', icon: '😎', title: '이모티콘러', label: '이모티콘 비율', val: function (p) { return p.emoticons / p.msgs; }, fmt: pct },
-        { key: 'long', icon: '📝', title: '장문 작가', label: '평균 글자 수', val: function (p) { return p.avgLen; }, fmt: function (v) { return v.toFixed(1) + '자'; } },
-        { key: 'short', icon: '⚡', title: '단답러', label: '3자 이하 메시지 비율', val: function (p) { return p.text ? p.shortMsgs / p.text : 0; }, fmt: pct },
-        { key: 'mention', icon: '📣', title: '멘션러', label: '@멘션 비율', val: function (p) { return p.mentions / p.msgs; }, fmt: pct },
-        { key: 'speed', icon: '⏱️', title: '번개 답장', label: '평균 답장 시간', min: 30, val: function (p) { return p.avgReply === null ? null : -p.avgReply; }, fmt: function (v) { return (-v).toFixed(1) + '분'; } },
-        { key: 'steady', icon: '📆', title: '개근러', label: '활동 일수', val: function (p) { return p.activeDays; }, fmt: function (v) { return v + '일'; } }
+        { key: 'night', title: '올빼미', label: '새벽 비율', desc: '메시지의 {v}를 새벽 0~5시에 보내요', val: function (p) { return p.night / p.msgs; }, fmt: pct },
+        { key: 'morning', title: '아침형', label: '아침 비율', desc: '메시지의 {v}를 아침 5~10시에 보내요', val: function (p) { return p.morning / p.msgs; }, fmt: pct },
+        { key: 'weekend', title: '주말러', label: '주말 비율', desc: '메시지의 {v}가 주말에 몰려 있어요', val: function (p) { return p.weekend / p.msgs; }, fmt: pct },
+        { key: 'starter', title: '분위기 메이커', label: '대화 시작', desc: '조용한 방에 먼저 말을 거는 일이 가장 잦아요', val: function (p) { return p.starters / p.msgs * 1000; }, fmt: function (v) { return v.toFixed(1); } },
+        { key: 'ender', title: '마무리 담당', label: '마지막 발언', desc: '대화의 마지막 말을 가장 자주 남겨요', val: function (p) { return p.enders / p.msgs * 1000; }, fmt: function (v) { return v.toFixed(1); } },
+        { key: 'burst', title: '연속 발사', label: '연속 발언', desc: '한 번 말하면 평균 {v}씩 이어서 보내요', val: function (p) { return p.avgBurst; }, fmt: function (v) { return v.toFixed(1) + '개'; } },
+        { key: 'question', title: '호기심 대장', label: '질문 비율', desc: '메시지의 {v}가 질문이에요', val: function (p) { return p.text ? p.questions / p.text : 0; }, fmt: pct },
+        { key: 'laugh', title: '웃음 담당', label: 'ㅋㅋ 사용', desc: '메시지마다 ㅋ·ㅎ를 평균 {v} 써요', val: function (p) { return p.text ? p.laugh / p.text : 0; }, fmt: function (v) { return v.toFixed(1) + '자'; } },
+        { key: 'cry', title: '감성파', label: 'ㅠㅠ 사용', desc: 'ㅠ·ㅜ를 가장 자주 써요', val: function (p) { return p.text ? p.cry / p.text : 0; }, fmt: function (v) { return v.toFixed(2) + '자'; } },
+        { key: 'link', title: '정보통', label: '링크 공유', desc: '메시지의 {v}가 링크예요', val: function (p) { return p.links / p.msgs; }, fmt: pct },
+        { key: 'photo', title: '사진 기록가', label: '사진 비율', desc: '메시지의 {v}가 사진이에요', val: function (p) { return p.photoMsgs / p.msgs; }, fmt: pct },
+        { key: 'emoticon', title: '이모티콘 부자', label: '이모티콘 비율', desc: '메시지의 {v}가 이모티콘이에요', val: function (p) { return p.emoticons / p.msgs; }, fmt: pct },
+        { key: 'long', title: '장문가', label: '평균 길이', desc: '한 메시지에 평균 {v}를 써요', val: function (p) { return p.avgLen; }, fmt: function (v) { return v.toFixed(1) + '자'; } },
+        { key: 'short', title: '단답러', label: '단답 비율', desc: '메시지의 {v}가 3자 이하예요', val: function (p) { return p.text ? p.shortMsgs / p.text : 0; }, fmt: pct },
+        { key: 'mention', title: '호출 담당', label: '멘션 비율', desc: '메시지의 {v}에 @멘션이 있어요', val: function (p) { return p.mentions / p.msgs; }, fmt: pct },
+        { key: 'speed', title: '번개 답장', label: '평균 답장', min: 30, desc: '평균 {v} 만에 답해요', val: function (p) { return p.avgReply === null ? null : -p.avgReply; }, fmt: function (v) { return (-v < 1 ? '1분 미만' : (-v).toFixed(1) + '분'); } },
+        { key: 'steady', title: '개근상', label: '활동 일수', desc: '{v} 동안 대화에 참여했어요', val: function (p) { return p.activeDays; }, fmt: function (v) { return v + '일'; } }
     ];
 
     function pct(v) { return (v * 100).toFixed(1) + '%'; }
 
-    function attachTraits(persons, total, sessions) {
+    function attachTraits(persons, total) {
         var minMsgs = Math.max(30, Math.round(total * 0.004));
         var pool = persons.filter(function (p) { return p.msgs >= minMsgs; });
-        persons.forEach(function (p) { p.traits = []; p.titles = []; p.metrics = {}; });
+        persons.forEach(function (p) { p.title = null; p.metrics = {}; });
         if (pool.length < 3) return;
+        var cands = [];
         TRAITS.forEach(function (t) {
             var qual = pool.filter(function (p) { return (!t.min || p.replyN >= t.min) && t.val(p) !== null; });
             if (qual.length < 3) return;
@@ -562,14 +564,17 @@
             if (!sd) return;
             qual.forEach(function (p, i) {
                 var z = (vals[i] - mean) / sd;
-                p.metrics[t.key] = { value: vals[i], z: z, text: t.fmt(vals[i]), label: t.label };
-                if (z >= 0.9) p.traits.push({ key: t.key, icon: t.icon, title: t.title, label: t.label, text: t.fmt(vals[i]), z: z });
+                p.metrics[t.key] = { label: t.label, text: t.fmt(vals[i]), z: z };
+                if (z >= 1) cands.push({ p: p, t: t, z: z, text: t.fmt(vals[i]) });
             });
-            var best = qual[0], bz = -Infinity;
-            qual.forEach(function (p, i) { var z = (vals[i] - mean) / sd; if (z > bz) { bz = z; best = p; } });
-            if (bz >= 1.2) best.titles.push({ key: t.key, icon: t.icon, title: t.title, label: t.label, text: t.fmt(t.val(best)) });
         });
-        persons.forEach(function (p) { p.traits.sort(function (a, b) { return b.z - a.z; }); });
+        cands.sort(function (a, b) { return b.z - a.z; });
+        var used = {};
+        cands.forEach(function (c) {
+            if (c.p.title || used[c.t.key]) return;
+            used[c.t.key] = 1;
+            c.p.title = { key: c.t.key, title: c.t.title, label: c.t.label, text: c.text, desc: c.t.desc.replace('{v}', c.text) };
+        });
     }
 
     /* ---------- search / transcript ---------- */

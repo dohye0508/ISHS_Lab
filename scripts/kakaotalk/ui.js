@@ -12,7 +12,7 @@
         kinds: { text: true, photo: true, emoticon: true, video: true, file: true, search: true, voice: true, deleted: false }
     };
     var KIND_CHIPS = [['photo', '사진'], ['emoticon', '이모티콘'], ['video', '동영상'], ['file', '파일'], ['voice', '음성'], ['search', '샵검색'], ['deleted', '삭제된 메시지']];
-    var TABS = [['overview', '개요'], ['ranking', '참여자 순위'], ['trend', '활동 추이'], ['keywords', '핵심 키워드'], ['traits', '성향 분석'], ['relations', '관계'], ['report', '분석 리포트'], ['transcript', '대화 원문']];
+    var TABS = [['summary', '요약'], ['people', '사람'], ['time', '시간'], ['keywords', '키워드'], ['transcript', '대화 원문']];
 
     function clone(o) { return JSON.parse(JSON.stringify(o)); }
     function loadSettings() {
@@ -26,7 +26,7 @@
     function saveSettings() { try { localStorage.setItem(SKEY, JSON.stringify(S.set)); } catch (_) {} }
 
     S.set = loadSettings();
-    S.tab = 'overview';
+    S.tab = 'summary';
     S.from = null; S.to = null; S.roomSel = null;
     S.people = []; S.peopleById = {}; S.rooms = []; S.result = null;
     S.roomTitle = ''; S.filterSummary = '';
@@ -156,12 +156,7 @@
     function renderRoomInfo() {
         var el = $('roomInfo'); KT.clear(el);
         el.appendChild(h('h1', { class: 'room-title' }, S.roomTitle));
-        var meta = h('p', { class: 'room-meta' }, num(S.total) + '개 메시지 · ' + KT.dayStr(S.firstDay) + ' ~ ' + KT.dayStr(S.lastDay));
-        el.appendChild(meta);
-        var notes = [];
-        if (S.skipped.deleted) notes.push('삭제된 메시지 ' + num(S.skipped.deleted) + '개');
-        if (S.skipped.hidden) notes.push('관리자가 가린 메시지 ' + num(S.skipped.hidden) + '개');
-        if (notes.length) el.appendChild(h('p', { class: 'room-note' }, notes.join(' · ') + '는 내용이 남지 않아 집계에서 빠져요.'));
+        el.appendChild(h('p', { class: 'room-meta' }, KT.dayStr(S.firstDay) + ' – ' + KT.dayStr(S.lastDay)));
     }
 
     /* ---------- filter sidebar ---------- */
@@ -170,9 +165,9 @@
         return h('details', { class: 'fsec', open: open !== false }, h('summary', null, h('span', null, title), badge ? h('em', { class: 'fbadge', id: badge.id }, badge.text || '') : null), h('div', { class: 'fbody' }, body));
     }
 
-    function toggle(label, desc, key, onChange) {
+    function toggle(label, key, onChange) {
         return h('label', { class: 'switch' }, h('input', { type: 'checkbox', checked: !!S.set[key], onchange: function (e) { S.set[key] = e.target.checked; saveSettings(); if (onChange) onChange(); else scheduleAnalyze(60); } }),
-            h('b', null), h('span', null, label, desc ? h('small', null, desc) : null));
+            h('b', null), h('span', null, label));
     }
 
     var brush = null;
@@ -185,68 +180,54 @@
                 return h('label', { class: 'check' }, h('input', { type: 'checkbox', checked: !S.roomSel || S.roomSel.indexOf(r.id) >= 0, onchange: function () {
                     var on = Array.prototype.map.call(roomBox_inputs(), function (i, k) { return i.checked ? S.rooms[k].id : -1; }).filter(function (v) { return v >= 0; });
                     S.roomSel = on.length === S.rooms.length ? null : on.length ? on : [r.id]; scheduleAnalyze(60);
-                } }), h('span', null, r.title, h('small', null, num(r.count) + '개')));
+                } }), h('span', null, r.title));
             });
             el.appendChild(section('대화방', h('div', { id: 'roomBox', class: 'checks' }, roomBox)));
         }
 
         /* period */
-        var fromIn = h('input', { type: 'date', class: 'input', id: 'dFrom', 'aria-label': '시작일', min: KT.dayInput(S.firstDay), max: KT.dayInput(S.lastDay), onchange: function (e) { S.from = KT.inputDay(e.target.value); syncPeriod(true); } });
-        var toIn = h('input', { type: 'date', class: 'input', id: 'dTo', 'aria-label': '종료일', min: KT.dayInput(S.firstDay), max: KT.dayInput(S.lastDay), onchange: function (e) { S.to = KT.inputDay(e.target.value); syncPeriod(true); } });
-        var brushEl = h('div', { class: 'brush-wrap' });
-        var presets = [['전체', null], ['최근 1개월', 1], ['3개월', 3], ['6개월', 6], ['1년', 12], ['올해', 'year']].map(function (p) {
+        var fromIn = h('input', { type: 'date', class: 'input', id: 'dFrom', 'aria-label': '시작일', min: KT.dayInput(S.firstDay), max: KT.dayInput(S.lastDay), onchange: function (e) { S.from = KT.inputDay(e.target.value); if (S.from === S.firstDay) S.from = null; syncPeriod(true); } });
+        var toIn = h('input', { type: 'date', class: 'input', id: 'dTo', 'aria-label': '종료일', min: KT.dayInput(S.firstDay), max: KT.dayInput(S.lastDay), onchange: function (e) { S.to = KT.inputDay(e.target.value); if (S.to === S.lastDay) S.to = null; syncPeriod(true); } });
+        var brushEl = h('div', { class: 'brush-wrap', title: '드래그해서 기간 선택' });
+        var presets = [['전체', null], ['1개월', 1], ['3개월', 3], ['1년', 12]].map(function (p) {
             return h('button', { type: 'button', class: 'chip btn-chip', onclick: function () { applyPreset(p[1]); } }, p[0]);
         });
-        el.appendChild(section('기간', [brushEl, h('p', { class: 'hint tiny' }, '그래프를 드래그해 기간을 고르거나, 클릭해서 해제하세요.'),
-            h('div', { class: 'date-row' }, fromIn, h('span', null, '~'), toIn), h('div', { class: 'chips' }, presets), h('p', { class: 'hint', id: 'periodInfo' })]));
+        el.appendChild(section('기간', [brushEl, h('div', { class: 'date-row' }, fromIn, h('span', null, '–'), toIn), h('div', { class: 'chips' }, presets)]));
         brush = KT.brushTimeline(brushEl, { keys: S.timeline.days, counts: S.timeline.counts, from: S.from, to: S.to, onChange: function (a, b) { S.from = a; S.to = b; syncPeriod(false, true); } });
 
         /* people */
         var search = h('input', { type: 'search', class: 'input', placeholder: '이름 검색', 'aria-label': '인물 검색', oninput: function (e) { filterPeopleRows(e.target.value); } });
-        var topSel = h('select', { class: 'input', 'aria-label': '상위 인물만 보기', onchange: function (e) {
-            var n = +e.target.value; if (!n) return;
-            var keep = S.people.filter(function (p) { return !(s.excludeBots && p.isBot); }).slice(0, n).map(function (p) { return p.name; });
-            S.set.excludedNames = S.people.filter(function (p) { return keep.indexOf(p.name) < 0; }).map(function (p) { return p.name; });
-            e.target.value = '0'; saveSettings(); syncPeopleRows(); scheduleAnalyze(60);
-        } }, h('option', { value: '0' }, '상위 N명만 보기…'), [3, 5, 8, 10, 20].map(function (n) { return h('option', { value: n }, '상위 ' + n + '명'); }));
         var list = h('ul', { class: 'people', id: 'peopleList' }, S.people.map(function (p) {
             return h('li', { dataset: { name: p.name.toLowerCase() } }, h('label', { class: 'prow' }, h('input', { type: 'checkbox', dataset: { id: p.id }, onchange: function (e) { setExcluded(p.name, !e.target.checked); } }),
-                KT.avatar({ name: p.name, colorSlot: p.id }, 'sm'), h('span', { class: 'prow-name' }, p.name, p.isBot && h('em', { class: 'badge' }, '봇'), (p.left || p.kicked) && h('em', { class: 'badge mute' }, p.kicked ? '강퇴' : '나감')),
+                h('span', { class: 'prow-name' }, p.name, p.isBot && h('em', { class: 'badge' }, '봇')),
                 h('span', { class: 'prow-n' }, num(p.total))));
         }));
-        el.appendChild(section('분석할 사람', [h('div', { class: 'row-2' }, search, topSel),
-            h('div', { class: 'mini-actions' }, h('button', { type: 'button', class: 'link', onclick: function () { S.set.excludedNames = []; saveSettings(); syncPeopleRows(); scheduleAnalyze(60); } }, '모두 포함'),
-                h('button', { type: 'button', class: 'link', onclick: function () { S.set.excludedNames = S.people.map(function (p) { return p.name; }); saveSettings(); syncPeopleRows(); scheduleAnalyze(60); } }, '모두 제외')),
-            list,
-            toggle('봇 자동 제외', '챗봇·알림봇 등 자동 감지', 'excludeBots', function () { syncPeopleRows(); scheduleAnalyze(60); }),
-            toggle('나간·강퇴된 사람 제외', null, 'excludeLeft', function () { syncPeopleRows(); scheduleAnalyze(60); }),
-            toggle('제외한 사람을 @멘션한 메시지도 제외', null, 'mentionExclude'),
-            h('label', { class: 'field' }, '최소 메시지 수', h('input', { type: 'number', class: 'input', min: 0, step: 5, value: s.minMsgs, onchange: function (e) { S.set.minMsgs = Math.max(0, +e.target.value || 0); saveSettings(); scheduleAnalyze(60); } }), h('small', null, '이보다 적게 말한 사람은 제외'))], true, { id: 'peopleBadge' }));
+        el.appendChild(section('사람', [search, list,
+            h('div', { class: 'mini-actions' }, h('button', { type: 'button', class: 'link', onclick: function () { S.set.excludedNames = []; saveSettings(); syncPeopleRows(); scheduleAnalyze(60); } }, '모두 선택'),
+                h('button', { type: 'button', class: 'link', onclick: function () { S.set.excludedNames = S.people.map(function (p) { return p.name; }); saveSettings(); syncPeopleRows(); scheduleAnalyze(60); } }, '모두 해제')),
+            toggle('봇 제외', 'excludeBots', function () { syncPeopleRows(); scheduleAnalyze(60); })], true, { id: 'peopleBadge' }));
 
-        /* kinds */
-        el.appendChild(section('메시지 유형', h('div', { class: 'chips' }, KIND_CHIPS.map(function (k) {
-            return h('button', { type: 'button', class: 'chip btn-chip', 'aria-pressed': String(!!s.kinds[k[0]]), onclick: function (e) { S.set.kinds[k[0]] = !S.set.kinds[k[0]]; e.currentTarget.setAttribute('aria-pressed', String(S.set.kinds[k[0]])); saveSettings(); scheduleAnalyze(60); } }, k[1]);
-        })), false));
-
-        /* hours */
-        var hf = h('select', { class: 'input', id: 'hFrom', 'aria-label': '시작 시각', onchange: function (e) { S.set.hourFrom = +e.target.value; saveSettings(); scheduleAnalyze(60); } }, hourOptions(0, 23, s.hourFrom));
-        var ht = h('select', { class: 'input', id: 'hTo', 'aria-label': '종료 시각', onchange: function (e) { S.set.hourTo = +e.target.value; saveSettings(); scheduleAnalyze(60); } }, hourOptions(1, 24, s.hourTo));
-        function hourPreset(a, b) { S.set.hourFrom = a; S.set.hourTo = b; hf.value = a; ht.value = b; saveSettings(); scheduleAnalyze(60); }
-        el.appendChild(section('시간대', [h('div', { class: 'date-row' }, hf, h('span', null, '~'), ht),
-            h('div', { class: 'chips' }, [['종일', 0, 24], ['심야 제외', 5, 24], ['심야만', 0, 5], ['낮 9–18시', 9, 18]].map(function (p) { return h('button', { type: 'button', class: 'chip btn-chip', onclick: function () { hourPreset(p[1], p[2]); } }, p[0]); }))], false));
-
-        /* options */
-        var gap = h('select', { class: 'input', 'aria-label': '대화 구분 간격', onchange: function (e) { S.set.sessionGapMin = +e.target.value; saveSettings(); scheduleAnalyze(60); } },
+        /* advanced: everything else, collapsed */
+        var hf = h('select', { class: 'input', 'aria-label': '시작 시각', onchange: function (e) { S.set.hourFrom = +e.target.value; saveSettings(); scheduleAnalyze(60); } }, hourOptions(0, 23, s.hourFrom));
+        var ht = h('select', { class: 'input', 'aria-label': '종료 시각', onchange: function (e) { S.set.hourTo = +e.target.value; saveSettings(); scheduleAnalyze(60); } }, hourOptions(1, 24, s.hourTo));
+        var gap = h('select', { class: 'input', 'aria-label': '새 대화로 보는 침묵 시간', onchange: function (e) { S.set.sessionGapMin = +e.target.value; saveSettings(); scheduleAnalyze(60); } },
             [10, 30, 60, 180].map(function (m) { return h('option', { value: m, selected: s.sessionGapMin === m }, m + '분'); }));
-        el.appendChild(section('분석 옵션', [
-            toggle('불용어 제외', '“그냥·진짜·근데” 같은 말', 'stopwords'), toggle('참여자 이름 제외', '키워드에서 사람 이름 빼기', 'skipNames'),
-            toggle('학번 접두사 합치기', '“1207 이름”과 “이름”을 같은 사람으로', 'mergeNo', function () { reconfigure(); }),
-            h('label', { class: 'field' }, '이만큼 조용하면 새로운 대화', gap)], false));
-
-        /* aliases */
-        el.appendChild(section('이름 합치기', aliasUi(), false, { id: 'aliasBadge' }));
-
-        el.appendChild(h('div', { class: 'fsec foot' }, h('button', { type: 'button', class: 'btn ghost wide', onclick: resetAll }, '모든 필터 초기화')));
+        el.appendChild(section('고급 설정', [
+            h('div', { class: 'sub-h' }, '메시지 종류'),
+            h('div', { class: 'chips' }, KIND_CHIPS.map(function (k) {
+                return h('button', { type: 'button', class: 'chip btn-chip', 'aria-pressed': String(!!s.kinds[k[0]]), onclick: function (e) { S.set.kinds[k[0]] = !S.set.kinds[k[0]]; e.currentTarget.setAttribute('aria-pressed', String(S.set.kinds[k[0]])); saveSettings(); scheduleAnalyze(60); } }, k[1]);
+            })),
+            h('div', { class: 'sub-h' }, '시간대'), h('div', { class: 'date-row' }, hf, h('span', null, '–'), ht),
+            h('div', { class: 'sub-h' }, '사람'),
+            toggle('나간·강퇴된 사람 제외', 'excludeLeft', function () { syncPeopleRows(); scheduleAnalyze(60); }),
+            toggle('뺀 사람을 멘션한 메시지도 제외', 'mentionExclude'),
+            toggle('학번 붙은 이름 합치기', 'mergeNo', function () { reconfigure(); }),
+            h('label', { class: 'field' }, '최소 메시지 수', h('input', { type: 'number', class: 'input', min: 0, step: 5, value: s.minMsgs, onchange: function (e) { S.set.minMsgs = Math.max(0, +e.target.value || 0); saveSettings(); scheduleAnalyze(60); } })),
+            h('div', { class: 'sub-h' }, '키워드'),
+            toggle('흔한 말 제외', 'stopwords'), toggle('사람 이름 제외', 'skipNames'),
+            h('label', { class: 'field' }, '새 대화로 보는 침묵', gap),
+            h('div', { class: 'sub-h' }, '이름 합치기')].concat(aliasUi(),
+            [h('button', { type: 'button', class: 'btn ghost wide', onclick: resetAll }, '설정 초기화')]), false));
         syncPeriod(false, true); syncPeopleRows();
     }
 
@@ -262,10 +243,9 @@
             Object.keys(S.set.aliases).forEach(function (k) {
                 list.appendChild(h('li', null, h('span', null, k + ' → ' + S.set.aliases[k]), h('button', { type: 'button', class: 'link', onclick: function () { delete S.set.aliases[k]; saveSettings(); reconfigure(); } }, '되돌리기')));
             });
-            var badge = $('aliasBadge'); if (badge) badge.textContent = Object.keys(S.set.aliases).length || '';
         }
         setTimeout(draw, 0);
-        return [h('p', { class: 'hint tiny' }, '닉네임을 바꾼 사람을 한 사람으로 합쳐요.'), h('div', { class: 'stack-y tight' }, a, h('div', { class: 'center tiny' }, '↓'), b,
+        return [h('div', { class: 'stack-y tight' }, a, h('div', { class: 'center muted' }, '↓'), b,
             h('button', { type: 'button', class: 'btn wide', onclick: function () {
                 if (a.value === b.value) return;
                 S.set.aliases[a.value] = b.value; saveSettings(); reconfigure();
@@ -294,10 +274,9 @@
             var p = S.people[+inp.dataset.id], auto = isAutoExcluded(p);
             inp.checked = !ex[p.name] && !auto; inp.disabled = auto;
             inp.closest('li').classList.toggle('auto', auto);
-            inp.closest('label').title = auto ? '자동 제외 중 (아래 옵션에서 해제할 수 있어요)' : '';
+            inp.closest('label').title = auto ? '봇 제외가 켜져 있어요' : '';
         });
         updateBadge();
-        var ab = $('aliasBadge'); if (ab) ab.textContent = Object.keys(S.set.aliases).length || '';
     }
     function updateBadge() {
         var b = $('peopleBadge'); if (!b) return;
@@ -319,14 +298,9 @@
     function syncPeriod(fromInput, fromBrush, push) {
         if (S.from && S.to && S.from > S.to) { var t = S.from; S.from = S.to; S.to = t; }
         var a = $('dFrom'), b = $('dTo');
-        if (a) a.value = S.from ? KT.dayInput(S.from) : '';
-        if (b) b.value = S.to ? KT.dayInput(S.to) : '';
+        if (a) a.value = KT.dayInput(S.from || S.firstDay);
+        if (b) b.value = KT.dayInput(S.to || S.lastDay);
         if (brush && (fromInput || push)) brush.set(S.from, S.to);
-        var info = $('periodInfo');
-        if (info) {
-            var f = S.from || S.firstDay, to = S.to || S.lastDay, days = Math.round((KT.dayToDate(to) - KT.dayToDate(f)) / 86400000) + 1;
-            info.textContent = (S.from || S.to) ? KT.dayStr(f) + ' ~ ' + KT.dayStr(to) + ' (' + num(days) + '일)' : '전체 기간 (' + num(days) + '일)';
-        }
         scheduleAnalyze(fromBrush ? 220 : 60);
     }
 
@@ -354,17 +328,14 @@
         function add(label, clear) { chips.push(h('button', { type: 'button', class: 'chip active', onclick: clear, 'aria-label': label + ' 필터 해제' }, label, h('i', null, '✕'))); }
         if (S.from || S.to) add('기간 ' + (S.from ? KT.dayShort(S.from) : '처음') + ' ~ ' + (S.to ? KT.dayShort(S.to) : '끝'), function () { S.from = null; S.to = null; syncPeriod(false, false, true); });
         var manual = s.excludedNames.length;
-        if (manual) add('직접 제외 ' + manual + '명', function () { S.set.excludedNames = []; saveSettings(); syncPeopleRows(); scheduleAnalyze(60); });
-        if (R && R.excludedIds.length - manual > 0 && (s.excludeBots || s.excludeLeft || s.minMsgs)) chips.push(h('span', { class: 'chip' }, '자동 제외 ' + Math.max(0, R.excludedIds.length - manual) + '명'));
+        if (manual) add(manual + '명 제외', function () { S.set.excludedNames = []; saveSettings(); syncPeopleRows(); scheduleAnalyze(60); });
         if (s.hourFrom !== 0 || s.hourTo !== 24) add('시간대 ' + s.hourFrom + '~' + s.hourTo + '시', function () { S.set.hourFrom = 0; S.set.hourTo = 24; saveSettings(); buildFilters(); scheduleAnalyze(60); });
         if (S.roomSel) add('대화방 ' + S.roomSel.length + '/' + S.rooms.length, function () { S.roomSel = null; buildFilters(); scheduleAnalyze(60); });
         var offKinds = KIND_CHIPS.filter(function (k) { return k[0] !== 'deleted' && !s.kinds[k[0]]; });
         if (offKinds.length) add(offKinds.map(function (k) { return k[1]; }).join('·') + ' 제외', function () { offKinds.forEach(function (k) { S.set.kinds[k[0]] = true; }); saveSettings(); buildFilters(); scheduleAnalyze(60); });
         if (!chips.length) { el.hidden = true; return; }
         el.hidden = false;
-        el.appendChild(h('span', { class: 'af-label' }, '적용 중'));
         chips.forEach(function (c) { el.appendChild(c); });
-        el.appendChild(h('button', { type: 'button', class: 'link', onclick: resetAll }, '모두 초기화'));
     }
 
     /* ---------- tabs & panel ---------- */
