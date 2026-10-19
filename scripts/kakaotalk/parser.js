@@ -11,10 +11,10 @@
 
     var PC_DATE = /^-{3,} (\d{4})년 (\d{1,2})월 (\d{1,2})일 .+? -{3,}$/;
     var PC_MSG = /^\[([^\]]+)\] \[(오전|오후) (\d{1,2}):(\d{2})\] ([\s\S]*)$/;
-    var MOBILE_DATE = /^(\d{4})년 (\d{1,2})월 (\d{1,2})일 [월화수목금토일]요일$/;
+    var MOBILE_DATE = /^(\d{4})(?:년 |\. )(\d{1,2})(?:월 |\. )(\d{1,2})(?:일|\.)(?: [월화수목금토일]요일)?(?: (?:오전|오후) \d{1,2}:\d{2})?$/;
     var MOBILE_MSG = /^(\d{4})(?:년 |\. )(\d{1,2})(?:월 |\. )(\d{1,2})(?:일|\.) (오전|오후) (\d{1,2}):(\d{2}), (.+?) : ([\s\S]*)$/;
     var MOBILE_SYS = /^(\d{4})(?:년 |\. )(\d{1,2})(?:월 |\. )(\d{1,2})(?:일|\.) (오전|오후) (\d{1,2}):(\d{2})(?:, |: )([\s\S]*)$/;
-    var TITLE_RE = /^(.+?) 님과 카카오톡 대화$/;
+    var TITLE_RE = /^(.+?) (?:님과 )?카카오톡 대화$/;
     var SAVED_RE = /^저장한 날짜 : (.+)$/;
 
     var SYS_VERB = /(초대했습니다|추가했습니다|제거했습니다|내보냈습니다|들어왔습니다|나갔습니다|입장했습니다|퇴장했습니다|부방장이 되었습니다|부방장에서 해제되었습니다|방장이 되었습니다|시작했어요!?)\.?$/;
@@ -142,16 +142,19 @@
     }
 
     function parseMobile(lines, chat, onProgress) {
-        var cur = -1, i, line, m, sys, total = lines.length, ts;
+        var cur = -1, i, line, m, sys, total = lines.length, ts, lastTs = 0;
         for (i = 0; i < total; i++) {
             line = lines[i];
             if (line.charCodeAt(line.length - 1) === 13) line = line.slice(0, -1);
             if ((m = MOBILE_MSG.exec(line))) {
-                ts = new Date(+m[1], m[2] - 1, +m[3], toHour(m[4], m[5]), +m[6]).getTime();
+                ts = lastTs = new Date(+m[1], m[2] - 1, +m[3], toHour(m[4], m[5]), +m[6]).getTime();
                 push(chat, ts, m[7], m[8]);
                 cur = chat.text.length - 1;
             } else if (MOBILE_DATE.test(line)) {
+                if (cur >= 0) chat.text[cur] = chat.text[cur].replace(/\n+$/, '');
                 cur = -1;
+            } else if ((sys = classifySystem(line)) && (sys.type === 'deleted' || sys.type === 'hidden')) {
+                pushEvent(chat, lastTs, sys);
             } else if ((m = MOBILE_SYS.exec(line)) && (sys = classifySystem(m[7]))) {
                 pushEvent(chat, new Date(+m[1], m[2] - 1, +m[3], toHour(m[4], m[5]), +m[6]).getTime(), sys);
                 cur = -1;
