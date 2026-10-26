@@ -324,6 +324,91 @@ def at_points(term, start=1):
     return lambda v: s.summation(term.subs(x, v), (n, start, s.oo))
 
 
+def taylor(expr, center, order):
+    """Taylor polynomial of the given order (terms up to (x-center)^order) as a function for 'expr' targets."""
+    poly = s.series(expr, x, center, order + 1).removeO()
+    return (lambda v: poly.subs(x, v)), [s.Rational(1, 3), s.Rational(1, 2), 2]
+
+
+def _exp_remainder_degree():
+    # Lagrange: |R_n(x)| <= e^c x^{n+1}/(n+1)! < 3/(n+1)! on [0, 1]
+    N = 0
+    while not s.Rational(3) / s.factorial(N + 1) < s.Rational(1, 10**6):
+        N += 1
+    true_error = s.N(s.E - sum(1 / s.factorial(k) for k in range(N + 1)), 30)
+    assert true_error < s.Rational(3) / s.factorial(N + 1)
+    return N
+
+
+def _sin_square_integral():
+    two_terms = s.series(s.sin(x**2), x, 0, 10).removeO()  # x^2 - x^6/6
+    assert s.expand(two_terms - (x**2 - x**6 / 6)) == 0
+    approx = s.integrate(two_terms, (x, 0, 1))
+    assert abs(s.N(s.Integral(s.sin(x**2), (x, 0, 1)) - approx, 30)) < s.Rational(1, 1320)  # next term
+    return approx
+
+
+def _log_factorial_alternating():
+    # |a_n| = 1/ln(n!) decreases to 0 (ln n! increases without bound) -> the alternating series converges.
+    # ln n! <= n ln n gives |a_n| >= 1/(n ln n), whose sum diverges (int du/u with u = ln x).
+    assert all(s.log(s.factorial(k)) <= k * s.log(k) for k in range(2, 60))
+    assert s.integrate(1 / u, (u, s.log(2), s.oo)) == s.oo
+    assert seq_limit(1 / s.log(s.factorial(n))) == 0
+    return '조건수렴'
+
+
+def _cosine_power(p):
+    if p <= 0:
+        return '발산'  # terms >= 1 or blow up
+    return limit_compare((1 - s.cos(1 / n))**p, 2 * p)  # (1 - cos(1/n))^p ~ (1/(2n^2))^p
+
+
+def _double_factorial_interval():
+    a = s.factorial(2 * n) / (4**n * s.factorial(n)**2)  # 1*3*...*(2n-1) / (2*4*...*(2n))
+    assert radius(a) == 1
+    right = limit_compare(a, s.Rational(1, 2)) == '수렴'           # x = 1: a_n ~ 1/sqrt(pi n)
+    assert s.simplify(a.subs(n, n + 1) / a - (2 * n + 1) / (2 * n + 2)) == 0  # decreasing
+    left = seq_limit(a) == 0                                          # x = -1: alternating, -> 0
+    return ('[' if left else '(', -1, 1, ']' if right else ')')
+
+
+def _arctan_telescoping():
+    # arctan(2/n^2) = arctan(n+1) - arctan(n-1); partial sum = arctan(N+1) + arctan(N) - arctan(0) - arctan(1)
+    for k in range(1, 30):
+        assert close(s.atan(s.Rational(2, k**2)), s.atan(k + 1) - s.atan(k - 1), s.Rational(1, 10**40))
+    N = s.Symbol('N', positive=True)
+    return s.limit(s.atan(N + 1) + s.atan(N) - s.atan(0) - s.atan(1), N, s.oo)
+
+
+def _two_geometric_interval():
+    # sum (3^n + (-2)^n) x^n / n: |x| < 1/3 (3^n dominates)
+    assert seq_limit(((-2)**n / 3**n)) == 0 and seq_limit((3**n / n)**(1 / n)) == 3
+    r = s.Rational(1, 3)
+    right = endpoint((3**n * r**n / n).simplify())                    # x = 1/3: 1/n (+ convergent part)
+    assert s.summation((-2)**n * r**n / n, (n, 1, s.oo)).is_finite
+    left = endpoint(((-3)**n * r**n / n).simplify())                  # x = -1/3: (-1)^n/n (+ convergent part)
+    assert s.summation(2**n * r**n / n, (n, 1, s.oo)).is_finite
+    return ('[' if left else '(', -r, r, ']' if right else ')')
+
+
+def _cos_remainder_bound():
+    p4 = s.series(s.cos(x), x, 0, 5).removeO()
+    p5 = s.series(s.cos(x), x, 0, 6).removeO()
+    assert s.expand(p4 - p5) == 0  # so the R_5 bound applies to P_4
+    bound = s.Rational(1, 2)**6 / s.factorial(6)
+    assert s.N(abs(s.cos(s.Rational(1, 2)) - p4.subs(x, s.Rational(1, 2))), 30) < bound
+    return bound
+
+
+def _erf_next_term():
+    # int_0^{1/2} e^{-x^2} dx = sum (-1)^k (1/2)^{2k+1}/((2k+1) k!); three terms used, error < |4th term|
+    term = lambda k: s.Rational(1, 2)**(2 * k + 1) / ((2 * k + 1) * s.factorial(k))
+    approx = sum((-1)**k * term(k) for k in range(3))
+    exact = s.N(s.Integral(s.exp(-x**2), (x, 0, s.Rational(1, 2))), 40)
+    assert abs(exact - approx) < term(3)
+    return term(3)
+
+
 def _diverges_by_nth_term(term):
     def verdict():
         assert seq_limit(term) != 0
@@ -380,6 +465,42 @@ TARGETS = {
     'fin_ser_08_v1_weighted_sum_value': ('value', s.summation((n + 1)**2 / 2**n, (n, 1, s.oo))),
     'fin_ser_08_v1_arctan_series_value': ('value', s.summation((-1)**n / ((2 * n + 1) * 3**n), (n, 0, s.oo))),
     'fin_ser_08_v1_double_integral_sum': ('value', s.summation(1 / (n * (n + 1) * 2**n), (n, 1, s.oo))),
+    # 급수 9 · 테일러 다항식과 테일러급수
+    'fin_ser_09_v1_maclaurin_product': ('expr', taylor(s.exp(2 * x) * s.cos(x), 0, 3)),
+    'fin_ser_09_v1_taylor_shifted_center': ('expr', taylor(x * s.log(x), 1, 3)),
+    'fin_ser_09_v1_high_derivative_from_series': ('value', s.diff(x**3 * s.exp(-x**2), x, 9).subs(x, 0)),
+    'fin_ser_09_v1_remainder_degree': ('value', _exp_remainder_degree()),
+    'fin_ser_09_v1_tan_quintic': ('expr', taylor(s.tan(x), 0, 5)),
+    # 급수 10 · 테일러급수의 활용
+    'fin_ser_10_v1_limit_sine_cubic': ('value', s.limit((s.sin(x) - x * s.cos(x)) / x**3, x, 0)),
+    'fin_ser_10_v1_limit_tan_sine': ('value', s.limit((s.tan(x) - s.sin(x)) / x**3, x, 0)),
+    'fin_ser_10_v1_integral_approx': ('value', _sin_square_integral()),
+    'fin_ser_10_v1_recognize_sine_value': ('value', s.simplify(s.summation((-1)**n * (s.pi / 2)**(2 * n) / s.factorial(2 * n + 1), (n, 0, s.oo)))),
+    'fin_ser_10_v1_composite_derivative': ('value', s.diff(s.exp(x**2) * s.sin(x), x, 5).subs(x, 0)),
+    # 급수 11 · 심화 판정 종합
+    'fin_ser_11_v1_root_alternating_absolute': ('verdict', lambda: '절대수렴' if by_limit(seq_limit(n / (2 * n + 1))) == '수렴' else None),
+    'fin_ser_11_v1_log_factorial_alternating': ('verdict', _log_factorial_alternating),
+    'fin_ser_11_v1_harmonic_log_difference': ('verdict', lambda: limit_compare(1 / n - s.log(1 + 1 / n), 2)),
+    'fin_ser_11_v1_cosine_power_range': ('interval', param_range(_cosine_power, ('(', s.Rational(1, 2), s.oo, ')'), [-1, 0, s.Rational(1, 2), s.Rational(3, 4), 2])),
+    'fin_ser_11_v1_double_factorial_interval': ('interval', _double_factorial_interval()),
+    # 급수 12 · 심화 급수의 합
+    'fin_ser_12_v1_exponential_weighted': ('value', s.summation((n + 1) / s.factorial(n), (n, 0, s.oo))),
+    'fin_ser_12_v1_alternating_weighted': ('value', s.summation((-1)**(n + 1) * n / 3**n, (n, 1, s.oo))),
+    'fin_ser_12_v1_odd_reciprocal_powers': ('value', s.summation(1 / ((2 * n - 1) * 4**n), (n, 1, s.oo))),
+    'fin_ser_12_v1_cosine_derivative_value': ('value', s.summation((-1)**n * n * s.pi**(2 * n) / (9**n * s.factorial(2 * n)), (n, 1, s.oo))),
+    'fin_ser_12_v1_arctan_telescoping': ('value', _arctan_telescoping()),
+    # 급수 13 · 심화 멱급수와 테일러
+    'fin_ser_13_v1_exponential_sum_function': ('expr', (at_points((n + 1) * x**n / s.factorial(n), 0), [s.Rational(1, 3), s.Rational(1, 2), 2])),
+    'fin_ser_13_v1_two_geometric_interval': ('interval', _two_geometric_interval()),
+    'fin_ser_13_v1_shifted_log_sum_function': ('expr', (at_points(x**n / (n + 1)), [s.Rational(1, 3), s.Rational(1, 2)])),
+    'fin_ser_13_v1_log_quadratic_derivative': ('value', s.diff(s.log(1 + x + x**2), x, 6).subs(x, 0)),
+    'fin_ser_13_v1_cos_remainder_bound': ('value', _cos_remainder_bound()),
+    # 급수 14 · 심화 극한과 근사
+    'fin_ser_14_v1_limit_exp_cos': ('value', s.limit((s.exp(x) - 1 - x) / (1 - s.cos(x)), x, 0)),
+    'fin_ser_14_v1_limit_log_sine': ('value', s.limit((s.log(1 + x) - s.sin(x)) / x**2, x, 0)),
+    'fin_ser_14_v1_e_sequence_correction': ('value', seq_limit(n * (s.E - (1 + 1 / n)**n))),
+    'fin_ser_14_v1_limit_reciprocal_squares': ('value', s.limit(1 / s.sin(x)**2 - 1 / x**2, x, 0)),
+    'fin_ser_14_v1_integral_error_bound': ('value', _erf_next_term()),
     # 미분방정식 1 · 풀이
     'fin_ode_01_v1_euler_three_steps': ('value', euler(lambda X, Y: X - Y**2, 0, 1, s.Rational(1, 2), 3)),
     'fin_ode_01_v1_separable_tangent_sum': ('ode', (lambda y: y.diff(x) - (1 + y**2) / (1 + x**2), 0, 1)),
