@@ -7,7 +7,8 @@ let state = {
     totalCount: 20,
     isProcessing: false,
     strictC: true,
-    giveUpUnlocked: false // Track if Give Up button is unlocked
+    giveUpUnlocked: false, // Track if Give Up button is unlocked
+    studyAttempt: null
 };
 
 // --- Debug Logic ---
@@ -115,12 +116,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (grid && window.generatedCollections) {
         grid.innerHTML = "";
         window.generatedCollections.forEach((col, idx) => {
-            const history = localStorage.getItem(`history_${col.id}`);
-            let score = "Not started";
-            if (history) try { score = `Best: ${JSON.parse(history).score}`; } catch(e) {}
+            const score = window.studyScores?.historyLabel(col.id, col.problems.length) || '불러오는 중…';
             const card = document.createElement('div');
             card.className = 'collection-card';
             card.dataset.id = col.id;
+            card.dataset.totalCount = col.problems.length;
             card.onclick = () => selectCollection(col.id);
             let scoreClass = (score.startsWith("Best")) ? "collection-score has-score" : "collection-score";
             card.innerHTML = `<div><h3>${col.name}</h3><span class="${scoreClass}">${score}</span></div>
@@ -170,6 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function openCollectionModal() {
+    window.studyScores?.refreshHistory();
     document.getElementById('collection-modal')?.classList.add('visible');
     document.body.style.overflow = 'hidden';
 }
@@ -198,9 +199,22 @@ async function startGame() {
     const id = document.getElementById('sel-collection-value').value;
     const colProvider = window.generatedCollections?.find(c => c.id === id);
     if (!colProvider) return alert("문제집 오류.");
+    if (window.STUDIO_SCORE_CONFIG) {
+        try {
+            state.studyAttempt = await window.studyScores?.startAttempt({ collectionId: id, totalCount: colProvider.problems.length });
+            if (!state.studyAttempt) throw new Error('점수 기록 시스템을 시작할 수 없습니다.');
+        } catch (error) {
+            alert(`문제집을 시작할 수 없습니다. ${error.message}`);
+            return;
+        }
+    } else {
+        state.studyAttempt = null;
+    }
+    document.getElementById('app-view').classList.toggle('polar-session', colProvider.id.startsWith('adv_col2_v2_'));
 
     state.problems = colProvider.problems.map((p, idx) => ({
-        id: idx + 1, level: p.level, latex: normalizeLatex(p.latex), solution: p.solution, userAnswer: ""
+        id: idx + 1, level: p.level, latex: normalizeLatex(p.latex), solution: p.solution,
+        title: p.title, explanation: p.explanation, answerMode: p.answerMode, userAnswer: ""
     }));
     state.totalCount = state.problems.length;
     state.currentIndex = 0;
@@ -227,12 +241,6 @@ function loadCurrentProblem() {
     const field = document.getElementById('math-input');
     field.value = state.problems[state.currentIndex]?.userAnswer || "";
     field.focus();
-    field.onkeydown = (e) => {
-        if (e.key === "Enter") {
-            if (state.currentIndex === state.totalCount - 1) finishTest();
-            else nextProblem();
-        }
-    };
     renderMath(document.getElementById('problem-area'), state.problems[state.currentIndex]?.latex);
     updateNavButtons();
     // Matrix-insert helper buttons only exist/matter for the algebra subject; harmless
@@ -250,6 +258,48 @@ function saveAnswer() {
     const val = document.getElementById('math-input').value;
     if (state.problems[state.currentIndex]) state.problems[state.currentIndex].userAnswer = val;
 }
+
+// 문제 화면 키보드 이동. 입력칸의 onkeydown에만 걸면 포커스가 버튼 등으로 옮겨졌을 때나
+// 한글 조합 중일 때 첫 Enter가 먹히지 않으므로, 캡처 단계에서 문서 전체의 키를 받는다.
+//   Enter: 다음 문제(마지막 문제면 제출)
+//   ←/→: 입력칸 밖이거나 커서가 입력칸의 맨 앞/맨 끝일 때 이전/다음 문제
+function isQuizScreenActive() {
+    const app = document.getElementById('app-view');
+    const quiz = document.getElementById('quiz-area');
+    const modal = document.getElementById('collection-modal');
+    return !!app && app.style.display === 'block' && !!quiz && quiz.style.display !== 'none'
+        && document.getElementById('result-view')?.style.display !== 'block'
+        && !modal?.classList.contains('visible') && !!state.problems?.length;
+}
+
+function handleQuizKeys(e) {
+    if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey || !isQuizScreenActive()) return;
+    const field = document.getElementById('math-input');
+    const inField = e.target === field;
+    const tag = e.target?.tagName;
+    // 다른 입력 요소(검색창 등)나 포커스된 버튼의 Enter는 원래 동작을 그대로 둔다.
+    if (!inField && (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target?.isContentEditable)) return;
+    if (e.key === 'Enter' || e.keyCode === 13 || (e.keyCode === 229 && e.code === 'Enter')) {
+        if (!inField && tag === 'BUTTON') return;
+        e.preventDefault();
+        e.stopPropagation();
+        const go = () => (state.currentIndex === state.totalCount - 1 ? finishTest() : nextProblem());
+        // 한글 조합 중이면 조합이 확정된 뒤 값을 저장하고 넘어간다.
+        if (e.isComposing || e.keyCode === 229) setTimeout(go, 30); else go();
+        return;
+    }
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    if (inField) {
+        const end = typeof field.lastOffset === 'number' ? field.lastOffset : 0;
+        const pos = typeof field.position === 'number' ? field.position : end;
+        if (e.key === 'ArrowLeft' && pos > 0) return;
+        if (e.key === 'ArrowRight' && pos < end) return;
+    }
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.key === 'ArrowLeft') prevProblem(); else nextProblem();
+}
+document.addEventListener('keydown', handleQuizKeys, true);
 
 function prevProblem() {
     if (state.currentIndex > 0) { saveAnswer(); state.currentIndex--; updateHeader(); loadCurrentProblem(); }
@@ -313,7 +363,7 @@ async function finishTest() {
                 // string (both contain "x"), so the per-problem exemption has to happen here,
                 // matching the same \text{ check the result view already uses to hide "+ C".
                 const effectiveStrict = state.strictC && !p.latex.includes("\\text{");
-                const gradeRes = await gradeProblem(p.userAnswer, p.solution, effectiveStrict);
+                const gradeRes = await gradeProblem(p.userAnswer, p.solution, effectiveStrict, 30000, p.answerMode === 'exact');
                 
                 if (gradeRes === "CORRECT") {
                     isCorrect = true;
@@ -345,13 +395,9 @@ async function finishTest() {
             comment: generateComment(results, total)
         };
 
-        // Save History (Local)
+        // Account history is saved with the completed server attempt below.
         const score = results.filter(r => r.isCorrect).length;
         const skipCount = results.filter(r => r.isSkipped).length;
-        try {
-            const currentId = document.getElementById('sel-collection-value').value;
-            localStorage.setItem(`history_${currentId}`, JSON.stringify({ score: `${score} / ${total}`, date: new Date().toISOString() }));
-        } catch(e) {}
 
         loadingView.style.display = 'none';
         
@@ -361,6 +407,11 @@ async function finishTest() {
         document.getElementById('result-view').style.display = 'block';
         
         renderResult(finalResult);
+        if (state.studyAttempt) {
+            window.studyScores.completeAttempt(state.studyAttempt, {
+                total_count: total, correct_count: score, skipped_count: skipCount
+            }).catch(() => {});
+        }
         
         // Reset loading text
         if(loadingHeader) loadingHeader.innerText = "Generating...";

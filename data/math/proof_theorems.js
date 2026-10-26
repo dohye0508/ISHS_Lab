@@ -1,4 +1,4 @@
-window.proofTheorems = [
+﻿window.proofTheorems = [
     {
         "chapter": "1장. 행렬의 연산과 대수적 성질",
         "theorems": [
@@ -273,6 +273,93 @@ window.proofTheorems = [
                 "title": "곱이 가역이면 각 인수도 가역",
                 "hypothesis": "같은 크기의 정사각행렬 \\(A, B\\)에 대하여, 곱 \\(AB\\)가 가역이면 \\(A\\)와 \\(B\\)가 각각 가역임을 증명하시오.",
                 "statement": ""
+            }
+        ]
+    },
+    {
+        "chapter": "6장. 벡터공간과 부분공간, 생성",
+        "theorems": [
+            {
+                "num": "6.1",
+                "title": "부분공간의 필요충분조건 (Subspace Test)",
+                "hypothesis": "벡터공간 \\(V\\)의 공집합이 아닌 부분집합 \\(W\\)가 \\(V\\)의 부분공간이 되기 위한 필요충분조건은 다음이 성립하는 것임을 증명하시오.",
+                "statement": "(a)\\ \\forall u, v \\in W, u+v \\in W \\qquad (b)\\ \\forall k \\in \\mathbb{R}, \\forall u \\in W, ku \\in W"
+            },
+            {
+                "num": "6.2",
+                "title": "부분공간의 교집합 (Intersection of Subspaces)",
+                "hypothesis": "\\(W_1, W_2, \\cdots, W_r\\)이 벡터공간 \\(V\\)의 부분공간일 때, 이들 부분공간의 교집합 또한 \\(V\\)의 부분공간임을 증명하시오.",
+                "statement": ""
+            },
+            {
+                "num": "6.3",
+                "title": "동차 연립방정식의 해공간 (Solution Space of Homogeneous System)",
+                "hypothesis": "\\(n\\)개 변수를 가진 동차 연립방정식 \\(Ax = 0\\)의 해집합은 \\(\\mathbb{R}^n\\)의 부분공간임을 증명하시오.",
+                "statement": ""
+            },
+            {
+                "num": "6.4",
+                "title": "생성된 공간 (Span is a Subspace)",
+                "hypothesis": "\\(S = \\{w_1, w_2, \\cdots, w_r\\}\\)이 벡터공간 \\(V\\) 내의 공집합이 아닌 벡터집합일 때, \\(S\\) 내 벡터들의 가능한 모든 선형결합의 집합 \\(W\\)에 대해 다음을 증명하시오.",
+                "statement": "\\text{(a) } W \\text{는 } V \\text{의 부분공간이다.} \\qquad \\text{(b) } W \\text{는 } S \\text{ 내의 벡터를 포함하는 가장 작은 부분공간이다.}"
+            }
+        ]
+    },
+    {
+        "chapter": "7장. 일차독립과 일차종속, 기저, 좌표",
+        "theorems": [
+            {
+                "num": "7.1",
+                "title": "일차독립의 조건 (Condition for Linear Independence)",
+                "hypothesis": "벡터공간 \\(V\\)의 공집합이 아닌 집합 \\(S\\)가 일차독립이기 위한 필요충분조건은 다음이 성립하는 것임을 증명하시오.",
+                "statement": "k_1v_1 + k_2v_2 + \\cdots + k_rv_r = 0 \\implies k_1 = k_2 = \\cdots = k_r = 0"
+            },
+            {
+                "num": "7.2",
+                "title": "기저 표현의 유일성 (Uniqueness of Basis Representation)",
+                "hypothesis": "\\(S = \\{v_1, v_2, \\cdots, v_n\\}\\)이 벡터공간 \\(V\\)의 기저라 할 때, \\(V\\) 속의 모든 벡터 \\(v\\)는 다음 형식으로 단 한 가지 방법으로 표현됨을 증명하시오.",
+                "statement": "v = c_1v_1 + c_2v_2 + \\cdots + c_nv_n"
+            }
+        ]
+    },
+    {
+        "chapter": "8장. 차원 (Dimension)",
+        "theorems": [
+            {
+                "num": "8.1",
+                "title": "차원 정리 1 (Dimension Theorem)",
+                "hypothesis": "\\(V\\)가 유한차원 벡터공간이고, \\(\\{v_1, v_2, \\cdots, v_n\\}\\)을 임의의 기저라 할 때, 다음을 증명하시오.",
+                "statement": "\\text{(a) } n\\text{개보다 많으면 선형종속} \\qquad \\text{(b) } n\\text{개보다 적으면 생성하지 못함}"
+            },
+            {
+                "num": "8.2",
+                "title": "기저 벡터 개수의 유일성 (Unique Number of Basis Vectors)",
+                "hypothesis": "유한차원 벡터공간의 모든 기저는 동일한 개수의 벡터를 가짐을 증명하시오.",
+                "statement": ""
+            },
+            {
+                "num": "8.3",
+                "title": "플러스/마이너스 정리 (Plus/Minus Lemma)",
+                "hypothesis": "\\(S\\)를 벡터공간 \\(V\\)의 벡터집합이라 할 때, 다음을 증명하시오. 단, (a)에서는 \\(S\\)가 일차독립이라고 가정한다.",
+                "statement": "\\text{(a) } v \\notin span(S) \\implies S \\cup \\{v\\} \\text{도 일차독립} \\qquad \\text{(b) } v \\in span(S - \\{v\\}) \\implies span(S) = span(S  - \\{v\\})"
+            },
+            {
+                "num": "8.4",
+                "title": "n차원 공간에서 n개 벡터의 기저 판정",
+                "hypothesis": "\\(V\\)가 \\(n\\)차원 벡터공간이고 \\(S\\)가 정확히 \\(n\\)개의 벡터를 갖는 \\(V\\)의 집합일 때, 다음이 동치임을 증명하시오.",
+                "statement": "S\\text{가 } V\\text{의 기저} \\iff S\\text{가 } V\\text{를 생성} \\iff S\\text{가 일차독립}"
+            },
+            {
+                "num": "8.5",
+                "title": "기저의 축소 및 확장 (Reduction and Extension)",
+                "hypothesis": "\\(S\\)를 유한차원 벡터공간 \\(V\\)의 유한벡터집합이라 할 때, 다음을 증명하시오.",
+                "statement": "\\text{(a) 생성하지만 기저가 아니면 축소 가능} \\qquad \\text{(b) 독립이지만 기저가 아니면 확장 가능}"
+            },
+            {
+                "num": "8.6",
+                "title": "부분공간의 차원 (Dimension of Subspace)",
+                "hypothesis": "\\(W\\)가 유한차원 벡터공간 \\(V\\)의 부분공간일 때, 다음을 증명하시오.",
+                "statement": "\\text{(a) } W\\text{는 유한차원} \\quad \\text{(b) } \\dim(W) \\le \\dim(V) \\quad \\text{(c) } W=V \\iff \\dim(W)=\\dim(V)"
             }
         ]
     }

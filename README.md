@@ -68,6 +68,73 @@ ISHS_Lab/
    python scripts/sync_algorithms.py
    ```
 
+## Polar-coordinate problem bank
+
+Advanced Math Studio loads `data/math/polar_collections.js` after the general
+calculus data. The polar bank contains ten curated sets of five problems:
+hidden geometry, tracing and symmetry, region decomposition, and tangents/arc
+length. These replace the former 515 parameter-variant questions. Other calculus
+sets remain in `adv_collections_final.js`.
+
+Each problem has a stable `template`, a difficulty level, an exact scalar
+`solution`, and an `explanation` shown in the results screen. In this file,
+`$...$` separates mathematical notation from Korean prose; use braced radicals
+such as `\sqrt{2}` in answers. Versioned collection IDs keep old scores separate.
+Do not expand the bank by changing coefficients alone: add a new reasoning task
+and verify its domain, trace multiplicity, answer, and explanation.
+
+To check the polar mathematical answers and production LaTeX grading, run:
+
+```bash
+python -m pip install sympy antlr4-python3-runtime==4.11.1
+node scripts/check_polar.cjs python
+```
+
+Advanced Math Studio also loads `data/math/inverse_hyperbolic_collections.js`.
+The inverse-trigonometric tab has ten collections; the hyperbolic tab has nine
+after removal of the out-of-scope catenary collection and supplementary item.
+Run its structural,
+exact-answer, and production-grader checks with:
+
+```bash
+node scripts/check_inverse_hyperbolic.cjs --structure-only
+node scripts/check_inverse_hyperbolic.cjs python
+```
+
+The last argument may be an absolute Python executable path. These checks do not
+call the authentication service or alter the database. Browser layout should
+also be checked when changing the statements or renderer.
+
+The September calculus lesson PDFs are covered by
+`data/math/lesson_calculus_collections.js`. Its 25 questions are distributed
+across the existing subject collections, keeping each at no more than ten questions,
+with levels 1–5 and worked solutions. These questions require exact function
+answers, while existing antiderivative questions retain their
+constant-of-integration behavior. Validate with:
+
+```powershell
+node scripts/check_lesson_calculus.cjs --payload | python scripts/check_lesson_calculus.py
+```
+
+For this lesson update, upload `adv_math.php`,
+`data/math/lesson_calculus_collections.js`, `scripts/logic.js` and
+`scripts/grader.js` to their matching hosting paths. The check scripts and
+reference PDFs are local development resources.
+
+The hyperbolic/application answer audit recomputes all 70 remaining base answers
+from the defining integrals or geometry, checks two valid parameter sets, and
+tests equivalent and incorrect answers with the production grader:
+
+```powershell
+node scripts/check_calculus_audit.cjs | python scripts/check_calculus_audit.py
+node scripts/check_inverse_hyperbolic.cjs --payload | python scripts/check_inverse_hyperbolic.py
+```
+
+Upload `data/math/adv_collections_final.js`,
+`data/math/inverse_hyperbolic_collections.js`, `scripts/grader.js`,
+`adv_math.php`, and `integral.php` for this audit. The page versions refresh
+the cached data and grader. No database changes are required.
+
 ## License
 
 - **Developer:** Dohye Lee

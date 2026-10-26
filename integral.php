@@ -55,6 +55,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
             background-attachment:fixed;
         }
     </style>
+    <link rel="stylesheet" href="assets/css/studio-layout.css?v=20260918_v1">
     <script src="https://unpkg.com/mathlive"></script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
@@ -67,12 +68,11 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
     </script>
 </head>
 
-<body>
+<body class="studio-page">
     <!-- Scripts calling body removed from top -->
 
     <!-- Auth UI Elements (Top-Left) -->
-    <div id="auth-header"
-        style="position: fixed; top: 26px; left: 46px; z-index: 10000; display: flex; align-items: center; gap: 10px; transform: translateZ(0); will-change: transform;">
+    <div id="auth-header">
         <a href="modules.php"
             style="display: flex; align-items: center; text-decoration: none; font-weight: 800; font-size: 27px; letter-spacing: -.03em; line-height: 1; filter: drop-shadow(0 1px 3px rgba(0,0,0,.12));"
             title="스튜디오 목록으로">
@@ -210,6 +210,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
             <div id="result-view" style="display:none;">
                 <h2>Test Result</h2>
                 <div id="score-area"></div>
+                <div id="score-save-message" aria-live="polite"></div>
                 <div id="simple-result-list"></div>
                 <div id="analysis-area"></div>
                 <div class="detail-control">
@@ -229,8 +230,10 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
     </div>
 
     <script src="data/math/collections.js?v=<?php echo time(); ?>"></script>
-    <script src="scripts/grader.js?v=debug_v8"></script>
-    <script src="scripts/logic.js?v=debug_v8"></script>
+    <script>window.STUDIO_SCORE_CONFIG = { studio: 'integral' };</script>
+    <script src="scripts/grader.js?v=20260922_audit"></script>
+    <script src="scripts/logic.js?v=20261006_keys"></script>
+    <script src="scripts/study_scores.js?v=20260922_history"></script>
     <script src="scripts/bg_funcs.js?v=debug_v7"></script>
     <script src="scripts/bg_anim.js?v=debug_v7"></script>
     <!-- Global Theme Toggle (Top-Right) -->

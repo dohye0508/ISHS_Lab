@@ -48,6 +48,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
             --mesh-c:rgba(94,234,212,.12);
         }
         body{
+            justify-content: flex-start;
             background-image:
                 radial-gradient(ellipse 70% 62% at 10% 8%, var(--mesh-a) 0%, transparent 72%),
                 radial-gradient(ellipse 65% 58% at 88% 14%, var(--mesh-b) 0%, transparent 72%),
@@ -93,6 +94,41 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
             width: 100%;
             text-align: center;
             margin-top: 18px;
+        }
+        .collection-card--polar .problem-preview {
+            white-space: normal;
+            overflow-wrap: anywhere;
+            -webkit-mask-image: none;
+            mask-image: none;
+        }
+        .polar-session #math-input {
+            box-sizing: border-box;
+            max-width: 100%;
+        }
+        .problem-explanation {
+            margin-top: 12px;
+            line-height: 1.8;
+        }
+        .problem-explanation summary {
+            cursor: pointer;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .problem-explanation .problem-statement-text {
+            font-size: 1rem;
+            line-height: 1.85;
+        }
+        @media (max-width: 600px) {
+            #proof-view .brand { order: 3; flex-basis: 100%; }
+            #proof-view #proof-chapter-title { word-break: keep-all; }
+            .polar-session .problem-statement-text,
+            #proof-view .problem-statement-text {
+                font-size: 1.05rem;
+                line-height: 1.9;
+                word-break: keep-all;
+                overflow-wrap: break-word;
+            }
+            .polar-session #slogan-text { display: none; }
         }
         /* Subject picker inside the single collection modal (고급미적분 / 고급대수).
            .overlay-header uses 30px horizontal padding to stay clear of the modal's own
@@ -150,6 +186,65 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
         [data-theme="dark"] #proof-problem-area {
             background-color: transparent;
         }
+        #proof-view .proof-navigation {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 10px;
+        }
+        #proof-btn-prev { justify-self: start; }
+        #proof-btn-explanation { grid-column: 2; justify-self: center; }
+        #proof-btn-next { grid-column: 3; justify-self: end; }
+        #proof-explanation {
+            margin-top: 24px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--surface);
+            line-height: 1.9;
+            overflow-wrap: anywhere;
+        }
+        #proof-explanation[hidden] { display: none; }
+        #proof-explanation h3 { margin: 0 0 16px; font-size: 1.1rem; }
+        #proof-explanation p { margin: 0 0 16px; overflow-x: auto; }
+        #proof-explanation p:last-child { margin-bottom: 0; }
+        .proof-level-summary { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+        .proof-level-summary .badge { font-size: .75rem; }
+        .proof-level-guide { margin: 0 0 18px; font-size: .85rem; line-height: 1.8; }
+        .proof-level-guide summary { cursor: pointer; font-weight: 600; }
+        #proof-level-badge { white-space: nowrap; }
+        /* 참고자료(PDF)에 실린 정리: 번호를 강조하고 출처를 작게 붙인다. */
+        .proof-ref-num {
+            display: inline-block; padding: 0 .4em; border-radius: 6px;
+            background: rgba(var(--primary-rgb), .14); color: var(--primary);
+            box-shadow: inset 0 0 0 1.5px rgba(var(--primary-rgb), .45);
+        }
+        .proof-ref-source {
+            display: inline-block; margin-top: 6px; padding: 2px 10px; border-radius: 999px;
+            font-size: .45em; font-weight: 600; vertical-align: middle;
+            background: var(--primary); color: #fff;
+        }
+        .proof-ref-count { background: rgba(var(--primary-rgb), .14); color: var(--primary); }
+        #proof-view .header { flex-wrap: wrap; gap: 12px; }
+        #proof-view .brand { flex: 1; width: auto; min-width: 0; }
+        #proof-view #proof-chapter-title {
+            position: static; transform: none; max-width: none;
+            white-space: normal; text-align: center;
+        }
+        #proof-view .badges { display: flex; flex-wrap: wrap; gap: 6px; }
+        #proof-explanation mjx-container,
+        #proof-problem-area .problem-statement-text mjx-container {
+            max-width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding-bottom: 4px;
+        }
+        @media (max-width: 600px) {
+            #proof-view .proof-navigation { gap: 6px; }
+            #proof-view .proof-navigation .btn { padding: 10px 8px; font-size: .85rem; }
+            #quiz-area > .action-bar { gap: 6px; }
+            #quiz-area > .action-bar .btn { padding: 10px 8px; font-size: .85rem; }
+            #proof-explanation { padding: 16px; }
+        }
         /* .brand is deliberately width:0 (see style.css) so #slogan-text can center itself
            over the header via position:absolute -- #proof-chapter-title sits in that same
            zero-width box but never got the same absolute-positioning rule, so it was stuck
@@ -176,6 +271,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
             }
         }
     </style>
+    <link rel="stylesheet" href="assets/css/studio-layout.css?v=20260918_v1">
 
     <!-- ANTI-FOUC SCRIPT: Must be in HEAD and before body renders -->
     <script>
@@ -186,12 +282,11 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
     </script>
 </head>
 
-<body>
+<body class="studio-page">
     <!-- Scripts calling body removed from top -->
 
     <!-- Auth UI Elements (Top-Left) -->
-    <div id="auth-header"
-        style="position: fixed; top: 26px; left: 46px; z-index: 10000; display: flex; align-items: center; gap: 10px; transform: translateZ(0); will-change: transform;">
+    <div id="auth-header">
         <a href="modules.php"
             style="display: flex; align-items: center; text-decoration: none; font-weight: 800; font-size: 27px; letter-spacing: -.03em; line-height: 1; filter: drop-shadow(0 1px 3px rgba(0,0,0,.12));"
             title="스튜디오 목록으로">
@@ -257,6 +352,12 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                                     <span>적분상수(C) 포함 필수 (미적분 문제에만 적용)</span>
                                 </label>
                             </div>
+                            <div class="option-item">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="chk-proof-keep-open">
+                                    <span>증명 문제 해설 계속 펼치기</span>
+                                </label>
+                            </div>
                         </div>
 
                         <button class="start-btn" onclick="startSelectedGame()">Get Started</button>
@@ -294,36 +395,45 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                     <button type="button" id="subject-tab-algebra" class="subject-tab" onclick="switchModalSubject('algebra')">고급대수</button>
                     <button type="button" id="subject-tab-proof" class="subject-tab" onclick="switchModalSubject('proof')">증명</button>
                 </div>
-                <div style="flex: 1; overflow-y: auto; padding: 0 25px 0 30px;">
+                <div class="collection-sections">
                     <div id="collection-grid" style="display:none;"></div> <!-- logic.js compatibility -->
 
                     <div id="modal-section-trig">
-                        <h3 style="margin-top: 10px; margin-bottom: 15px; color: var(--text); padding-left: 10px;">▶ 역삼각함수 미적분</h3>
+                        <h3>▶ 역삼각함수 미적분</h3>
                         <div id="collection-grid-trig" class="collection-grid"></div>
                     </div>
 
                     <div id="modal-section-hyp" class="hidden">
-                        <h3 style="margin-top: 10px; margin-bottom: 15px; color: var(--text); padding-left: 10px;">▶ 쌍곡함수 미적분</h3>
+                        <h3>▶ 쌍곡함수 미적분</h3>
                         <div id="collection-grid-hyp" class="collection-grid"></div>
                     </div>
 
                     <div id="modal-section-polar" class="hidden">
-                        <h3 style="margin-top: 10px; margin-bottom: 15px; color: var(--text); padding-left: 10px;">▶ 극좌표와 극곡선</h3>
+                        <h3>▶ 극좌표와 극곡선 · 심화 탐구</h3>
                         <div id="collection-grid-polar" class="collection-grid"></div>
                     </div>
 
                     <div id="modal-section-apps" class="hidden">
-                        <h3 style="margin-top: 10px; margin-bottom: 15px; color: var(--text); padding-left: 10px;">▶ 정적분의 활용 (고난도)</h3>
+                        <h3>▶ 정적분의 활용 (고난도)</h3>
                         <div id="collection-grid-apps" class="collection-grid"></div>
                     </div>
 
                     <div id="modal-section-algebra" class="hidden">
-                        <h3 style="margin-top: 10px; margin-bottom: 15px; color: var(--text); padding-left: 10px;">▶ 행렬과 연립일차방정식</h3>
+                        <h3>▶ 고급대수 · 유형별 심화</h3>
+                        <p class="proof-level-guide">연립방정식·역행렬·행렬식·기저 6개 문제집(각 10문항)과 내적·정사영·정규직교기저 6개 문제집(각 5문항), 총 90문항입니다.<br>난이도는 Level 3 응용 · Level 4 심화 · Level 5 종합으로 구성되며, 결과 화면에서 풀이를 확인할 수 있습니다.</p>
                         <div id="collection-grid-algebra" class="collection-grid"></div>
                     </div>
 
                     <div id="modal-section-proof" class="hidden">
-                        <h3 style="margin-top: 10px; margin-bottom: 15px; color: var(--text); padding-left: 10px;">▶ 증명</h3>
+                        <h3>▶ 증명</h3>
+                        <details class="proof-level-guide">
+                            <summary>Level 1–5 난이도 기준</summary>
+                            <div>Level 1 · 정의 확인과 한 단계 계산<br>
+                                Level 2 · 기본 성질을 적용하는 짧은 직접 증명<br>
+                                Level 3 · 여러 단계 연결, 양방향 증명, 귀납법<br>
+                                Level 4 · 보조 아이디어, 경우 분류, 직접 구성<br>
+                                Level 5 · 여러 보조정리를 결합하는 종합 논증</div>
+                        </details>
                         <div id="collection-grid-proof" class="collection-grid"></div>
                     </div>
 
@@ -362,6 +472,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                     <button type="button" class="btn secondary" onclick="insertMatrixTemplate(3,3)">3×3 행렬</button>
                     <button type="button" class="btn secondary" onclick="insertMatrixTemplate(2,1)">2×1 벡터</button>
                     <button type="button" class="btn secondary" onclick="insertMatrixTemplate(3,1)">3×1 벡터</button>
+                    <button type="button" class="btn secondary" onclick="insertMatrixTemplate(4,1)">4×1 벡터</button>
                 </div>
                 <div class="action-bar">
                     <button id="btn-prev" class="btn secondary hidden" onclick="prevProblem()">← Previous</button>
@@ -376,6 +487,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
             <div id="result-view" style="display:none;">
                 <h2>Test Result</h2>
                 <div id="score-area"></div>
+                <div id="score-save-message" aria-live="polite"></div>
                 <div id="simple-result-list"></div>
                 <div id="analysis-area"></div>
                 <div class="detail-control">
@@ -401,16 +513,18 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                     <h2 id="proof-chapter-title">증명</h2>
                 </span>
                 <div class="badges">
+                    <span id="proof-level-badge" class="badge">Level 1</span>
                     <span id="proof-progress-badge" class="badge progress">1 / 1</span>
                 </div>
             </div>
 
             <div id="proof-problem-area"></div>
-            <div class="action-bar">
+            <div class="action-bar proof-navigation">
                 <button id="proof-btn-prev" class="btn secondary hidden" onclick="prevProofTheorem()">← Previous</button>
-                <div style="flex-grow: 1;"></div>
+                <button type="button" id="proof-btn-explanation" class="btn secondary" aria-expanded="false" aria-controls="proof-explanation" onclick="toggleProofExplanation()">해설</button>
                 <button id="proof-btn-next" class="btn primary" onclick="nextProofTheorem()">Next →</button>
             </div>
+            <section id="proof-explanation" aria-labelledby="proof-explanation-title" hidden></section>
         </div>
 
         <div class="footer">
@@ -418,11 +532,25 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
         </div>
     </div>
 
-    <script src="data/math/adv_collections_final.js?v=20260909_v11"></script>
-    <script src="data/math/algebra_collections.js?v=20260907_v3"></script>
-    <script src="data/math/proof_theorems.js?v=20260908_v4"></script>
-    <script src="scripts/grader.js?v=debug_v8"></script>
-    <script src="scripts/logic.js?v=debug_v8"></script>
+    <script src="data/math/adv_collections_final.js?v=20260922_audit"></script>
+    <script src="data/math/polar_collections.js?v=20260916_v2"></script>
+    <script src="data/math/inverse_hyperbolic_collections.js?v=20260922_audit"></script>
+    <script src="data/math/lesson_calculus_collections.js?v=20260921_v1"></script>
+    <script src="data/math/algebra_collections.js?v=20261006_v5"></script>
+    <script src="data/math/algebra_orthogonal.js?v=20260928_v1"></script>
+    <script src="data/math/proof_theorems.js?v=20260918_v1"></script>
+    <script src="data/math/proof_theorems_extended.js?v=20260918_v1"></script>
+    <script src="data/math/proof_explanations.js?v=20260918_v2"></script>
+    <script src="data/math/proof_theorems_supplement.js?v=20260917_v1"></script>
+    <script src="data/math/proof_theorems_advanced.js?v=20260918_v1"></script>
+    <script src="data/math/proof_change_of_basis.js?v=20260918_v1"></script>
+    <script src="data/math/proof_levels.js?v=20260918_v1"></script>
+    <script src="data/math/proof_orthogonal.js?v=20260928_v1"></script>
+    <script src="data/math/proof_sources.js?v=20261006_v1"></script>
+    <script>window.STUDIO_SCORE_CONFIG = { studio: 'advanced_math' };</script>
+    <script src="scripts/grader.js?v=20260922_audit"></script>
+    <script src="scripts/logic.js?v=20261006_keys"></script>
+    <script src="scripts/study_scores.js?v=20260922_history"></script>
     <script src="scripts/adv_anim.js?v=debug_v2"></script>
     <!-- Global Theme Toggle (Top-Right) -->
     <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Dark Mode">
@@ -609,40 +737,31 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                         <span class="detail-answer-label">정답</span>
                         <span>$$${p.solution}${cLabel}$$</span>
                     </div>
+                    ${p.explanation ? `<details class="problem-explanation"><summary>풀이 해설 · ${escapeHtmlText(p.title || '핵심 논리')}</summary>${buildProblemHtml(p.explanation)}</details>` : ''}
                 </li>`;
             }).join("");
+            document.querySelectorAll('.problem-explanation').forEach(detail => {
+                detail.addEventListener('toggle', () => {
+                    if (detail.open && window.MathJax) MathJax.typesetPromise([detail]);
+                });
+            });
             if (window.MathJax) MathJax.typesetPromise([document.getElementById('detail-list')]);
         }
 
         function readHistory(colId, expectedTotal) {
-            const history = localStorage.getItem(`history_${colId}`);
-            let score = "Not started";
-            if (history) {
-                try {
-                    let parsed = JSON.parse(history);
-                    // If the history was saved against a different collection size (e.g. the
-                    // pool got regenerated with a different chunk count), discard it -- compare
-                    // against THIS collection's actual problem count, not a hardcoded "/ 20"
-                    // (algebra collections are 10 questions, calculus ones are 20).
-                    if (!parsed.score.includes(`/ ${expectedTotal}`)) {
-                        localStorage.removeItem(`history_${colId}`);
-                    } else {
-                        score = `Best: ${parsed.score}`;
-                    }
-                } catch(e) {}
-            }
-            return score;
+            return window.studyScores?.historyLabel(colId, expectedTotal) || '불러오는 중…';
         }
 
         function buildCollectionCard(col, onClick) {
             const score = readHistory(col.id, col.problems.length);
             const card = document.createElement('div');
-            card.className = 'collection-card';
+            card.className = col.description ? 'collection-card collection-card--polar' : 'collection-card';
             card.dataset.id = col.id;
+            card.dataset.totalCount = col.problems.length;
             card.onclick = onClick;
             let scoreClass = (score.startsWith("Best")) ? "collection-score has-score" : "collection-score";
-            let preview = buildMathPreview(col.problems[0].latex);
-            card.innerHTML = `<div><h3>${col.name}</h3><span class="${scoreClass}">${score}</span></div>
+            let preview = col.description ? escapeHtmlText(col.problems[0].title) : buildMathPreview(col.problems[0].latex);
+            card.innerHTML = `<div><h3>${col.name}</h3>${col.description ? `<p style="font-size: .85rem; line-height: 1.5;">${escapeHtmlText(col.description)} · ${col.problems.length}문항</p>` : ''}<span class="${scoreClass}">${score}</span></div>
             <div class="problem-preview">${preview}</div>`;
             return card;
         }
@@ -668,16 +787,22 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
         }
 
         // 증명 감상 (Proof Gallery) -- read-only, no grading, no math-input. The modal tab
-        // is just 5 chapter cards (same .collection-card look as every other tab); picking
+        // uses chapter cards (same .collection-card look as every other tab); picking
         // one jumps straight into #proof-view, which reuses the real quiz's header/badge/
         // action-bar layout so a theorem reads exactly like a normal problem -- just with
-        // only a Prev/Next pair instead of an answer field.
+        // Previous/Next navigation and an optional proof explanation.
         function buildProofChapterCard(chapter, idx) {
             const card = document.createElement('div');
             card.className = 'collection-card';
             card.onclick = () => startProofChapter(idx);
+            const levelCounts = [1, 2, 3, 4, 5].map(level => {
+                const count = chapter.theorems.filter(t => t.level === level).length;
+                return count ? `<span class="badge" title="${escapeHtmlText(window.proofLevelDescriptions[level])}">Level ${level} · ${count}개</span>` : '';
+            }).join('');
+            const referenceCount = chapter.theorems.filter(t => t.referenceSource).length;
             card.innerHTML = `<div><h3>${escapeHtmlText(chapter.chapter)}</h3></div>
-            <div class="problem-preview">정리 ${chapter.theorems.length}개</div>`;
+            <div class="problem-preview">정리 ${chapter.theorems.length}개</div>
+            <div class="proof-level-summary">${levelCounts}${referenceCount ? `<span class="badge proof-ref-count" title="참고자료 PDF에 실린 정리">참고자료 · ${referenceCount}개</span>` : ''}</div>`;
             return card;
         }
 
@@ -712,15 +837,42 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
         function loadCurrentProofTheorem() {
             const t = proofState.theorems[proofState.index];
             if (!t) return;
+            const explanation = document.getElementById('proof-explanation');
+            if (window.MathJax?.typesetClear) MathJax.typesetClear([explanation]);
+            explanation.hidden = true;
+            explanation.innerHTML = '';
+            const explanationButton = document.getElementById('proof-btn-explanation');
+            explanationButton.setAttribute('aria-expanded', 'false');
+            explanationButton.textContent = '해설';
             document.getElementById('proof-progress-badge').innerText = `${proofState.index + 1} / ${proofState.theorems.length}`;
+            const levelBadge = document.getElementById('proof-level-badge');
+            levelBadge.textContent = `Level ${t.level}`;
+            levelBadge.title = window.proofLevelDescriptions[t.level];
             const area = document.getElementById('proof-problem-area');
             area.innerHTML = `
-                <div class="problem-statement-text"><strong>정리 ${t.num}. ${escapeHtmlText(t.title)}</strong><br>${t.hypothesis}</div>
-                ${t.statement ? `<div class="problem-statement-formula">$$${t.statement}$$</div>` : ''}
+                <div class="problem-statement-text">${t.referenceSource ? `<span class="proof-ref-source">참고자료 ${escapeHtmlText(t.referenceSource.unit)} · ${escapeHtmlText(t.referenceSource.label)}</span><br>` : ''}<strong>${t.referenceSource ? `<span class="proof-ref-num" title="참고자료에 실린 정리">정리 ${escapeHtmlText(t.num)}</span>` : `정리 ${escapeHtmlText(t.num)}`}. ${escapeHtmlText(t.title)}</strong><br>${escapeHtmlText(t.hypothesis)}</div>
+                ${t.statement ? `<div class="problem-statement-formula">$$${escapeHtmlText(t.statement)}$$</div>` : ''}
             `;
             document.getElementById('proof-btn-prev').classList.toggle('hidden', proofState.index === 0);
             document.getElementById('proof-btn-next').classList.toggle('hidden', proofState.index === proofState.theorems.length - 1);
             if (window.MathJax) MathJax.typesetPromise([area]);
+            if (document.getElementById('chk-proof-keep-open').checked) toggleProofExplanation();
+        }
+
+        function toggleProofExplanation() {
+            const t = proofState.theorems[proofState.index];
+            if (!t) return;
+            const panel = document.getElementById('proof-explanation');
+            const button = document.getElementById('proof-btn-explanation');
+            const opening = panel.hidden;
+            if (opening && !panel.innerHTML) {
+                panel.innerHTML = `<h3 id="proof-explanation-title">정리 ${escapeHtmlText(t.num)} 해설 · ${escapeHtmlText(t.title)}</h3>` +
+                    t.explanation.map(paragraph => `<p>${escapeHtmlText(paragraph)}</p>`).join('');
+            }
+            panel.hidden = !opening;
+            button.setAttribute('aria-expanded', String(opening));
+            button.textContent = opening ? '해설 접기' : '해설';
+            if (opening && window.MathJax?.typesetPromise) MathJax.typesetPromise([panel]);
         }
 
         function prevProofTheorem() {
@@ -729,6 +881,17 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
         function nextProofTheorem() {
             if (proofState.index < proofState.theorems.length - 1) { proofState.index++; loadCurrentProofTheorem(); }
         }
+        // 증명 화면: ←/→로 이전/다음 정리, Enter로 다음 정리. 포커스된 버튼·체크박스의 Enter는 그대로 둔다.
+        document.addEventListener('keydown', e => {
+            if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+            if (document.getElementById('proof-view')?.style.display !== 'block') return;
+            if (document.getElementById('collection-modal')?.classList.contains('visible')) return;
+            const tag = e.target?.tagName;
+            if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+            if (e.key === 'ArrowLeft') { e.preventDefault(); prevProofTheorem(); }
+            else if (e.key === 'ArrowRight') { e.preventDefault(); nextProofTheorem(); }
+            else if (e.key === 'Enter' && tag !== 'BUTTON' && tag !== 'SUMMARY') { e.preventDefault(); nextProofTheorem(); }
+        });
 
         window.addEventListener('DOMContentLoaded', () => {
             const trigGrid = document.getElementById('collection-grid-trig');
@@ -813,13 +976,28 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
             const id = document.getElementById('sel-collection-value-algebra').value;
             const colProvider = window.algebraCollections?.find(c => c.id === id);
             if (!colProvider) return alert("문제집을 선택해주세요.");
+            try {
+                state.studyAttempt = await window.studyScores?.startAttempt({ collectionId: id, totalCount: colProvider.problems.length });
+                if (!state.studyAttempt) throw new Error('점수 기록 시스템을 시작할 수 없습니다.');
+            } catch (error) {
+                alert(`문제집을 시작할 수 없습니다. ${error.message}`);
+                return;
+            }
+            document.getElementById('app-view').classList.remove('polar-session');
 
             state.strictC = false; // 행렬/연립방정식 문제에는 적분상수(C) 개념이 없음
             state.subject = 'algebra';
             const slogan = document.getElementById('slogan-text');
-            if (slogan) slogan.innerText = 'Solve your matrices';
+            if (slogan) slogan.innerText = 'Explore the structure';
             state.problems = colProvider.problems.map((p, idx) => ({
-                id: idx + 1, level: p.level, latex: normalizeLatex(p.latex), solution: p.solution, userAnswer: ""
+                id: idx + 1,
+                level: p.level,
+                title: p.title,
+                latex: normalizeLatex(p.latex),
+                solution: p.solution,
+                explanation: p.explanation,
+                answerMode: p.answerMode,
+                userAnswer: ""
             }));
             state.totalCount = state.problems.length;
             state.currentIndex = 0;
@@ -842,7 +1020,8 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
             if (selectedSubject === 'algebra') return startAlgebraGame();
             state.subject = 'calc';
             const slogan = document.getElementById('slogan-text');
-            if (slogan) slogan.innerText = 'Integrate your skills';
+            const polarSelected = document.getElementById('sel-collection-value').value.startsWith('adv_col2_v2_');
+            if (slogan) slogan.innerText = polarSelected ? '극좌표 심화 탐구' : 'Integrate your skills';
             return startGame();
         }
     </script>

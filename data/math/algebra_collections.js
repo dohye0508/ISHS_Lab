@@ -1,956 +1,267 @@
-window.algebraCollections = [
-    {
-        "id": "alg_col_1",
-        "name": "행렬과 연립일차방정식 1",
-        "problems": [
-            {
-                "level": 1,
-                "template": "sys_unique",
-                "latex": "\\text{가우스 소거법을 이용하여 다음 연립일차방정식의 해를 구하시오 (첨가행렬 } [A|B] \\text{ 를 기약 행사다리꼴로 변형하시오): } \\begin{cases}x + y = 0\\\\2 x + 4 y = -10\\end{cases}",
-                "solution": "\\begin{pmatrix}5\\\\-5\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "mat_inverse",
-                "latex": "\\text{첨가행렬 } [A|I] \\text{ 에 기본 행연산을 적용하여 다음 행렬 } A \\text{ 의 역행렬을 구하시오: } A=\\begin{pmatrix}-1 & -1\\\\-1 & 0\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}0 & -1\\\\-1 & 1\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "sys_elem_matrix",
-                "latex": "\\text{연립일차방정식을 첨가행렬 } M \\text{ 로 나타내고, 기본 행연산에 대응하는 기본행렬 } E_1, E_2, \\ldots \\text{ 을 차례로 곱하는 과정을 통해 해를 구하시오: } \\begin{cases}5 x + y + z = 26\\\\- 3 x + y + 2 z = -1\\\\2 x + 5 y + 3 z = 28\\end{cases}",
-                "solution": "\\begin{pmatrix}4\\\\1\\\\5\\end{pmatrix}"
-            },
-            {
-                "level": 3,
-                "template": "rref_interpret",
-                "latex": "\\text{연립일차방정식을 행렬로 나타내고 가우스 소거법을 이용하여 다음과 같은 행렬을 얻었을 때, } \\text{주어진 연립일차방정식의 해를 구하시오 (해가 무수히 많으면 자유변수를 } t \\text{ 로 두고, 해가 없으면 \"포기\" 버튼을 이용하시오): } \\begin{pmatrix}1 & 3 & 1\\\\0 & 1 & -1\\\\0 & 0 & 0\\end{pmatrix}\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix} = \\begin{pmatrix}-1\\\\-2\\\\1\\end{pmatrix}",
-                "solution": "해없음"
-            },
-            {
-                "level": 3,
-                "template": "mat_P_transform",
-                "latex": "\\text{행렬 } A \\text{ 를 가우스 소거법을 이용하여 단위행렬로 변형하고, } PA=I \\text{ 를 만족시키는 행렬 } P \\text{ 를 기본행렬의 곱으로 나타내시오: } A=\\begin{pmatrix}5 & 1\\\\-1 & 0\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}0 & -1\\\\1 & 5\\end{pmatrix}"
-            },
-            {
-                "level": 1,
-                "template": "minor_cofactor",
-                "latex": "\\text{다음 } 3\\times 3 \\text{ 행렬 } A \\text{ 에서 원소 } a_{31} \\text{ 의 소행렬식 } M_{31} \\text{ 과 여인수 } C_{31} \\text{ 를 차례로 구하시오 (답은 } M_{31}, C_{31} \\text{ 순서의 } 2\\times 1 \\text{ 벡터로 입력하시오): } A=\\begin{pmatrix}-5 & -6 & 1\\\\-6 & 11 & 7\\\\-5 & 2 & -4\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}-53\\\\-53\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "det_cofactor_expand",
-                "latex": "\\text{제 1행에 대한 여인수 전개를 이용하여 다음 } 3\\times 3 \\text{ 행렬 } A \\text{ 의 행렬식 } \\det(A) \\text{ 를 계산하시오: } A=\\begin{pmatrix}-3 & 3 & 8\\\\1 & 3 & -8\\\\-1 & 3 & -7\\end{pmatrix}",
-                "solution": "84"
-            },
-            {
-                "level": 2,
-                "template": "det_properties",
-                "latex": "2\\times 2 \\text{ 정사각행렬 } A \\text{ 에 대하여 } \\det(A)=-9 \\text{ 일 때, } \\det(-4A) \\text{ 의 값을 구하시오: }",
-                "solution": "-144"
-            },
-            {
-                "level": 2,
-                "template": "adjoint_matrix",
-                "latex": "\\text{다음 행렬 } A \\text{ 의 여인수행렬을 구하고, 이를 전치하여 딸림행렬(수반행렬) } \\operatorname{adj}(A) \\text{ 를 구하시오: } A=\\begin{pmatrix}-3 & -5 & 4\\\\4 & -5 & -8\\\\0 & -6 & -5\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}-23 & -49 & 60\\\\20 & 15 & -8\\\\-24 & -18 & 35\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "cramer_single_var",
-                "latex": "\\text{크래머 공식(Cramer's Rule)을 적용하여 다음 연립방정식의 미지수 } x \\text{ 의 값을 구하시오: } \\begin{cases}- 2 x + 2 y - 3 z = 1\\\\- x + 2 y - 7 z = -11\\\\7 x - 5 z = -15\\end{cases}",
-                "solution": "0"
-            }
-        ]
-    },
-    {
-        "id": "alg_col_2",
-        "name": "행렬과 연립일차방정식 2",
-        "problems": [
-            {
-                "level": 1,
-                "template": "sys_unique",
-                "latex": "\\text{가우스 소거법을 이용하여 다음 연립일차방정식의 해를 구하시오 (첨가행렬 } [A|B] \\text{ 를 기약 행사다리꼴로 변형하시오): } \\begin{cases}- 2 x - 4 y = -16\\\\x + 5 y = 14\\end{cases}",
-                "solution": "\\begin{pmatrix}4\\\\2\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "mat_inverse",
-                "latex": "\\text{첨가행렬 } [A|I] \\text{ 에 기본 행연산을 적용하여 다음 행렬 } A \\text{ 의 역행렬을 구하시오: } A=\\begin{pmatrix}3 & -3 & 4\\\\0 & -1 & 1\\\\2 & -3 & 4\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}1 & 0 & -1\\\\-2 & -4 & 3\\\\-2 & -3 & 3\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "sys_elem_matrix",
-                "latex": "\\text{연립일차방정식을 첨가행렬 } M \\text{ 로 나타내고, 기본 행연산에 대응하는 기본행렬 } E_1, E_2, \\ldots \\text{ 을 차례로 곱하는 과정을 통해 해를 구하시오: } \\begin{cases}- 3 x + y + 2 z = 19\\\\3 x + 5 y + z = -22\\\\5 x + 2 y + z = -31\\end{cases}",
-                "solution": "\\begin{pmatrix}-6\\\\-1\\\\1\\end{pmatrix}"
-            },
-            {
-                "level": 3,
-                "template": "rref_interpret",
-                "latex": "\\text{연립일차방정식을 행렬로 나타내고 가우스 소거법을 이용하여 다음과 같은 행렬을 얻었을 때, } \\text{주어진 연립일차방정식의 해를 구하시오 (해가 무수히 많으면 자유변수를 } t \\text{ 로 두고, 해가 없으면 \"포기\" 버튼을 이용하시오): } \\begin{pmatrix}1 & 1 & 0\\\\0 & 1 & 1\\\\0 & 0 & 0\\end{pmatrix}\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix} = \\begin{pmatrix}-3\\\\4\\\\4\\end{pmatrix}",
-                "solution": "해없음"
-            },
-            {
-                "level": 3,
-                "template": "mat_P_transform",
-                "latex": "\\text{행렬 } A \\text{ 를 가우스 소거법을 이용하여 단위행렬로 변형하고, } PA=I \\text{ 를 만족시키는 행렬 } P \\text{ 를 기본행렬의 곱으로 나타내시오: } A=\\begin{pmatrix}-2 & -1\\\\1 & 0\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}0 & 1\\\\-1 & -2\\end{pmatrix}"
-            },
-            {
-                "level": 1,
-                "template": "minor_cofactor",
-                "latex": "\\text{다음 } 3\\times 3 \\text{ 행렬 } A \\text{ 에서 원소 } a_{33} \\text{ 의 소행렬식 } M_{33} \\text{ 과 여인수 } C_{33} \\text{ 를 차례로 구하시오 (답은 } M_{33}, C_{33} \\text{ 순서의 } 2\\times 1 \\text{ 벡터로 입력하시오): } A=\\begin{pmatrix}11 & -5 & -6\\\\-2 & -12 & 5\\\\-4 & 4 & -1\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}-142\\\\-142\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "det_cofactor_expand",
-                "latex": "\\text{제 1열에 대한 여인수 전개를 이용하여 다음 } 3\\times 3 \\text{ 행렬 } A \\text{ 의 행렬식 } \\det(A) \\text{ 를 계산하시오: } A=\\begin{pmatrix}3 & 3 & -6\\\\-6 & -8 & 6\\\\-6 & 7 & 1\\end{pmatrix}",
-                "solution": "300"
-            },
-            {
-                "level": 2,
-                "template": "det_properties",
-                "latex": "4\\times 4 \\text{ 정사각행렬 } A \\text{ 에 대하여 } \\det(A)=-4 \\text{ 일 때, } \\det(A^{-1}) \\text{ 의 값을 구하시오: }",
-                "solution": "-\\frac{1}{4}"
-            },
-            {
-                "level": 2,
-                "template": "adjoint_matrix",
-                "latex": "\\text{다음 행렬 } A \\text{ 의 여인수행렬을 구하고, 이를 전치하여 딸림행렬(수반행렬) } \\operatorname{adj}(A) \\text{ 를 구하시오: } A=\\begin{pmatrix}-5 & -3 & 8\\\\2 & -7 & -8\\\\-5 & 6 & -4\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}76 & 36 & 80\\\\48 & 60 & -24\\\\-23 & 45 & 41\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "cramer_single_var",
-                "latex": "\\text{크래머 공식(Cramer's Rule)을 적용하여 다음 연립방정식의 미지수 } y \\text{ 의 값을 구하시오: } \\begin{cases}- 2 x + 2 y + 8 z = -84\\\\2 x - 3 y - 6 z = 69\\\\6 x + y + 3 z = 29\\end{cases}",
-                "solution": "-1"
-            }
-        ]
-    },
-    {
-        "id": "alg_col_3",
-        "name": "행렬과 연립일차방정식 3",
-        "problems": [
-            {
-                "level": 1,
-                "template": "sys_unique",
-                "latex": "\\text{가우스 소거법을 이용하여 다음 연립일차방정식의 해를 구하시오 (첨가행렬 } [A|B] \\text{ 를 기약 행사다리꼴로 변형하시오): } \\begin{cases}4 x - 3 y + 5 z = 12\\\\2 x + 3 y - 2 z = 24\\\\3 x - y - 3 z = 3\\end{cases}",
-                "solution": "\\begin{pmatrix}5\\\\6\\\\2\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "mat_inverse",
-                "latex": "\\text{첨가행렬 } [A|I] \\text{ 에 기본 행연산을 적용하여 다음 행렬 } A \\text{ 의 역행렬을 구하시오: } A=\\begin{pmatrix}1 & 0\\\\-3 & -1\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}1 & 0\\\\-3 & -1\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "sys_elem_matrix",
-                "latex": "\\text{연립일차방정식을 첨가행렬 } M \\text{ 로 나타내고, 기본 행연산에 대응하는 기본행렬 } E_1, E_2, \\ldots \\text{ 을 차례로 곱하는 과정을 통해 해를 구하시오: } \\begin{cases}3 x - 2 y = -7\\\\- 4 x = 20\\end{cases}",
-                "solution": "\\begin{pmatrix}-5\\\\-4\\end{pmatrix}"
-            },
-            {
-                "level": 3,
-                "template": "rref_interpret",
-                "latex": "\\text{연립일차방정식을 행렬로 나타내고 가우스 소거법을 이용하여 다음과 같은 행렬을 얻었을 때, } \\text{주어진 연립일차방정식의 해를 구하시오 (해가 무수히 많으면 자유변수를 } t \\text{ 로 두고, 해가 없으면 \"포기\" 버튼을 이용하시오): } \\begin{pmatrix}1 & -4 & 1\\\\0 & 1 & -4\\\\0 & 0 & 0\\end{pmatrix}\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix} = \\begin{pmatrix}-1\\\\1\\\\-4\\end{pmatrix}",
-                "solution": "해없음"
-            },
-            {
-                "level": 3,
-                "template": "mat_P_transform",
-                "latex": "\\text{행렬 } A \\text{ 를 가우스 소거법을 이용하여 단위행렬로 변형하고, } PA=I \\text{ 를 만족시키는 행렬 } P \\text{ 를 기본행렬의 곱으로 나타내시오: } A=\\begin{pmatrix}2 & 6 & -3\\\\2 & 5 & -2\\\\1 & 3 & -1\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}-1 & 3 & -3\\\\0 & -1 & 2\\\\-1 & 0 & 2\\end{pmatrix}"
-            },
-            {
-                "level": 1,
-                "template": "minor_cofactor",
-                "latex": "\\text{다음 } 3\\times 3 \\text{ 행렬 } A \\text{ 에서 원소 } a_{12} \\text{ 의 소행렬식 } M_{12} \\text{ 과 여인수 } C_{12} \\text{ 를 차례로 구하시오 (답은 } M_{12}, C_{12} \\text{ 순서의 } 2\\times 1 \\text{ 벡터로 입력하시오): } A=\\begin{pmatrix}8 & -4 & 1\\\\10 & -12 & 3\\\\-1 & 6 & -10\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}-97\\\\97\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "det_cofactor_expand",
-                "latex": "\\text{제 1행에 대한 여인수 전개를 이용하여 다음 } 3\\times 3 \\text{ 행렬 } A \\text{ 의 행렬식 } \\det(A) \\text{ 를 계산하시오: } A=\\begin{pmatrix}0 & -6 & 0\\\\5 & 7 & -8\\\\-2 & 0 & -6\\end{pmatrix}",
-                "solution": "-276"
-            },
-            {
-                "level": 2,
-                "template": "det_properties",
-                "latex": "4\\times 4 \\text{ 정사각행렬 } A \\text{ 에 대하여 } \\det(A)=-4 \\text{ 일 때, } \\det(A^{2}) \\text{ 의 값을 구하시오: }",
-                "solution": "16"
-            },
-            {
-                "level": 2,
-                "template": "adjoint_matrix",
-                "latex": "\\text{다음 행렬 } A \\text{ 의 여인수행렬을 구하고, 이를 전치하여 딸림행렬(수반행렬) } \\operatorname{adj}(A) \\text{ 를 구하시오: } A=\\begin{pmatrix}2 & -5 & 1\\\\8 & -7 & -6\\\\-7 & -8 & 2\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}-62 & 2 & 37\\\\26 & 11 & 20\\\\-113 & 51 & 26\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "cramer_single_var",
-                "latex": "\\text{크래머 공식(Cramer's Rule)을 적용하여 다음 연립방정식의 미지수 } z \\text{ 의 값을 구하시오: } \\begin{cases}- 7 x + 4 y - z = -21\\\\7 x + y + z = 41\\\\- x + 7 y + 4 z = 2\\end{cases}",
-                "solution": "-5"
-            }
-        ]
-    },
-    {
-        "id": "alg_col_4",
-        "name": "행렬과 연립일차방정식 4",
-        "problems": [
-            {
-                "level": 1,
-                "template": "sys_unique",
-                "latex": "\\text{가우스 소거법을 이용하여 다음 연립일차방정식의 해를 구하시오 (첨가행렬 } [A|B] \\text{ 를 기약 행사다리꼴로 변형하시오): } \\begin{cases}x - 3 y - z = -13\\\\2 x - 2 y + 3 z = 5\\\\- 4 x - 3 y - 4 z = -32\\end{cases}",
-                "solution": "\\begin{pmatrix}2\\\\4\\\\3\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "mat_inverse",
-                "latex": "\\text{첨가행렬 } [A|I] \\text{ 에 기본 행연산을 적용하여 다음 행렬 } A \\text{ 의 역행렬을 구하시오 (역행렬이 존재하지 않으면 \"포기\" 버튼을 이용하시오): } A=\\begin{pmatrix}-4 & -3 & -2\\\\5 & -3 & -3\\\\3 & 9 & 7\\end{pmatrix}",
-                "solution": "역행렬없음"
-            },
-            {
-                "level": 2,
-                "template": "sys_elem_matrix",
-                "latex": "\\text{연립일차방정식을 첨가행렬 } M \\text{ 로 나타내고, 기본 행연산에 대응하는 기본행렬 } E_1, E_2, \\ldots \\text{ 을 차례로 곱하는 과정을 통해 해를 구하시오: } \\begin{cases}- 4 x - 3 y - z = 23\\\\3 x + 2 y - 3 z = -32\\\\x + 2 y - 3 z = -20\\end{cases}",
-                "solution": "\\begin{pmatrix}-6\\\\-1\\\\4\\end{pmatrix}"
-            },
-            {
-                "level": 3,
-                "template": "rref_interpret",
-                "latex": "\\text{연립일차방정식을 행렬로 나타내고 가우스 소거법을 이용하여 다음과 같은 행렬을 얻었을 때, } \\text{주어진 연립일차방정식의 해를 구하시오 (해가 무수히 많으면 자유변수를 } t \\text{ 로 두고, 해가 없으면 \"포기\" 버튼을 이용하시오): } \\begin{pmatrix}1 & -3 & 4\\\\0 & 1 & -1\\\\0 & 0 & 0\\end{pmatrix}\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix} = \\begin{pmatrix}-3\\\\3\\\\0\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}6 - t\\\\t + 3\\\\t\\end{pmatrix}"
-            },
-            {
-                "level": 3,
-                "template": "mat_P_transform",
-                "latex": "\\text{행렬 } A \\text{ 를 가우스 소거법을 이용하여 단위행렬로 변형하고, } PA=I \\text{ 를 만족시키는 행렬 } P \\text{ 를 기본행렬의 곱으로 나타내시오: } A=\\begin{pmatrix}4 & 0 & -1\\\\2 & -1 & -2\\\\5 & 0 & -1\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}-1 & 0 & 1\\\\8 & -1 & -6\\\\-5 & 0 & 4\\end{pmatrix}"
-            },
-            {
-                "level": 1,
-                "template": "minor_cofactor",
-                "latex": "\\text{다음 } 3\\times 3 \\text{ 행렬 } A \\text{ 에서 원소 } a_{23} \\text{ 의 소행렬식 } M_{23} \\text{ 과 여인수 } C_{23} \\text{ 를 차례로 구하시오 (답은 } M_{23}, C_{23} \\text{ 순서의 } 2\\times 1 \\text{ 벡터로 입력하시오): } A=\\begin{pmatrix}-1 & -8 & 10\\\\-7 & 5 & 1\\\\3 & -3 & 11\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}27\\\\-27\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "det_cofactor_expand",
-                "latex": "\\text{제 2행에 대한 여인수 전개를 이용하여 다음 } 3\\times 3 \\text{ 행렬 } A \\text{ 의 행렬식 } \\det(A) \\text{ 를 계산하시오: } A=\\begin{pmatrix}-4 & 5 & -3\\\\-5 & 7 & -6\\\\-6 & 8 & 5\\end{pmatrix}",
-                "solution": "-33"
-            },
-            {
-                "level": 2,
-                "template": "det_properties",
-                "latex": "3\\times 3 \\text{ 정사각행렬 } A \\text{ 에 대하여 } \\det(A)=4 \\text{ 일 때, } \\det(4A^{-1}) \\text{ 의 값을 구하시오: }",
-                "solution": "16"
-            },
-            {
-                "level": 2,
-                "template": "adjoint_matrix",
-                "latex": "\\text{다음 행렬 } A \\text{ 의 여인수행렬을 구하고, 이를 전치하여 딸림행렬(수반행렬) } \\operatorname{adj}(A) \\text{ 를 구하시오: } A=\\begin{pmatrix}1 & -7 & 7\\\\7 & 1 & 6\\\\6 & 2 & 7\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}-5 & 63 & -49\\\\-13 & -35 & 43\\\\8 & -44 & 50\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "cramer_single_var",
-                "latex": "\\text{크래머 공식(Cramer's Rule)을 적용하여 다음 연립방정식의 미지수 } y \\text{ 의 값을 구하시오: } \\begin{cases}- 3 x - 3 y + 2 z = 29\\\\3 x + 6 y + 3 z = -60\\\\2 x - 6 y + 8 z = 18\\end{cases}",
-                "solution": "-7"
-            }
-        ]
-    },
-    {
-        "id": "alg_col_5",
-        "name": "행렬과 연립일차방정식 5",
-        "problems": [
-            {
-                "level": 1,
-                "template": "sys_unique",
-                "latex": "\\text{가우스 소거법을 이용하여 다음 연립일차방정식의 해를 구하시오 (첨가행렬 } [A|B] \\text{ 를 기약 행사다리꼴로 변형하시오): } \\begin{cases}- 4 x = 20\\\\x + 3 y = 1\\end{cases}",
-                "solution": "\\begin{pmatrix}-5\\\\2\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "mat_inverse",
-                "latex": "\\text{첨가행렬 } [A|I] \\text{ 에 기본 행연산을 적용하여 다음 행렬 } A \\text{ 의 역행렬을 구하시오: } A=\\begin{pmatrix}-5 & -2\\\\-7 & -3\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}-3 & 2\\\\7 & -5\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "sys_elem_matrix",
-                "latex": "\\text{연립일차방정식을 첨가행렬 } M \\text{ 로 나타내고, 기본 행연산에 대응하는 기본행렬 } E_1, E_2, \\ldots \\text{ 을 차례로 곱하는 과정을 통해 해를 구하시오: } \\begin{cases}- 4 x = -4\\\\- 2 x - 3 y = 7\\end{cases}",
-                "solution": "\\begin{pmatrix}1\\\\-3\\end{pmatrix}"
-            },
-            {
-                "level": 3,
-                "template": "rref_interpret",
-                "latex": "\\text{연립일차방정식을 행렬로 나타내고 가우스 소거법을 이용하여 다음과 같은 행렬을 얻었을 때, } \\text{주어진 연립일차방정식의 해를 구하시오 (해가 무수히 많으면 자유변수를 } t \\text{ 로 두고, 해가 없으면 \"포기\" 버튼을 이용하시오): } \\begin{pmatrix}1 & 2 & -3\\\\0 & 1 & 1\\\\0 & 0 & 0\\end{pmatrix}\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix} = \\begin{pmatrix}-1\\\\-3\\\\-1\\end{pmatrix}",
-                "solution": "해없음"
-            },
-            {
-                "level": 3,
-                "template": "mat_P_transform",
-                "latex": "\\text{행렬 } A \\text{ 를 가우스 소거법을 이용하여 단위행렬로 변형하고, } PA=I \\text{ 를 만족시키는 행렬 } P \\text{ 를 기본행렬의 곱으로 나타내시오: } A=\\begin{pmatrix}0 & 1\\\\-1 & -1\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}-1 & -1\\\\1 & 0\\end{pmatrix}"
-            },
-            {
-                "level": 1,
-                "template": "minor_cofactor",
-                "latex": "\\text{다음 } 3\\times 3 \\text{ 행렬 } A \\text{ 에서 원소 } a_{11} \\text{ 의 소행렬식 } M_{11} \\text{ 과 여인수 } C_{11} \\text{ 를 차례로 구하시오 (답은 } M_{11}, C_{11} \\text{ 순서의 } 2\\times 1 \\text{ 벡터로 입력하시오): } A=\\begin{pmatrix}8 & 10 & 11\\\\-4 & 0 & -6\\\\8 & 2 & 0\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}12\\\\12\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "det_cofactor_expand",
-                "latex": "\\text{제 1열에 대한 여인수 전개를 이용하여 다음 } 4\\times 4 \\text{ 행렬 } A \\text{ 의 행렬식 } \\det(A) \\text{ 를 계산하시오: } A=\\begin{pmatrix}1 & -7 & 4 & -3\\\\-5 & 6 & 8 & -6\\\\7 & -6 & 1 & 5\\\\2 & 1 & -4 & -6\\end{pmatrix}",
-                "solution": "4203"
-            },
-            {
-                "level": 2,
-                "template": "det_properties",
-                "latex": "4\\times 4 \\text{ 정사각행렬 } A \\text{ 에 대하여 } \\det(A)=6 \\text{ 일 때, } \\det(A^{3}) \\text{ 의 값을 구하시오: }",
-                "solution": "216"
-            },
-            {
-                "level": 2,
-                "template": "adjoint_matrix",
-                "latex": "\\text{다음 행렬 } A \\text{ 의 여인수행렬을 구하고, 이를 전치하여 딸림행렬(수반행렬) } \\operatorname{adj}(A) \\text{ 를 구하시오: } A=\\begin{pmatrix}-6 & -2 & 3\\\\-1 & 3 & 2\\\\2 & -4 & 4\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}20 & -4 & -13\\\\8 & -30 & 9\\\\-2 & -28 & -20\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "cramer_single_var",
-                "latex": "\\text{크래머 공식(Cramer's Rule)을 적용하여 다음 연립방정식의 미지수 } z \\text{ 의 값을 구하시오: } \\begin{cases}x - 5 y = 22\\\\- 2 x + 6 y - 7 z = -13\\\\x + 2 y - 3 z = -17\\end{cases}",
-                "solution": "-1"
-            }
-        ]
-    },
-    {
-        "id": "alg_col_6",
-        "name": "행렬과 연립일차방정식 6",
-        "problems": [
-            {
-                "level": 1,
-                "template": "sys_unique",
-                "latex": "\\text{가우스 소거법을 이용하여 다음 연립일차방정식의 해를 구하시오 (첨가행렬 } [A|B] \\text{ 를 기약 행사다리꼴로 변형하시오): } \\begin{cases}5 x - 3 y - 3 z = -12\\\\- 3 y + 3 z = -9\\\\- 4 x + 3 y + z = 13\\end{cases}",
-                "solution": "\\begin{pmatrix}-3\\\\1\\\\-2\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "mat_inverse",
-                "latex": "\\text{첨가행렬 } [A|I] \\text{ 에 기본 행연산을 적용하여 다음 행렬 } A \\text{ 의 역행렬을 구하시오: } A=\\begin{pmatrix}-8 & -3\\\\-3 & -1\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}1 & -3\\\\-3 & 8\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "sys_elem_matrix",
-                "latex": "\\text{연립일차방정식을 첨가행렬 } M \\text{ 로 나타내고, 기본 행연산에 대응하는 기본행렬 } E_1, E_2, \\ldots \\text{ 을 차례로 곱하는 과정을 통해 해를 구하시오: } \\begin{cases}- 2 x - 4 y + z = -22\\\\5 x + 4 y + 3 z = 47\\\\- 3 x + 5 y + 4 z = 32\\end{cases}",
-                "solution": "\\begin{pmatrix}3\\\\5\\\\4\\end{pmatrix}"
-            },
-            {
-                "level": 3,
-                "template": "rref_interpret",
-                "latex": "\\text{연립일차방정식을 행렬로 나타내고 가우스 소거법을 이용하여 다음과 같은 행렬을 얻었을 때, } \\text{주어진 연립일차방정식의 해를 구하시오 (해가 무수히 많으면 자유변수를 } t \\text{ 로 두고, 해가 없으면 \"포기\" 버튼을 이용하시오): } \\begin{pmatrix}1 & 1 & -2\\\\0 & 1 & -3\\\\0 & 0 & 0\\end{pmatrix}\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix} = \\begin{pmatrix}-4\\\\0\\\\2\\end{pmatrix}",
-                "solution": "해없음"
-            },
-            {
-                "level": 3,
-                "template": "mat_P_transform",
-                "latex": "\\text{행렬 } A \\text{ 를 가우스 소거법을 이용하여 단위행렬로 변형하고, } PA=I \\text{ 를 만족시키는 행렬 } P \\text{ 를 기본행렬의 곱으로 나타내시오: } A=\\begin{pmatrix}3 & 3 & -1\\\\1 & -5 & 2\\\\-1 & 0 & 0\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}0 & 0 & -1\\\\2 & 1 & 7\\\\5 & 3 & 18\\end{pmatrix}"
-            },
-            {
-                "level": 1,
-                "template": "minor_cofactor",
-                "latex": "\\text{다음 } 3\\times 3 \\text{ 행렬 } A \\text{ 에서 원소 } a_{12} \\text{ 의 소행렬식 } M_{12} \\text{ 과 여인수 } C_{12} \\text{ 를 차례로 구하시오 (답은 } M_{12}, C_{12} \\text{ 순서의 } 2\\times 1 \\text{ 벡터로 입력하시오): } A=\\begin{pmatrix}9 & -5 & -3\\\\5 & 5 & -1\\\\4 & 12 & -5\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}-21\\\\21\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "det_cofactor_expand",
-                "latex": "\\text{제 1열에 대한 여인수 전개를 이용하여 다음 } 4\\times 4 \\text{ 행렬 } A \\text{ 의 행렬식 } \\det(A) \\text{ 를 계산하시오: } A=\\begin{pmatrix}-7 & -3 & -4 & -8\\\\8 & 8 & 2 & -5\\\\-8 & 2 & 0 & 0\\\\-6 & 6 & 6 & -8\\end{pmatrix}",
-                "solution": "5636"
-            },
-            {
-                "level": 2,
-                "template": "det_properties",
-                "latex": "2\\times 2 \\text{ 정사각행렬 } A \\text{ 에 대하여 } \\det(A)=6 \\text{ 일 때, } \\det(-A) \\text{ 의 값을 구하시오: }",
-                "solution": "6"
-            },
-            {
-                "level": 2,
-                "template": "adjoint_matrix",
-                "latex": "\\text{다음 행렬 } A \\text{ 의 여인수행렬을 구하고, 이를 전치하여 딸림행렬(수반행렬) } \\operatorname{adj}(A) \\text{ 를 구하시오: } A=\\begin{pmatrix}7 & 7 & 5\\\\-2 & 7 & -6\\\\-2 & 7 & -4\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}14 & 63 & -77\\\\4 & -18 & 32\\\\0 & -63 & 63\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "cramer_single_var",
-                "latex": "\\text{크래머 공식(Cramer's Rule)을 적용하여 다음 연립방정식의 미지수 } y \\text{ 의 값을 구하시오: } \\begin{cases}7 x - 7 y + z = 21\\\\5 x = 15\\\\- 2 x - 4 y - 8 z = -6\\end{cases}",
-                "solution": "0"
-            }
-        ]
-    },
-    {
-        "id": "alg_col_7",
-        "name": "행렬과 연립일차방정식 7",
-        "problems": [
-            {
-                "level": 1,
-                "template": "sys_unique",
-                "latex": "\\text{가우스 소거법을 이용하여 다음 연립일차방정식의 해를 구하시오 (첨가행렬 } [A|B] \\text{ 를 기약 행사다리꼴로 변형하시오): } \\begin{cases}3 x + 4 y + 3 z = 19\\\\x - y = 1\\\\3 x + 3 y + 4 z = 21\\end{cases}",
-                "solution": "\\begin{pmatrix}2\\\\1\\\\3\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "mat_inverse",
-                "latex": "\\text{첨가행렬 } [A|I] \\text{ 에 기본 행연산을 적용하여 다음 행렬 } A \\text{ 의 역행렬을 구하시오 (역행렬이 존재하지 않으면 \"포기\" 버튼을 이용하시오): } A=\\begin{pmatrix}9 & -5 & 10\\\\5 & 3 & 2\\\\2 & -4 & 4\\end{pmatrix}",
-                "solution": "역행렬없음"
-            },
-            {
-                "level": 2,
-                "template": "sys_elem_matrix",
-                "latex": "\\text{연립일차방정식을 첨가행렬 } M \\text{ 로 나타내고, 기본 행연산에 대응하는 기본행렬 } E_1, E_2, \\ldots \\text{ 을 차례로 곱하는 과정을 통해 해를 구하시오: } \\begin{cases}- 3 x - y + z = 6\\\\- 3 x + 2 y - 3 z = -7\\\\5 x + 5 y = 0\\end{cases}",
-                "solution": "\\begin{pmatrix}-1\\\\1\\\\4\\end{pmatrix}"
-            },
-            {
-                "level": 3,
-                "template": "rref_interpret",
-                "latex": "\\text{연립일차방정식을 행렬로 나타내고 가우스 소거법을 이용하여 다음과 같은 행렬을 얻었을 때, } \\text{주어진 연립일차방정식의 해를 구하시오 (해가 무수히 많으면 자유변수를 } t \\text{ 로 두고, 해가 없으면 \"포기\" 버튼을 이용하시오): } \\begin{pmatrix}1 & -4 & 4\\\\0 & 1 & -1\\\\0 & 0 & 0\\end{pmatrix}\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix} = \\begin{pmatrix}1\\\\0\\\\3\\end{pmatrix}",
-                "solution": "해없음"
-            },
-            {
-                "level": 3,
-                "template": "mat_P_transform",
-                "latex": "\\text{행렬 } A \\text{ 를 가우스 소거법을 이용하여 단위행렬로 변형하고, } PA=I \\text{ 를 만족시키는 행렬 } P \\text{ 를 기본행렬의 곱으로 나타내시오: } A=\\begin{pmatrix}1 & 0 & 0\\\\-5 & 7 & -2\\\\3 & -4 & 1\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}1 & 0 & 0\\\\1 & -1 & -2\\\\1 & -4 & -7\\end{pmatrix}"
-            },
-            {
-                "level": 1,
-                "template": "minor_cofactor",
-                "latex": "\\text{다음 } 3\\times 3 \\text{ 행렬 } A \\text{ 에서 원소 } a_{21} \\text{ 의 소행렬식 } M_{21} \\text{ 과 여인수 } C_{21} \\text{ 를 차례로 구하시오 (답은 } M_{21}, C_{21} \\text{ 순서의 } 2\\times 1 \\text{ 벡터로 입력하시오): } A=\\begin{pmatrix}-4 & -1 & 9\\\\-9 & 4 & 11\\\\-4 & -6 & 6\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}48\\\\-48\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "det_cofactor_expand",
-                "latex": "\\text{제 1열에 대한 여인수 전개를 이용하여 다음 } 4\\times 4 \\text{ 행렬 } A \\text{ 의 행렬식 } \\det(A) \\text{ 를 계산하시오: } A=\\begin{pmatrix}-1 & -1 & -6 & 6\\\\-7 & 4 & 8 & 0\\\\4 & 4 & -3 & -2\\\\6 & 5 & -6 & -2\\end{pmatrix}",
-                "solution": "-100"
-            },
-            {
-                "level": 2,
-                "template": "det_properties",
-                "latex": "3\\times 3 \\text{ 정사각행렬 } A \\text{ 에 대하여 } \\det(A)=-7 \\text{ 일 때, } \\det\\left((-2A)^{-1}\\right) \\text{ 의 값을 구하시오: }",
-                "solution": "\\frac{1}{56}"
-            },
-            {
-                "level": 2,
-                "template": "adjoint_matrix",
-                "latex": "\\text{다음 행렬 } A \\text{ 의 여인수행렬을 구하고, 이를 전치하여 딸림행렬(수반행렬) } \\operatorname{adj}(A) \\text{ 를 구하시오: } A=\\begin{pmatrix}-2 & -7 & 2\\\\7 & 5 & 3\\\\3 & 2 & -1\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}-11 & -3 & -31\\\\16 & -4 & 20\\\\-1 & -17 & 39\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "cramer_single_var",
-                "latex": "\\text{크래머 공식(Cramer's Rule)을 적용하여 다음 연립방정식의 미지수 } y \\text{ 의 값을 구하시오: } \\begin{cases}x + 7 y - 8 z = -94\\\\8 x + 3 y - 8 z = -51\\\\- 3 x + 7 z = 25\\end{cases}",
-                "solution": "-9"
-            }
-        ]
-    },
-    {
-        "id": "alg_col_8",
-        "name": "행렬과 연립일차방정식 8",
-        "problems": [
-            {
-                "level": 1,
-                "template": "sys_unique",
-                "latex": "\\text{가우스 소거법을 이용하여 다음 연립일차방정식의 해를 구하시오 (첨가행렬 } [A|B] \\text{ 를 기약 행사다리꼴로 변형하시오): } \\begin{cases}- x + 5 y + 5 z = -47\\\\4 x + 2 y + 5 z = -28\\\\4 x + 3 y + 5 z = -31\\end{cases}",
-                "solution": "\\begin{pmatrix}2\\\\-3\\\\-6\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "mat_inverse",
-                "latex": "\\text{첨가행렬 } [A|I] \\text{ 에 기본 행연산을 적용하여 다음 행렬 } A \\text{ 의 역행렬을 구하시오 (역행렬이 존재하지 않으면 \"포기\" 버튼을 이용하시오): } A=\\begin{pmatrix}-6 & 8 & 6\\\\2 & 0 & -2\\\\-1 & 4 & 1\\end{pmatrix}",
-                "solution": "역행렬없음"
-            },
-            {
-                "level": 2,
-                "template": "sys_elem_matrix",
-                "latex": "\\text{연립일차방정식을 첨가행렬 } M \\text{ 로 나타내고, 기본 행연산에 대응하는 기본행렬 } E_1, E_2, \\ldots \\text{ 을 차례로 곱하는 과정을 통해 해를 구하시오: } \\begin{cases}- 2 x + 4 z = 0\\\\- 2 x + 5 y + 2 z = 1\\\\- 4 x - 3 y + 3 z = -13\\end{cases}",
-                "solution": "\\begin{pmatrix}4\\\\1\\\\2\\end{pmatrix}"
-            },
-            {
-                "level": 3,
-                "template": "rref_interpret",
-                "latex": "\\text{연립일차방정식을 행렬로 나타내고 가우스 소거법을 이용하여 다음과 같은 행렬을 얻었을 때, } \\text{주어진 연립일차방정식의 해를 구하시오 (해가 무수히 많으면 자유변수를 } t \\text{ 로 두고, 해가 없으면 \"포기\" 버튼을 이용하시오): } \\begin{pmatrix}1 & 4 & 1\\\\0 & 1 & -2\\\\0 & 0 & 0\\end{pmatrix}\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix} = \\begin{pmatrix}-2\\\\-2\\\\-2\\end{pmatrix}",
-                "solution": "해없음"
-            },
-            {
-                "level": 3,
-                "template": "mat_P_transform",
-                "latex": "\\text{행렬 } A \\text{ 를 가우스 소거법을 이용하여 단위행렬로 변형하고, } PA=I \\text{ 를 만족시키는 행렬 } P \\text{ 를 기본행렬의 곱으로 나타내시오: } A=\\begin{pmatrix}3 & -1 & -1\\\\-3 & 1 & 2\\\\-7 & 2 & 6\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}2 & 4 & -1\\\\4 & 11 & -3\\\\1 & 1 & 0\\end{pmatrix}"
-            },
-            {
-                "level": 1,
-                "template": "minor_cofactor",
-                "latex": "\\text{다음 } 3\\times 3 \\text{ 행렬 } A \\text{ 에서 원소 } a_{31} \\text{ 의 소행렬식 } M_{31} \\text{ 과 여인수 } C_{31} \\text{ 를 차례로 구하시오 (답은 } M_{31}, C_{31} \\text{ 순서의 } 2\\times 1 \\text{ 벡터로 입력하시오): } A=\\begin{pmatrix}-2 & -12 & -1\\\\1 & -7 & -4\\\\2 & 11 & -1\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}41\\\\41\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "det_cofactor_expand",
-                "latex": "\\text{제 1행에 대한 여인수 전개를 이용하여 다음 } 4\\times 4 \\text{ 행렬 } A \\text{ 의 행렬식 } \\det(A) \\text{ 를 계산하시오: } A=\\begin{pmatrix}7 & 1 & -6 & 3\\\\-3 & -4 & -4 & 8\\\\-4 & -3 & 1 & -6\\\\0 & 0 & 8 & -2\\end{pmatrix}",
-                "solution": "-2018"
-            },
-            {
-                "level": 2,
-                "template": "det_properties",
-                "latex": "3\\times 3 \\text{ 정사각행렬 } A, B \\text{ 에 대하여 } \\det(A)=-6, \\ \\det(B)=-9 \\text{ 일 때, } \\det(AB) \\text{ 의 값을 구하시오: }",
-                "solution": "54"
-            },
-            {
-                "level": 2,
-                "template": "adjoint_matrix",
-                "latex": "\\text{다음 행렬 } A \\text{ 의 여인수행렬을 구하고, 이를 전치하여 딸림행렬(수반행렬) } \\operatorname{adj}(A) \\text{ 를 구하시오: } A=\\begin{pmatrix}8 & -1 & 7\\\\-3 & 4 & -7\\\\6 & 2 & -8\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}-18 & 6 & -21\\\\-66 & -106 & 35\\\\-30 & -22 & 29\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "cramer_single_var",
-                "latex": "\\text{크래머 공식(Cramer's Rule)을 적용하여 다음 연립방정식의 미지수 } x \\text{ 의 값을 구하시오: } \\begin{cases}5 x + 4 y - 5 z = 14\\\\- 7 x - 8 y + z = -28\\\\6 x + 6 y - 2 z = 24\\end{cases}",
-                "solution": "9"
-            }
-        ]
-    },
-    {
-        "id": "alg_col_9",
-        "name": "행렬과 연립일차방정식 9",
-        "problems": [
-            {
-                "level": 1,
-                "template": "sys_unique",
-                "latex": "\\text{가우스 소거법을 이용하여 다음 연립일차방정식의 해를 구하시오 (첨가행렬 } [A|B] \\text{ 를 기약 행사다리꼴로 변형하시오): } \\begin{cases}- 3 x + y = -20\\\\4 x + 4 y = 0\\end{cases}",
-                "solution": "\\begin{pmatrix}5\\\\-5\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "mat_inverse",
-                "latex": "\\text{첨가행렬 } [A|I] \\text{ 에 기본 행연산을 적용하여 다음 행렬 } A \\text{ 의 역행렬을 구하시오: } A=\\begin{pmatrix}6 & 7\\\\-1 & -1\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}-1 & -7\\\\1 & 6\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "sys_elem_matrix",
-                "latex": "\\text{연립일차방정식을 첨가행렬 } M \\text{ 로 나타내고, 기본 행연산에 대응하는 기본행렬 } E_1, E_2, \\ldots \\text{ 을 차례로 곱하는 과정을 통해 해를 구하시오: } \\begin{cases}x = -1\\\\3 x - 4 y = -7\\end{cases}",
-                "solution": "\\begin{pmatrix}-1\\\\1\\end{pmatrix}"
-            },
-            {
-                "level": 3,
-                "template": "rref_interpret",
-                "latex": "\\text{연립일차방정식을 행렬로 나타내고 가우스 소거법을 이용하여 다음과 같은 행렬을 얻었을 때, } \\text{주어진 연립일차방정식의 해를 구하시오 (해가 무수히 많으면 자유변수를 } t \\text{ 로 두고, 해가 없으면 \"포기\" 버튼을 이용하시오): } \\begin{pmatrix}1 & -4 & 0\\\\0 & 1 & 1\\\\0 & 0 & 0\\end{pmatrix}\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix} = \\begin{pmatrix}-2\\\\3\\\\0\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}10 - 4 t\\\\3 - t\\\\t\\end{pmatrix}"
-            },
-            {
-                "level": 3,
-                "template": "mat_P_transform",
-                "latex": "\\text{행렬 } A \\text{ 를 가우스 소거법을 이용하여 단위행렬로 변형하고, } PA=I \\text{ 를 만족시키는 행렬 } P \\text{ 를 기본행렬의 곱으로 나타내시오: } A=\\begin{pmatrix}1 & -2 & 0\\\\-3 & 8 & 3\\\\0 & -1 & -1\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}-5 & -2 & -6\\\\-3 & -1 & -3\\\\3 & 1 & 2\\end{pmatrix}"
-            },
-            {
-                "level": 1,
-                "template": "minor_cofactor",
-                "latex": "\\text{다음 } 3\\times 3 \\text{ 행렬 } A \\text{ 에서 원소 } a_{31} \\text{ 의 소행렬식 } M_{31} \\text{ 과 여인수 } C_{31} \\text{ 를 차례로 구하시오 (답은 } M_{31}, C_{31} \\text{ 순서의 } 2\\times 1 \\text{ 벡터로 입력하시오): } A=\\begin{pmatrix}5 & -1 & -7\\\\-10 & -9 & -10\\\\-12 & -12 & -5\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}-53\\\\-53\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "det_cofactor_expand",
-                "latex": "\\text{제 1열에 대한 여인수 전개를 이용하여 다음 } 3\\times 3 \\text{ 행렬 } A \\text{ 의 행렬식 } \\det(A) \\text{ 를 계산하시오: } A=\\begin{pmatrix}6 & -3 & 4\\\\-7 & 8 & -7\\\\0 & -6 & -6\\end{pmatrix}",
-                "solution": "-246"
-            },
-            {
-                "level": 2,
-                "template": "det_properties",
-                "latex": "3\\times 3 \\text{ 정사각행렬 } A, B \\text{ 에 대하여 } \\det(A)=7, \\ \\det(B)=-1 \\text{ 일 때, } \\det(A^{-1} B^{T}) \\text{ 의 값을 구하시오: }",
-                "solution": "-\\frac{1}{7}"
-            },
-            {
-                "level": 2,
-                "template": "adjoint_matrix",
-                "latex": "\\text{다음 행렬 } A \\text{ 의 여인수행렬을 구하고, 이를 전치하여 딸림행렬(수반행렬) } \\operatorname{adj}(A) \\text{ 를 구하시오: } A=\\begin{pmatrix}-7 & -2 & 7\\\\0 & 7 & -7\\\\-2 & -8 & -4\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}-84 & -64 & -35\\\\14 & 42 & -49\\\\14 & -52 & -49\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "cramer_single_var",
-                "latex": "\\text{크래머 공식(Cramer's Rule)을 적용하여 다음 연립방정식의 미지수 } y \\text{ 의 값을 구하시오: } \\begin{cases}- 2 x + 3 z = 36\\\\- 3 x + y - 4 z = -1\\\\- 3 x + 8 y = -5\\end{cases}",
-                "solution": "-4"
-            }
-        ]
-    },
-    {
-        "id": "alg_col_10",
-        "name": "행렬과 연립일차방정식 10",
-        "problems": [
-            {
-                "level": 1,
-                "template": "sys_unique",
-                "latex": "\\text{가우스 소거법을 이용하여 다음 연립일차방정식의 해를 구하시오 (첨가행렬 } [A|B] \\text{ 를 기약 행사다리꼴로 변형하시오): } \\begin{cases}2 x + 4 y + 5 z = 31\\\\3 x + 2 y + 4 z = 24\\\\2 y + 5 z = 21\\end{cases}",
-                "solution": "\\begin{pmatrix}2\\\\3\\\\3\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "mat_inverse",
-                "latex": "\\text{첨가행렬 } [A|I] \\text{ 에 기본 행연산을 적용하여 다음 행렬 } A \\text{ 의 역행렬을 구하시오: } A=\\begin{pmatrix}-1 & 0\\\\-2 & -1\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}-1 & 0\\\\2 & -1\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "sys_elem_matrix",
-                "latex": "\\text{연립일차방정식을 첨가행렬 } M \\text{ 로 나타내고, 기본 행연산에 대응하는 기본행렬 } E_1, E_2, \\ldots \\text{ 을 차례로 곱하는 과정을 통해 해를 구하시오: } \\begin{cases}5 x = 15\\\\- x + 5 y = -23\\end{cases}",
-                "solution": "\\begin{pmatrix}3\\\\-4\\end{pmatrix}"
-            },
-            {
-                "level": 3,
-                "template": "rref_interpret",
-                "latex": "\\text{연립일차방정식을 행렬로 나타내고 가우스 소거법을 이용하여 다음과 같은 행렬을 얻었을 때, } \\text{주어진 연립일차방정식의 해를 구하시오 (해가 무수히 많으면 자유변수를 } t \\text{ 로 두고, 해가 없으면 \"포기\" 버튼을 이용하시오): } \\begin{pmatrix}1 & -3 & -1\\\\0 & 1 & 4\\\\0 & 0 & 0\\end{pmatrix}\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix} = \\begin{pmatrix}-1\\\\-4\\\\0\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}- 11 t - 13\\\\- 4 t - 4\\\\t\\end{pmatrix}"
-            },
-            {
-                "level": 3,
-                "template": "mat_P_transform",
-                "latex": "\\text{행렬 } A \\text{ 를 가우스 소거법을 이용하여 단위행렬로 변형하고, } PA=I \\text{ 를 만족시키는 행렬 } P \\text{ 를 기본행렬의 곱으로 나타내시오: } A=\\begin{pmatrix}-3 & 3 & 7\\\\0 & 1 & 0\\\\-1 & -2 & 2\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}2 & -20 & -7\\\\0 & 1 & 0\\\\1 & -9 & -3\\end{pmatrix}"
-            },
-            {
-                "level": 1,
-                "template": "minor_cofactor",
-                "latex": "\\text{다음 } 3\\times 3 \\text{ 행렬 } A \\text{ 에서 원소 } a_{13} \\text{ 의 소행렬식 } M_{13} \\text{ 과 여인수 } C_{13} \\text{ 를 차례로 구하시오 (답은 } M_{13}, C_{13} \\text{ 순서의 } 2\\times 1 \\text{ 벡터로 입력하시오): } A=\\begin{pmatrix}-3 & -9 & 0\\\\-9 & 6 & 5\\\\-12 & -8 & 1\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}144\\\\144\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "det_cofactor_expand",
-                "latex": "\\text{제 1열에 대한 여인수 전개를 이용하여 다음 } 4\\times 4 \\text{ 행렬 } A \\text{ 의 행렬식 } \\det(A) \\text{ 를 계산하시오: } A=\\begin{pmatrix}-4 & 6 & 2 & 4\\\\-4 & 3 & 3 & 7\\\\3 & -3 & -4 & 5\\\\-2 & -7 & 4 & 5\\end{pmatrix}",
-                "solution": "206"
-            },
-            {
-                "level": 2,
-                "template": "det_properties",
-                "latex": "4\\times 4 \\text{ 정사각행렬 } A, B \\text{ 에 대하여 } \\det(A)=5, \\ \\det(B)=-7 \\text{ 일 때, } \\det\\left((AB)^{-1}\\right) \\text{ 의 값을 구하시오: }",
-                "solution": "-\\frac{1}{35}"
-            },
-            {
-                "level": 2,
-                "template": "adjoint_matrix",
-                "latex": "\\text{다음 행렬 } A \\text{ 의 여인수행렬을 구하고, 이를 전치하여 딸림행렬(수반행렬) } \\operatorname{adj}(A) \\text{ 를 구하시오: } A=\\begin{pmatrix}-5 & -8 & -3\\\\8 & 1 & 5\\\\-8 & 8 & -3\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}-43 & -48 & -37\\\\-16 & -9 & 1\\\\72 & 104 & 59\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "cramer_single_var",
-                "latex": "\\text{크래머 공식(Cramer's Rule)을 적용하여 다음 연립방정식의 미지수 } x \\text{ 의 값을 구하시오: } \\begin{cases}5 x + 7 y + 6 z = 15\\\\2 x + 5 y + 2 z = -14\\\\- x + 3 y + 7 z = 11\\end{cases}",
-                "solution": "7"
-            }
-        ]
-    },
-    {
-        "id": "alg_col_11",
-        "name": "행렬과 연립일차방정식 11",
-        "problems": [
-            {
-                "level": 1,
-                "template": "sys_unique",
-                "latex": "\\text{가우스 소거법을 이용하여 다음 연립일차방정식의 해를 구하시오 (첨가행렬 } [A|B] \\text{ 를 기약 행사다리꼴로 변형하시오): } \\begin{cases}- 4 y + z = -13\\\\x + 3 y + 2 z = -1\\\\- 3 x + 2 y + 5 z = -30\\end{cases}",
-                "solution": "\\begin{pmatrix}3\\\\2\\\\-5\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "mat_inverse",
-                "latex": "\\text{첨가행렬 } [A|I] \\text{ 에 기본 행연산을 적용하여 다음 행렬 } A \\text{ 의 역행렬을 구하시오: } A=\\begin{pmatrix}1 & -1\\\\1 & 0\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}0 & 1\\\\-1 & 1\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "sys_elem_matrix",
-                "latex": "\\text{연립일차방정식을 첨가행렬 } M \\text{ 로 나타내고, 기본 행연산에 대응하는 기본행렬 } E_1, E_2, \\ldots \\text{ 을 차례로 곱하는 과정을 통해 해를 구하시오: } \\begin{cases}3 x - 4 y + 5 z = -17\\\\- 4 x + 4 z = -4\\\\4 x - 4 y - 3 z = -2\\end{cases}",
-                "solution": "\\begin{pmatrix}-1\\\\1\\\\-2\\end{pmatrix}"
-            },
-            {
-                "level": 3,
-                "template": "rref_interpret",
-                "latex": "\\text{연립일차방정식을 행렬로 나타내고 가우스 소거법을 이용하여 다음과 같은 행렬을 얻었을 때, } \\text{주어진 연립일차방정식의 해를 구하시오 (해가 무수히 많으면 자유변수를 } t \\text{ 로 두고, 해가 없으면 \"포기\" 버튼을 이용하시오): } \\begin{pmatrix}1 & 2 & -3\\\\0 & 1 & 1\\\\0 & 0 & 0\\end{pmatrix}\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix} = \\begin{pmatrix}3\\\\0\\\\0\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}5 t + 3\\\\- t\\\\t\\end{pmatrix}"
-            },
-            {
-                "level": 3,
-                "template": "mat_P_transform",
-                "latex": "\\text{행렬 } A \\text{ 를 가우스 소거법을 이용하여 단위행렬로 변형하고, } PA=I \\text{ 를 만족시키는 행렬 } P \\text{ 를 기본행렬의 곱으로 나타내시오: } A=\\begin{pmatrix}-1 & 1\\\\-1 & 0\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}0 & -1\\\\1 & -1\\end{pmatrix}"
-            },
-            {
-                "level": 1,
-                "template": "minor_cofactor",
-                "latex": "\\text{다음 } 3\\times 3 \\text{ 행렬 } A \\text{ 에서 원소 } a_{11} \\text{ 의 소행렬식 } M_{11} \\text{ 과 여인수 } C_{11} \\text{ 를 차례로 구하시오 (답은 } M_{11}, C_{11} \\text{ 순서의 } 2\\times 1 \\text{ 벡터로 입력하시오): } A=\\begin{pmatrix}-8 & -10 & 6\\\\-12 & 12 & 12\\\\5 & 2 & 2\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}0\\\\0\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "det_cofactor_expand",
-                "latex": "\\text{제 2행에 대한 여인수 전개를 이용하여 다음 } 3\\times 3 \\text{ 행렬 } A \\text{ 의 행렬식 } \\det(A) \\text{ 를 계산하시오: } A=\\begin{pmatrix}2 & 5 & 0\\\\4 & 8 & 3\\\\3 & -7 & 7\\end{pmatrix}",
-                "solution": "59"
-            },
-            {
-                "level": 2,
-                "template": "det_properties",
-                "latex": "2\\times 2 \\text{ 정사각행렬 } A, B \\text{ 에 대하여 } \\det(A)=-9, \\ \\det(B)=-7 \\text{ 일 때, } \\det(-3AB^{-1}) \\text{ 의 값을 구하시오: }",
-                "solution": "\\frac{81}{7}"
-            },
-            {
-                "level": 2,
-                "template": "adjoint_matrix",
-                "latex": "\\text{다음 행렬 } A \\text{ 의 여인수행렬을 구하고, 이를 전치하여 딸림행렬(수반행렬) } \\operatorname{adj}(A) \\text{ 를 구하시오: } A=\\begin{pmatrix}-7 & 8 & 1\\\\4 & 2 & 7\\\\-8 & 0 & -1\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}-2 & 8 & 54\\\\-52 & 15 & 53\\\\16 & -64 & -46\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "cramer_single_var",
-                "latex": "\\text{크래머 공식(Cramer's Rule)을 적용하여 다음 연립방정식의 미지수 } y \\text{ 의 값을 구하시오: } \\begin{cases}- 5 x - 5 y - z = -39\\\\6 x + y + 4 z = 14\\\\- 5 y + 8 z = -38\\end{cases}",
-                "solution": "6"
-            }
-        ]
-    },
-    {
-        "id": "alg_col_12",
-        "name": "행렬과 연립일차방정식 12",
-        "problems": [
-            {
-                "level": 1,
-                "template": "sys_unique",
-                "latex": "\\text{가우스 소거법을 이용하여 다음 연립일차방정식의 해를 구하시오 (첨가행렬 } [A|B] \\text{ 를 기약 행사다리꼴로 변형하시오): } \\begin{cases}- 2 x + 4 y - z = 9\\\\3 x + 5 y - 2 z = -20\\\\5 x + 4 y = -21\\end{cases}",
-                "solution": "\\begin{pmatrix}-5\\\\1\\\\5\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "mat_inverse",
-                "latex": "\\text{첨가행렬 } [A|I] \\text{ 에 기본 행연산을 적용하여 다음 행렬 } A \\text{ 의 역행렬을 구하시오: } A=\\begin{pmatrix}-6 & 2 & 5\\\\-1 & 1 & 2\\\\-1 & 0 & 0\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}0 & 0 & -1\\\\-2 & 5 & 7\\\\1 & -2 & -4\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "sys_elem_matrix",
-                "latex": "\\text{연립일차방정식을 첨가행렬 } M \\text{ 로 나타내고, 기본 행연산에 대응하는 기본행렬 } E_1, E_2, \\ldots \\text{ 을 차례로 곱하는 과정을 통해 해를 구하시오: } \\begin{cases}- 3 x - 3 y - 3 z = -9\\\\- 3 x + 5 y + 2 z = 9\\\\- 4 x - 2 y + 3 z = -42\\end{cases}",
-                "solution": "\\begin{pmatrix}3\\\\6\\\\-6\\end{pmatrix}"
-            },
-            {
-                "level": 3,
-                "template": "rref_interpret",
-                "latex": "\\text{연립일차방정식을 행렬로 나타내고 가우스 소거법을 이용하여 다음과 같은 행렬을 얻었을 때, } \\text{주어진 연립일차방정식의 해를 구하시오 (해가 무수히 많으면 자유변수를 } t \\text{ 로 두고, 해가 없으면 \"포기\" 버튼을 이용하시오): } \\begin{pmatrix}1 & 4 & 0\\\\0 & 1 & 2\\\\0 & 0 & 0\\end{pmatrix}\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix} = \\begin{pmatrix}-3\\\\0\\\\0\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}8 t - 3\\\\- 2 t\\\\t\\end{pmatrix}"
-            },
-            {
-                "level": 3,
-                "template": "mat_P_transform",
-                "latex": "\\text{행렬 } A \\text{ 를 가우스 소거법을 이용하여 단위행렬로 변형하고, } PA=I \\text{ 를 만족시키는 행렬 } P \\text{ 를 기본행렬의 곱으로 나타내시오: } A=\\begin{pmatrix}1 & -1\\\\1 & 0\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}0 & 1\\\\-1 & 1\\end{pmatrix}"
-            },
-            {
-                "level": 1,
-                "template": "minor_cofactor",
-                "latex": "\\text{다음 } 3\\times 3 \\text{ 행렬 } A \\text{ 에서 원소 } a_{33} \\text{ 의 소행렬식 } M_{33} \\text{ 과 여인수 } C_{33} \\text{ 를 차례로 구하시오 (답은 } M_{33}, C_{33} \\text{ 순서의 } 2\\times 1 \\text{ 벡터로 입력하시오): } A=\\begin{pmatrix}-8 & -5 & 8\\\\-8 & -4 & 9\\\\-8 & -3 & 3\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}-8\\\\-8\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "det_cofactor_expand",
-                "latex": "\\text{제 1열에 대한 여인수 전개를 이용하여 다음 } 4\\times 4 \\text{ 행렬 } A \\text{ 의 행렬식 } \\det(A) \\text{ 를 계산하시오: } A=\\begin{pmatrix}7 & -7 & 4 & -1\\\\1 & -4 & 5 & -3\\\\-4 & -4 & -8 & 2\\\\-3 & 3 & -3 & -7\\end{pmatrix}",
-                "solution": "-2978"
-            },
-            {
-                "level": 2,
-                "template": "det_properties",
-                "latex": "3\\times 3 \\text{ 정사각행렬 } A, B \\text{ 에 대하여 } \\det(A)=-9, \\ \\det(B)=2 \\text{ 일 때, } \\det(A^{2}B) \\text{ 의 값을 구하시오: }",
-                "solution": "162"
-            },
-            {
-                "level": 2,
-                "template": "adjoint_matrix",
-                "latex": "\\text{다음 행렬 } A \\text{ 의 여인수행렬을 구하고, 이를 전치하여 딸림행렬(수반행렬) } \\operatorname{adj}(A) \\text{ 를 구하시오: } A=\\begin{pmatrix}1 & 7 & 8\\\\1 & 6 & -3\\\\3 & -1 & -1\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}-9 & -1 & -69\\\\-8 & -25 & 11\\\\-19 & 22 & -1\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "cramer_single_var",
-                "latex": "\\text{크래머 공식(Cramer's Rule)을 적용하여 다음 연립방정식의 미지수 } z \\text{ 의 값을 구하시오: } \\begin{cases}- 4 x + y - 5 z = 42\\\\2 x - 7 y + 6 z = -16\\\\3 x - 5 y - 5 z = 38\\end{cases}",
-                "solution": "-6"
-            }
-        ]
-    },
-    {
-        "id": "alg_col_13",
-        "name": "행렬과 연립일차방정식 13",
-        "problems": [
-            {
-                "level": 1,
-                "template": "sys_unique",
-                "latex": "\\text{가우스 소거법을 이용하여 다음 연립일차방정식의 해를 구하시오 (첨가행렬 } [A|B] \\text{ 를 기약 행사다리꼴로 변형하시오): } \\begin{cases}- 4 x + 5 y = 54\\\\- x - 2 y = -6\\end{cases}",
-                "solution": "\\begin{pmatrix}-6\\\\6\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "mat_inverse",
-                "latex": "\\text{첨가행렬 } [A|I] \\text{ 에 기본 행연산을 적용하여 다음 행렬 } A \\text{ 의 역행렬을 구하시오: } A=\\begin{pmatrix}0 & 1\\\\1 & 3\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}-3 & 1\\\\1 & 0\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "sys_elem_matrix",
-                "latex": "\\text{연립일차방정식을 첨가행렬 } M \\text{ 로 나타내고, 기본 행연산에 대응하는 기본행렬 } E_1, E_2, \\ldots \\text{ 을 차례로 곱하는 과정을 통해 해를 구하시오: } \\begin{cases}2 x - y = -14\\\\3 x + 4 y + 5 z = 2\\\\- 2 x - y + z = 0\\end{cases}",
-                "solution": "\\begin{pmatrix}-4\\\\6\\\\-2\\end{pmatrix}"
-            },
-            {
-                "level": 3,
-                "template": "rref_interpret",
-                "latex": "\\text{연립일차방정식을 행렬로 나타내고 가우스 소거법을 이용하여 다음과 같은 행렬을 얻었을 때, } \\text{주어진 연립일차방정식의 해를 구하시오 (해가 무수히 많으면 자유변수를 } t \\text{ 로 두고, 해가 없으면 \"포기\" 버튼을 이용하시오): } \\begin{pmatrix}1 & -3 & 0\\\\0 & 1 & -1\\\\0 & 0 & 0\\end{pmatrix}\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix} = \\begin{pmatrix}4\\\\-1\\\\0\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}3 t + 1\\\\t - 1\\\\t\\end{pmatrix}"
-            },
-            {
-                "level": 3,
-                "template": "mat_P_transform",
-                "latex": "\\text{행렬 } A \\text{ 를 가우스 소거법을 이용하여 단위행렬로 변형하고, } PA=I \\text{ 를 만족시키는 행렬 } P \\text{ 를 기본행렬의 곱으로 나타내시오: } A=\\begin{pmatrix}-3 & -7 & 3\\\\2 & 2 & -1\\\\1 & 0 & 0\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}0 & 0 & 1\\\\-1 & -3 & 3\\\\-2 & -7 & 8\\end{pmatrix}"
-            },
-            {
-                "level": 1,
-                "template": "minor_cofactor",
-                "latex": "\\text{다음 } 3\\times 3 \\text{ 행렬 } A \\text{ 에서 원소 } a_{33} \\text{ 의 소행렬식 } M_{33} \\text{ 과 여인수 } C_{33} \\text{ 를 차례로 구하시오 (답은 } M_{33}, C_{33} \\text{ 순서의 } 2\\times 1 \\text{ 벡터로 입력하시오): } A=\\begin{pmatrix}4 & 11 & 3\\\\-3 & -6 & -3\\\\0 & -5 & 9\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}9\\\\9\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "det_cofactor_expand",
-                "latex": "\\text{제 1열에 대한 여인수 전개를 이용하여 다음 } 3\\times 3 \\text{ 행렬 } A \\text{ 의 행렬식 } \\det(A) \\text{ 를 계산하시오: } A=\\begin{pmatrix}-4 & 8 & 4\\\\-4 & 0 & -2\\\\5 & 0 & -8\\end{pmatrix}",
-                "solution": "-336"
-            },
-            {
-                "level": 2,
-                "template": "det_properties",
-                "latex": "3\\times 3 \\text{ 정사각행렬 } A, B \\text{ 에 대하여 } \\det(A)=-9, \\ \\det(B)=-3 \\text{ 일 때, } \\det(A^{T} B^{-1}) \\text{ 의 값을 구하시오: }",
-                "solution": "3"
-            },
-            {
-                "level": 2,
-                "template": "adjoint_matrix",
-                "latex": "\\text{다음 행렬 } A \\text{ 의 여인수행렬을 구하고, 이를 전치하여 딸림행렬(수반행렬) } \\operatorname{adj}(A) \\text{ 를 구하시오: } A=\\begin{pmatrix}7 & -1 & 5\\\\2 & -7 & -2\\\\-8 & 3 & -1\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}13 & 14 & 37\\\\18 & 33 & 24\\\\-50 & -13 & -47\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "cramer_single_var",
-                "latex": "\\text{크래머 공식(Cramer's Rule)을 적용하여 다음 연립방정식의 미지수 } x \\text{ 의 값을 구하시오: } \\begin{cases}- 8 x + 5 y + z = 37\\\\3 x + 4 y - 3 z = -57\\\\2 x + z = -13\\end{cases}",
-                "solution": "-8"
-            }
-        ]
-    },
-    {
-        "id": "alg_col_14",
-        "name": "행렬과 연립일차방정식 14",
-        "problems": [
-            {
-                "level": 1,
-                "template": "sys_unique",
-                "latex": "\\text{가우스 소거법을 이용하여 다음 연립일차방정식의 해를 구하시오 (첨가행렬 } [A|B] \\text{ 를 기약 행사다리꼴로 변형하시오): } \\begin{cases}- 3 x + 5 y - z = 11\\\\- x - 3 y + 5 z = -25\\\\- 4 x + 4 y = 0\\end{cases}",
-                "solution": "\\begin{pmatrix}5\\\\5\\\\-1\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "mat_inverse",
-                "latex": "\\text{첨가행렬 } [A|I] \\text{ 에 기본 행연산을 적용하여 다음 행렬 } A \\text{ 의 역행렬을 구하시오: } A=\\begin{pmatrix}-1 & -1 & 1\\\\0 & -9 & 4\\\\0 & 2 & -1\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}-1 & -1 & -5\\\\0 & -1 & -4\\\\0 & -2 & -9\\end{pmatrix}"
-            },
-            {
-                "level": 3,
-                "template": "rref_interpret",
-                "latex": "\\text{연립일차방정식을 행렬로 나타내고 가우스 소거법을 이용하여 다음과 같은 행렬을 얻었을 때, } \\text{주어진 연립일차방정식의 해를 구하시오 (해가 무수히 많으면 자유변수를 } t \\text{ 로 두고, 해가 없으면 \"포기\" 버튼을 이용하시오): } \\begin{pmatrix}1 & 3 & -3\\\\0 & 1 & 1\\\\0 & 0 & 0\\end{pmatrix}\\begin{pmatrix}x\\\\y\\\\z\\end{pmatrix} = \\begin{pmatrix}-2\\\\4\\\\0\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}6 t - 14\\\\4 - t\\\\t\\end{pmatrix}"
-            },
-            {
-                "level": 1,
-                "template": "minor_cofactor",
-                "latex": "\\text{다음 } 3\\times 3 \\text{ 행렬 } A \\text{ 에서 원소 } a_{12} \\text{ 의 소행렬식 } M_{12} \\text{ 과 여인수 } C_{12} \\text{ 를 차례로 구하시오 (답은 } M_{12}, C_{12} \\text{ 순서의 } 2\\times 1 \\text{ 벡터로 입력하시오): } A=\\begin{pmatrix}7 & -3 & 6\\\\-2 & -1 & -6\\\\9 & 7 & -9\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}72\\\\-72\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "det_cofactor_expand",
-                "latex": "\\text{제 2행에 대한 여인수 전개를 이용하여 다음 } 3\\times 3 \\text{ 행렬 } A \\text{ 의 행렬식 } \\det(A) \\text{ 를 계산하시오: } A=\\begin{pmatrix}-4 & -6 & -1\\\\-2 & -7 & -6\\\\-3 & -8 & 6\\end{pmatrix}",
-                "solution": "185"
-            },
-            {
-                "level": 2,
-                "template": "det_properties",
-                "latex": "3\\times 3 \\text{ 정사각행렬 } A, B \\text{ 에 대하여 } \\det(A)=1, \\ \\det(B)=-2 \\text{ 일 때, } \\det\\left((AB)^{2}\\right) \\text{ 의 값을 구하시오: }",
-                "solution": "4"
-            },
-            {
-                "level": 2,
-                "template": "adjoint_matrix",
-                "latex": "\\text{다음 행렬 } A \\text{ 의 여인수행렬을 구하고, 이를 전치하여 딸림행렬(수반행렬) } \\operatorname{adj}(A) \\text{ 를 구하시오: } A=\\begin{pmatrix}0 & 7 & 1\\\\1 & 1 & 6\\\\3 & 2 & -6\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}-18 & 44 & 41\\\\24 & -3 & 1\\\\-1 & 21 & -7\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "cramer_single_var",
-                "latex": "\\text{크래머 공식(Cramer's Rule)을 적용하여 다음 연립방정식의 미지수 } y \\text{ 의 값을 구하시오: } \\begin{cases}x - 4 y - z = 3\\\\2 x - 2 y - 7 z = 43\\\\3 x - 5 z = 43\\end{cases}",
-                "solution": "2"
-            }
-        ]
-    },
-    {
-        "id": "alg_col_15",
-        "name": "행렬과 연립일차방정식 15",
-        "problems": [
-            {
-                "level": 2,
-                "template": "mat_inverse",
-                "latex": "\\text{첨가행렬 } [A|I] \\text{ 에 기본 행연산을 적용하여 다음 행렬 } A \\text{ 의 역행렬을 구하시오: } A=\\begin{pmatrix}-1 & -1 & 2\\\\-3 & 0 & 5\\\\4 & 3 & -8\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}-15 & -2 & -5\\\\-4 & 0 & -1\\\\-9 & -1 & -3\\end{pmatrix}"
-            },
-            {
-                "level": 1,
-                "template": "minor_cofactor",
-                "latex": "\\text{다음 } 3\\times 3 \\text{ 행렬 } A \\text{ 에서 원소 } a_{11} \\text{ 의 소행렬식 } M_{11} \\text{ 과 여인수 } C_{11} \\text{ 를 차례로 구하시오 (답은 } M_{11}, C_{11} \\text{ 순서의 } 2\\times 1 \\text{ 벡터로 입력하시오): } A=\\begin{pmatrix}-1 & -3 & -5\\\\10 & 4 & 6\\\\-5 & -1 & 10\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}46\\\\46\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "det_cofactor_expand",
-                "latex": "\\text{제 2행에 대한 여인수 전개를 이용하여 다음 } 3\\times 3 \\text{ 행렬 } A \\text{ 의 행렬식 } \\det(A) \\text{ 를 계산하시오: } A=\\begin{pmatrix}1 & 4 & 3\\\\1 & -6 & 3\\\\8 & 1 & 5\\end{pmatrix}",
-                "solution": "190"
-            },
-            {
-                "level": 2,
-                "template": "det_properties",
-                "latex": "3\\times 3 \\text{ 정사각행렬 } A \\text{ 에 대하여 } \\det(A)=-4 \\text{ 일 때, } \\det(2A) \\text{ 의 값을 구하시오: }",
-                "solution": "-32"
-            },
-            {
-                "level": 2,
-                "template": "adjoint_matrix",
-                "latex": "\\text{다음 행렬 } A \\text{ 의 여인수행렬을 구하고, 이를 전치하여 딸림행렬(수반행렬) } \\operatorname{adj}(A) \\text{ 를 구하시오: } A=\\begin{pmatrix}-8 & -6 & 1\\\\-5 & 7 & -2\\\\-5 & 1 & 2\\end{pmatrix}",
-                "solution": "\\begin{pmatrix}16 & 13 & 5\\\\20 & -11 & -21\\\\30 & 38 & -86\\end{pmatrix}"
-            },
-            {
-                "level": 2,
-                "template": "cramer_single_var",
-                "latex": "\\text{크래머 공식(Cramer's Rule)을 적용하여 다음 연립방정식의 미지수 } x \\text{ 의 값을 구하시오: } \\begin{cases}5 x - 3 y + 5 z = 15\\\\- 6 x + 4 y - 2 z = -40\\\\- 4 x - y + 3 z = -30\\end{cases}",
-                "solution": "5"
-            }
-        ]
-    }
-];
+(function () {
+    'use strict';
+    const t = String.raw;
+    // 참고자료/대수 1–9 단원의 예제·연습문제 흐름을 따라 재구성한 심화 문제.
+    // 개편 전 성적과 구분하기 위해 문제집/문항 ID를 모두 버전 관리한다.
+    const q = (key, level, title, latex, solution, explanation, references) => ({
+        id: `alg_v3_${key}`, template: `alg_v3_${key}`, level, title,
+        latex, solution, explanation, references, answerMode: 'exact'
+    });
+    const collection = (number, title, problems) => ({
+        id: `alg_col_v3_${number}`, name: `대수 심화 ${number} · ${title}`, problems
+    });
+    window.algebraCollections = [
+        collection(1, '연립일차방정식과 가우스 소거', [
+            q('gauss_unique', 3, '가우스 소거로 푸는 연립방정식',
+                t`\text{가우스 소거법으로 다음 연립방정식을 풀고, 해를 }(x,y,z)^T\text{인 열벡터로 입력하시오.}\quad\begin{cases}2x+y-z=0\\x-y+2z=9\\3x+2y+z=7\end{cases}`,
+                t`\begin{pmatrix}2\\-1\\3\end{pmatrix}`,
+                t`\text{둘째 식을 첫 행으로 올려 }x\text{를 소거하면 }3y-5z=-18,\ 5y-5z=-20\text{이 된다. 두 식을 빼면 }2y=-2\text{이므로 }y=-1\text{이고, 이를 대입하면 }z=3,\ x=9+y-2z=2\text{이다. 계수행렬의 행렬식이 }-10\ne0\text{이므로 해는 유일하다.}`, [1]),
+            q('gauss_jordan', 3, '기약 행사다리꼴까지 소거하기',
+                t`\text{첨가행렬을 기약 행사다리꼴로 만들어 다음 연립방정식을 풀고, 해를 }(x,y,z)^T\text{인 열벡터로 입력하시오.}\quad\begin{cases}x+y+2z=9\\2x+4y-3z=1\\3x+6y-5z=0\end{cases}`,
+                t`\begin{pmatrix}1\\2\\3\end{pmatrix}`,
+                t`R_2\leftarrow R_2-2R_1,\ R_3\leftarrow R_3-3R_1\text{로 첫 열을 소거하면 }2y-7z=-17,\ 3y-11z=-27\text{이다. 둘째 행을 2로 나누고 }R_3\leftarrow R_3-3R_2\text{를 하면 }-\tfrac12z=-\tfrac32\text{이므로 }z=3\text{이다. 이어서 선행 1 위의 성분까지 모두 소거하면 }y=2,\ x=1\text{을 바로 읽을 수 있다.}`, [1]),
+            q('echelon_read', 4, '사다리꼴 첨가행렬에서 일반해 읽기',
+                t`\text{연립방정식의 첨가행렬을 행 연산하여 다음 행사다리꼴을 얻었다. 자유변수를 }z=t\text{로 두고 일반해를 }(x,y,z)^T\text{인 열벡터로 입력하시오.}\quad\left(\begin{array}{ccc|c}1&-2&1&3\\0&1&-3&-2\\0&0&0&0\end{array}\right)`,
+                t`\begin{pmatrix}5t-1\\3t-2\\t\end{pmatrix}`,
+                t`\text{선행 1이 없는 셋째 열의 변수 }z\text{가 자유변수이다. 둘째 행에서 }y=-2+3t\text{이고, 후진대입하면 }x=3+2y-z=3+2(3t-2)-t=5t-1\text{이다. 영행은 모순이 아니므로 해가 무수히 많다.}`, [1]),
+            q('no_solution', 4, '해가 없게 되는 계수 조건',
+                t`\text{다음 연립방정식이 해를 갖지 않도록 하는 실수 }k\text{의 값을 구하시오.}\quad\begin{cases}x+y+z=2\\x+2y+3z=5\\2x+3y+kz=8\end{cases}`,
+                '4',
+                t`\text{첫째 행을 이용해 소거하면 }y+2z=3,\ y+(k-2)z=4\text{이고, 다시 빼면 }(k-4)z=1\text{이 남는다. }k\ne4\text{이면 해가 유일하고, }k=4\text{이면 }0=1\text{이라는 모순 행이 생겨 해가 없다. 즉 계수행렬의 계수는 2, 첨가행렬의 계수는 3이다.}`, [1]),
+            q('infinite', 4, '해가 무수히 많을 조건',
+                t`\text{다음 연립방정식의 해가 무수히 많도록 하는 실수 }a,b\text{에 대하여 }a+b\text{의 값을 구하시오.}\quad\begin{cases}x+2y-z=1\\2x+5y+z=4\\x+3y+az=b\end{cases}`,
+                '5',
+                t`\text{첫째 행으로 소거하면 }y+3z=2,\ y+(a+1)z=b-1\text{이고, 두 식을 빼면 }(a-2)z=b-3\text{이다. 해가 무수히 많으려면 이 행이 영행이 되어야 하므로 }a=2,\ b=3\text{이다. }a=2,\ b\ne3\text{이면 해가 없고 }a\ne2\text{이면 해가 유일하다. 따라서 }a+b=5\text{이다.}`, [1]),
+            q('curve_fit', 4, '세 점을 지나는 포물선',
+                t`\text{포물선 }y=ax^2+bx+c\text{가 세 점 }(1,2),\ (2,7),\ (-1,4)\text{를 지날 때, 계수를 }(a,b,c)^T\text{인 열벡터로 입력하시오.}`,
+                t`\begin{pmatrix}2\\-1\\1\end{pmatrix}`,
+                t`\text{세 점을 대입하면 }a+b+c=2,\ 4a+2b+c=7,\ a-b+c=4\text{인 연립일차방정식을 얻는다. 첫째 식과 셋째 식을 빼면 }2b=-2\text{이므로 }b=-1\text{이고, 남은 두 식 }a+c=3,\ 4a+c=9\text{에서 }a=2,\ c=1\text{이다.}`, [1]),
+            q('consistency_rhs', 4, '상수항이 만족해야 할 조건',
+                t`\text{다음 연립방정식이 해를 갖도록 하는 실수 }k\text{의 값을 구하시오.}\quad\begin{cases}x+y+2z=2\\x+z=k\\2x+y+3z=5\end{cases}`,
+                '3',
+                t`\text{첨가행렬에서 }R_3\leftarrow R_3-R_1-R_2\text{를 하면 계수 부분이 }(0,0,0)\text{이 되고 상수항은 }5-2-k\text{가 된다. 셋째 식의 좌변이 첫째 식과 둘째 식의 좌변의 합이므로 해가 있으려면 }3-k=0\text{, 즉 }k=3\text{이어야 한다. 이때는 자유변수가 하나 있어 해가 무수히 많다.}`, [1]),
+            q('two_free', 4, '자유변수가 두 개인 동차 연립방정식',
+                t`\text{다음 동차 연립방정식의 해 중 }x_2=1,\ x_4=1\text{인 해에 대하여 }x_1+x_3\text{의 값을 구하시오.}\quad\begin{cases}x_1+2x_2-x_3+3x_4=0\\2x_1+4x_2+x_3+3x_4=0\\x_1+2x_2+2x_3=0\end{cases}`,
+                '-3',
+                t`R_2\leftarrow R_2-2R_1,\ R_3\leftarrow R_3-R_1\text{을 하면 둘째·셋째 행이 모두 }3x_3-3x_4=0\text{이 되어 하나는 영행이 된다. 선행변수는 }x_1,x_3\text{이고 자유변수는 }x_2,x_4\text{이다. }x_3=x_4\text{를 첫째 식에 대입하면 }x_1=-2x_2-2x_4\text{이다. 따라서 }x_2=x_4=1\text{일 때 }x_1=-4,\ x_3=1\text{이고 }x_1+x_3=-3\text{이다.}`, [1]),
+            q('homog', 5, '자명하지 않은 해를 갖는 동차계',
+                t`\text{다음 동차 연립방정식이 자명하지 않은 해를 갖게 하는 음수 }k\text{에 대하여, 그 }k\text{에서의 모든 해를 }x=t\text{로 두고 }(x,y,z)^T\text{인 열벡터로 입력하시오.}\quad\begin{cases}x+y+kz=0\\x+ky+z=0\\kx+y+z=0\end{cases}`,
+                t`\begin{pmatrix}t\\t\\t\end{pmatrix}`,
+                t`\text{동차계가 비자명해를 가질 필요충분조건은 계수행렬이 가역이 아닌 것이다. 행렬식은 }-(k-1)^2(k+2)\text{이므로 }k=1\text{ 또는 }k=-2\text{이고, 음수는 }k=-2\text{이다. 이때 첫째 식과 둘째 식을 빼면 }3y-3z=0\text{, 첫째 식과 셋째 식을 빼면 }3x-3z=0\text{이므로 }x=y=z\text{이다. 따라서 해는 }(t,t,t)^T\text{이다.}`, [1, 2, 4]),
+            q('parameter_cases', 5, '세 경우로 갈리는 연립방정식',
+                t`\text{다음 연립방정식이 무수히 많은 해를 갖도록 하는 실수 }a\text{에 대하여, 일반해를 }z=t\text{로 두고 }(x,y,z)^T\text{인 열벡터로 입력하시오.}\quad\begin{cases}x+y-z=2\\x+2y+z=3\\x+y+(a^2-5)z=a\end{cases}`,
+                t`\begin{pmatrix}1+3t\\1-2t\\t\end{pmatrix}`,
+                t`R_2\leftarrow R_2-R_1,\ R_3\leftarrow R_3-R_1\text{을 하면 }y+2z=1,\ (a^2-4)z=a-2\text{가 남는다. }a=-2\text{이면 }0=-4\text{로 해가 없고, }a\ne\pm2\text{이면 해가 유일하며, }a=2\text{일 때만 셋째 행이 영행이 되어 해가 무수히 많다. 이때 }y=1-2t,\ x=2-y+z=1+3t\text{이다.}`, [1])
+        ]),
+        collection(2, '기본행렬과 역행렬', [
+            q('inverse', 3, '첨가행렬로 구하는 역행렬',
+                t`\text{첨가행렬 }(A\mid I)\text{에 행 연산을 적용하여 다음 행렬의 역행렬을 구하시오.}\quad A=\begin{pmatrix}1&2&3\\0&1&4\\5&6&0\end{pmatrix}`,
+                t`\begin{pmatrix}-24&18&5\\20&-15&-4\\-5&4&1\end{pmatrix}`,
+                t`R_3\leftarrow R_3-5R_1,\ R_3\leftarrow R_3+4R_2\text{를 하면 셋째 행이 }(0,0,1\mid -5,4,1)\text{이 된다. 이어서 }R_2\leftarrow R_2-4R_3,\ R_1\leftarrow R_1-3R_3,\ R_1\leftarrow R_1-2R_2\text{로 위쪽을 소거하면 오른쪽 블록이 }A^{-1}\text{이 된다. }AA^{-1}=I\text{로 검산할 수 있다.}`, [1, 2]),
+            q('solve_by_inverse', 3, '역행렬로 연립방정식 풀기',
+                t`A=\begin{pmatrix}1&2&3\\2&5&3\\1&0&8\end{pmatrix}\text{의 역행렬은 }A^{-1}=\begin{pmatrix}-40&16&9\\13&-5&-3\\5&-2&-1\end{pmatrix}\text{이다. 이를 이용하여 }A\mathbf x=(5,3,17)^T\text{의 해 }\mathbf x\text{를 구하시오.}`,
+                t`\begin{pmatrix}1\\-1\\2\end{pmatrix}`,
+                t`A\text{가 가역이므로 }A\mathbf x=\mathbf b\text{의 해는 유일하고 }\mathbf x=A^{-1}\mathbf b\text{이다. }(-200+48+153,\ 65-15-51,\ 25-6-17)=(1,-1,2)\text{이며, 원래 식에 대입하여 검산할 수 있다.}`, [2]),
+            q('elementary', 4, '행 연산을 기본행렬의 곱으로',
+                t`3\times3\text{ 행렬 }A\text{에 차례로 (1) 둘째 행에 3을 곱하고, (2) 첫째 행과 셋째 행을 바꾸고, (3) 셋째 행에서 첫째 행의 2배를 빼서 }B\text{를 얻었다. }B=PA\text{인 행렬 }P\text{에 대하여 }P^{-1}\text{을 구하시오.}`,
+                t`\begin{pmatrix}2&0&1\\0&\frac{1}{3}&0\\1&0&0\end{pmatrix}`,
+                t`P=E_3E_2E_1\text{이므로 }P^{-1}=E_1^{-1}E_2^{-1}E_3^{-1}\text{이다. 각 역은 연산을 되돌리는 기본행렬로 }E_1^{-1}\text{은 둘째 행에 }\tfrac13\text{을 곱하고, }E_2^{-1}=E_2\text{, }E_3^{-1}\text{은 셋째 행에 첫째 행의 2배를 더한다. 실제로 }P=\begin{pmatrix}0&0&1\\0&3&0\\1&0&-2\end{pmatrix}\text{이고 위의 곱과 }PP^{-1}=I\text{로 확인된다.}`, [1, 2]),
+            q('xa_equals_b', 4, '오른쪽에서 곱해진 행렬방정식',
+                t`\text{다음 행렬에 대하여 }XA=B\text{를 만족하는 행렬 }X\text{를 구하시오.}\quad A=\begin{pmatrix}2&1\\5&3\end{pmatrix},\ B=\begin{pmatrix}1&4\\2&-1\end{pmatrix}`,
+                t`\begin{pmatrix}-17&7\\11&-4\end{pmatrix}`,
+                t`\det A=1\text{이므로 }A^{-1}=\begin{pmatrix}3&-1\\-5&2\end{pmatrix}\text{이다. 양변의 오른쪽에 }A^{-1}\text{을 곱하면 }X=BA^{-1}\text{이다. 행렬의 곱은 교환법칙이 성립하지 않으므로 }A^{-1}B\text{와 혼동하지 않아야 한다.}`, [2]),
+            q('relation', 4, '다항식 관계로 구하는 역행렬',
+                t`\text{다음 행렬 }A\text{가 }A^2-5A+6I=O\text{를 만족함을 이용하여 }A^{-1}\text{을 구하시오.}\quad A=\begin{pmatrix}4&-1\\2&1\end{pmatrix}`,
+                t`\begin{pmatrix}\frac{1}{6}&\frac{1}{6}\\-\frac{1}{3}&\frac{2}{3}\end{pmatrix}`,
+                t`\text{관계식을 }A(5I-A)=6I\text{로 정리하면 }A\cdot\tfrac16(5I-A)=I\text{이고, }A\text{와 }5I-A\text{는 교환하므로 }A^{-1}=\tfrac16(5I-A)\text{이다. }5I-A=\begin{pmatrix}1&1\\-2&4\end{pmatrix}\text{를 6으로 나누면 답을 얻는다.}`, [2]),
+            q('scaled_inverse', 4, '스칼라배의 역행렬에서 원래 행렬 찾기',
+                t`\text{가역행렬 }A\text{가 }(7A)^{-1}=\begin{pmatrix}-3&7\\1&-2\end{pmatrix}\text{를 만족할 때 }A\text{를 구하시오.}`,
+                t`\begin{pmatrix}\frac{2}{7}&1\\\frac{1}{7}&\frac{3}{7}\end{pmatrix}`,
+                t`\text{양변의 역행렬을 취하면 }7A=\begin{pmatrix}-3&7\\1&-2\end{pmatrix}^{-1}\text{이다. 행렬식이 }6-7=-1\text{이므로 }7A=\begin{pmatrix}2&7\\1&3\end{pmatrix}\text{이고, 7로 나누면 답이다. }(kA)^{-1}=\tfrac1kA^{-1}\text{과 같은 성질이다.}`, [2]),
+            q('shifted_recover', 4, '(I+2A)의 역행렬에서 A 복원',
+                t`2\times2\text{ 행렬 }A\text{에 대하여 }(I+2A)^{-1}=\begin{pmatrix}-1&2\\4&5\end{pmatrix}\text{일 때 }A\text{를 구하시오.}`,
+                t`\begin{pmatrix}-\frac{9}{13}&\frac{1}{13}\\\frac{2}{13}&-\frac{6}{13}\end{pmatrix}`,
+                t`\text{역행렬의 역행렬은 원래 행렬이므로 }I+2A=\begin{pmatrix}-1&2\\4&5\end{pmatrix}^{-1}=-\tfrac{1}{13}\begin{pmatrix}5&-2\\-4&-1\end{pmatrix}\text{이다. 여기서 }I\text{를 빼고 2로 나누면 }A=\tfrac{1}{13}\begin{pmatrix}-9&1\\2&-6\end{pmatrix}\text{이다.}`, [2]),
+            q('elementary_recover', 4, '행 연산 결과가 I일 때 원래 행렬',
+                t`3\times3\text{ 행렬 }A\text{에 차례로 (1) 둘째 행에서 첫째 행의 2배를 빼고, (2) 첫째 행과 셋째 행을 바꾸고, (3) 셋째 행에 }\tfrac12\text{을 곱했더니 단위행렬 }I\text{가 되었다. }A\text{를 구하시오.}`,
+                t`\begin{pmatrix}0&0&2\\0&1&4\\1&0&0\end{pmatrix}`,
+                t`\text{각 연산의 기본행렬을 }E_1,E_2,E_3\text{라 하면 }E_3E_2E_1A=I\text{이므로 }A=E_1^{-1}E_2^{-1}E_3^{-1}\text{이다. 즉 }I\text{에 역연산을 반대 순서로 적용한다. 셋째 행에 2를 곱하고, 첫째·셋째 행을 바꾸고, 둘째 행에 첫째 행의 2배를 더하면 }(0,0,2),(0,1,4),(1,0,0)\text{이 차례로 행이 된다.}`, [1, 2]),
+            q('properties', 5, '역행렬과 전치의 성질',
+                t`\text{2차 정사각행렬 }A,B\text{에 대하여 }A^{-1}=\begin{pmatrix}2&1\\1&1\end{pmatrix},\ B^{-1}=\begin{pmatrix}1&0\\3&1\end{pmatrix}\text{이다. }A,B\text{를 직접 구하지 않고 }(2BA^T)^{-1}\text{을 구하시오.}`,
+                t`\begin{pmatrix}\frac{5}{2}&\frac{1}{2}\\2&\frac{1}{2}\end{pmatrix}`,
+                t`(kM)^{-1}=\tfrac1kM^{-1},\ (MN)^{-1}=N^{-1}M^{-1},\ (A^T)^{-1}=(A^{-1})^T\text{를 차례로 쓰면 }(2BA^T)^{-1}=\tfrac12(A^{-1})^TB^{-1}\text{이다. }(A^{-1})^TB^{-1}=\begin{pmatrix}2&1\\1&1\end{pmatrix}\begin{pmatrix}1&0\\3&1\end{pmatrix}=\begin{pmatrix}5&1\\4&1\end{pmatrix}\text{이므로 답은 그 절반이다.}`, [2]),
+            q('nilpotent_sum', 5, '거듭제곱이 0이 되는 행렬과 역행렬',
+                t`A=\begin{pmatrix}0&2&1\\0&0&3\\0&0&0\end{pmatrix}\text{일 때 }A^3=O\text{임을 이용하여 }(I-A)^{-1}\text{을 구하시오.}`,
+                t`\begin{pmatrix}1&2&7\\0&1&3\\0&0&1\end{pmatrix}`,
+                t`(I-A)(I+A+A^2)=I-A^3=I\text{이고 순서를 바꾼 곱도 같으므로 }(I-A)^{-1}=I+A+A^2\text{이다. }A^2\text{는 }(1,3)\text{ 성분만 }2\cdot3=6\text{이고 나머지는 0이므로 }I+A+A^2\text{의 }(1,3)\text{ 성분은 }1+6=7\text{이다. 첨가행렬로 직접 구해도 같은 결과이다.}`, [2])
+        ]),
+        collection(3, '대각·삼각·대칭행렬', [
+            q('diag_det', 3, '대각행렬의 거듭제곱과 행렬식',
+                t`A=\begin{pmatrix}1&0&0\\0&-1&0\\0&0&2\end{pmatrix}\text{일 때 }\det(A^5+A^{-1})\text{의 값을 구하시오.}`,
+                '-130',
+                t`\text{대각행렬의 거듭제곱과 역행렬은 대각성분별로 계산된다. }A^5+A^{-1}=\mathrm{diag}(1+1,\ -1-1,\ 32+\tfrac12)=\mathrm{diag}(2,-2,\tfrac{65}{2})\text{이고, 대각행렬의 행렬식은 대각성분의 곱이므로 }2\cdot(-2)\cdot\tfrac{65}{2}=-130\text{이다.}`, [3]),
+            q('diag_commutator', 3, '대각행렬을 곱하는 방향',
+                t`D=\begin{pmatrix}2&0&0\\0&-1&0\\0&0&3\end{pmatrix},\ B=\begin{pmatrix}1&2&3\\4&5&6\\7&8&9\end{pmatrix}\text{일 때 }DB-BD\text{의 }(2,3)\text{ 성분을 구하시오.}`,
+                '-24',
+                t`\text{대각행렬을 왼쪽에 곱하면 각 행에 }d_i\text{가, 오른쪽에 곱하면 각 열에 }d_j\text{가 곱해진다. 따라서 }(DB-BD)_{ij}=(d_i-d_j)b_{ij}\text{이고, }(2,3)\text{ 성분은 }(-1-3)\cdot6=-24\text{이다.}`, [3]),
+            q('triangular_inverse', 4, '상삼각행렬의 역행렬',
+                t`\text{다음 상삼각행렬의 역행렬을 구하시오.}\quad A=\begin{pmatrix}1&2&3\\0&1&4\\0&0&1\end{pmatrix}`,
+                t`\begin{pmatrix}1&-2&5\\0&1&-4\\0&0&1\end{pmatrix}`,
+                t`\text{대각성분이 모두 0이 아니므로 가역이고, 역행렬도 대각성분이 1인 상삼각행렬이다. }A^{-1}=\begin{pmatrix}1&p&r\\0&1&s\\0&0&1\end{pmatrix}\text{로 두고 }AA^{-1}=I\text{를 비교하면 }p+2=0,\ s+4=0,\ r+2s+3=0\text{이므로 }p=-2,\ s=-4,\ r=5\text{이다.}`, [3]),
+            q('symmetric_product', 4, '대칭행렬의 곱이 대칭일 조건',
+                t`\text{대칭행렬 }A=\begin{pmatrix}1&2\\2&3\end{pmatrix},\ B=\begin{pmatrix}k&1\\1&2\end{pmatrix}\text{에 대하여 }AB\text{가 대칭행렬이 되도록 하는 실수 }k\text{를 구하시오.}`,
+                '1',
+                t`\text{대칭행렬 }A,B\text{에 대해 }(AB)^T=B^TA^T=BA\text{이므로 }AB\text{가 대칭일 필요충분조건은 }AB=BA\text{이다. }AB=\begin{pmatrix}k+2&5\\2k+3&8\end{pmatrix}\text{에서 }5=2k+3\text{이므로 }k=1\text{이다.}`, [3]),
+            q('symmetric_entries', 4, '대칭 조건으로 미지수 결정',
+                t`\text{다음 행렬이 대칭행렬일 때 }\det A\text{의 값을 구하시오.}\quad A=\begin{pmatrix}1&x-1&2\\3&2&y+1\\z&4&3\end{pmatrix}`,
+                '3',
+                t`a_{ij}=a_{ji}\text{에서 }x-1=3,\ y+1=4,\ z=2\text{이므로 }A=\begin{pmatrix}1&3&2\\3&2&4\\2&4&3\end{pmatrix}\text{이다. 첫째 행으로 전개하면 }1(6-16)-3(9-8)+2(12-4)=-10-3+16=3\text{이다.}`, [3, 4]),
+            q('sym_decompose', 4, '대칭 성분과 반대칭 성분',
+                t`\text{행렬 }A=\begin{pmatrix}1&4&-2\\0&3&5\\6&1&2\end{pmatrix}\text{를 대칭행렬 }S\text{와 반대칭행렬 }K\text{의 합 }A=S+K\text{로 나타낼 때 }S\text{를 구하시오.}`,
+                t`\begin{pmatrix}1&2&2\\2&3&3\\2&3&2\end{pmatrix}`,
+                t`A^T=S-K\text{이므로 }S=\tfrac12(A+A^T)\text{, }K=\tfrac12(A-A^T)\text{이다. 성분별로 }s_{ij}=\tfrac12(a_{ij}+a_{ji})\text{를 계산하면 }s_{12}=\tfrac12(4+0)=2,\ s_{13}=\tfrac12(-2+6)=2,\ s_{23}=\tfrac12(5+1)=3\text{이고 대각성분은 그대로이다.}`, [3]),
+            q('triangular_singular', 4, '삼각행렬이 가역이 아닐 조건',
+                t`\text{다음 행렬이 가역이 아니게 되는 서로 다른 모든 실수 }k\text{의 합을 구하시오.}\quad A=\begin{pmatrix}k-1&2&3\\0&k+2&4\\0&0&k^2-4\end{pmatrix}`,
+                '1',
+                t`\text{정리 1.3.1 (c)에 의해 삼각행렬은 주대각성분이 모두 0이 아닐 때에만 가역이다. 따라서 }k-1,\ k+2,\ k^2-4\text{ 중 하나가 0인 }k=1,-2,2\text{에서 가역이 아니다. 중복된 }-2\text{를 한 번만 세면 합은 }1\text{이다.}`, [3]),
+            q('gram_inverse', 4, 'AA^T의 역행렬',
+                t`A=\begin{pmatrix}1&2&0\\0&1&1\end{pmatrix}\text{일 때 }AA^T\text{는 대칭행렬이다. }(AA^T)^{-1}\text{을 구하시오.}`,
+                t`\begin{pmatrix}\frac{1}{3}&-\frac{1}{3}\\-\frac{1}{3}&\frac{5}{6}\end{pmatrix}`,
+                t`AA^T=\begin{pmatrix}5&2\\2&2\end{pmatrix}\text{이고 }(AA^T)^T=AA^T\text{이므로 대칭이다. 행렬식이 }10-4=6\text{이므로 역행렬은 }\tfrac16\begin{pmatrix}2&-2\\-2&5\end{pmatrix}\text{이다. 정리 1.3.4대로 가역 대칭행렬의 역행렬도 대칭이다.}`, [3]),
+            q('triangular_power', 5, '상삼각행렬의 거듭제곱',
+                t`A=\begin{pmatrix}2&1\\0&1\end{pmatrix}\text{일 때 }A^{10}\text{의 }(1,2)\text{ 성분을 구하시오.}`,
+                '1023',
+                t`\text{상삼각행렬의 곱은 상삼각행렬이고 대각성분은 대각성분끼리의 곱이므로 }A^n=\begin{pmatrix}2^n&c_n\\0&1\end{pmatrix}\text{이다. }A^{n+1}=A^nA\text{에서 }c_{n+1}=2^n+c_n,\ c_1=1\text{이므로 }c_n=2^n-1\text{이다. 따라서 }c_{10}=1023\text{이다.}`, [3]),
+            q('unipotent_power', 5, '대각성분이 1인 삼각행렬의 거듭제곱',
+                t`A=\begin{pmatrix}1&2&3\\0&1&4\\0&0&1\end{pmatrix}\text{일 때 }A^5\text{의 }(1,3)\text{ 성분을 구하시오.}`,
+                '95',
+                t`A=I+N\text{, }N=\begin{pmatrix}0&2&3\\0&0&4\\0&0&0\end{pmatrix}\text{로 두면 }N^2\text{는 }(1,3)\text{ 성분만 8이고 }N^3=O\text{이다. }I\text{와 }N\text{은 교환하므로 이항정리로 }A^5=I+5N+10N^2\text{이고, }(1,3)\text{ 성분은 }5\cdot3+10\cdot8=95\text{이다.}`, [3])
+        ]),
+        collection(4, '행렬식의 계산', [
+            q('cofactor_expand', 3, '0이 많은 열로 여인수 전개',
+                t`\text{다음 행렬식의 값을 구하시오.}\quad\begin{vmatrix}2&0&1&3\\1&0&-1&2\\3&4&2&1\\0&0&5&-1\end{vmatrix}`,
+                '8',
+                t`\text{둘째 열에서 0이 아닌 성분은 }a_{32}=4\text{뿐이므로 이 열로 전개하면 }4\cdot(-1)^{3+2}\begin{vmatrix}2&1&3\\1&-1&2\\0&5&-1\end{vmatrix}\text{이다. 3차 행렬식은 }2(1-10)-1(-1-0)+3(5-0)=-2\text{이므로 값은 }-4\cdot(-2)=8\text{이다.}`, [4]),
+            q('sarrus', 3, '3차 행렬식의 기본 계산',
+                t`\text{다음 행렬식의 값을 구하시오.}\quad\begin{vmatrix}1&2&3\\-4&5&6\\7&-8&9\end{vmatrix}`,
+                '240',
+                t`\text{첫째 행으로 여인수 전개하면 }1(45+48)-2(-36-42)+3(32-35)=93+156-9=240\text{이다. 사루스 방법으로 계산해도 같은 값이 나온다.}`, [3, 4]),
+            q('proportional_rows', 4, '거의 비례하는 두 행',
+                t`\text{다음 행렬식의 값을 구하시오.}\quad\begin{vmatrix}3&-1&4&-5\\6&-2&5&2\\5&8&1&4\\-9&3&-12&16\end{vmatrix}`,
+                '87',
+                t`\text{넷째 행의 앞 세 성분은 첫째 행의 }-3\text{배이다. }R_4\leftarrow R_4+3R_1\text{은 행렬식을 바꾸지 않고 넷째 행을 }(0,0,0,1)\text{로 만든다. 넷째 행으로 전개하면 }\begin{vmatrix}3&-1&4\\6&-2&5\\5&8&1\end{vmatrix}=3(-42)+1(-19)+4(58)=87\text{이다.}`, [4, 5]),
+            q('column_ops', 4, '열 연산으로 미지수 결정',
+                t`\text{다음 행렬식의 값이 160이 되도록 하는 실수 }k\text{를 구하시오.}\quad\begin{vmatrix}1&0&0&2\\3&5&0&6\\0&2&4&0\\4&1&3&k\end{vmatrix}`,
+                '16',
+                t`C_4\leftarrow C_4-2C_1\text{을 하면 넷째 열이 }(0,0,0,k-8)^T\text{가 되어 하삼각행렬이 된다. 따라서 행렬식은 }1\cdot5\cdot4\cdot(k-8)=20(k-8)\text{이고, }20(k-8)=160\text{에서 }k=16\text{이다.}`, [4, 5]),
+            q('row_rules', 4, '행 연산 규칙의 조합',
+                t`3\times3\text{ 행렬 }A\text{의 행이 차례로 }\mathbf r_1,\mathbf r_2,\mathbf r_3\text{이고 }\det A=5\text{이다. 행이 차례로 }\mathbf r_3,\ 2\mathbf r_2,\ \mathbf r_1-4\mathbf r_3\text{인 행렬 }B\text{의 행렬식을 구하시오.}`,
+                '-10',
+                t`\text{셋째 행에 첫째 행의 4배를 더하는 연산은 행렬식을 바꾸지 않으므로 행이 }\mathbf r_3,2\mathbf r_2,\mathbf r_1\text{인 행렬과 같다. 한 행에 2를 곱하면 2배, 두 행을 바꾸면 부호가 바뀌므로 }\det B=2\cdot(-1)\cdot5=-10\text{이다.}`, [4, 5]),
+            q('triangularize', 4, '하삼각꼴을 만드는 열 소거',
+                t`\text{다음 행렬식의 값을 구하시오.}\quad\begin{vmatrix}1&0&0&3\\2&7&0&6\\0&6&3&0\\7&3&1&-5\end{vmatrix}`,
+                '-546',
+                t`C_4\leftarrow C_4-3C_1\text{을 하면 넷째 열이 }(0,0,0,-26)^T\text{가 되어 하삼각행렬이 된다. 이 연산은 행렬식을 바꾸지 않으므로 값은 대각성분의 곱 }1\cdot7\cdot3\cdot(-26)=-546\text{이다.}`, [4, 5]),
+            q('block_triangular', 4, '블록 삼각 구조의 행렬식',
+                t`\text{다음 행렬식의 값을 구하시오.}\quad\begin{vmatrix}1&2&0&0\\3&4&0&0\\5&6&2&1\\7&8&1&3\end{vmatrix}`,
+                '-10',
+                t`\text{첫째 행으로 전개하면 0이 아닌 항은 }1\cdot\begin{vmatrix}4&0&0\\6&2&1\\8&1&3\end{vmatrix}-2\cdot\begin{vmatrix}3&0&0\\5&2&1\\7&1&3\end{vmatrix}\text{뿐이다. 각각 다시 첫째 행으로 전개하면 }4\cdot5-2\cdot3\cdot5=-10\text{이다. 결과는 }\begin{vmatrix}1&2\\3&4\end{vmatrix}\cdot\begin{vmatrix}2&1\\1&3\end{vmatrix}=(-2)\cdot5\text{와 같다.}`, [4]),
+            q('vandermonde', 4, '거듭제곱 행렬식이 0이 될 조건',
+                t`\text{다음 행렬식이 0이 되는 모든 실수 }x\text{의 합을 구하시오.}\quad\begin{vmatrix}1&1&1\\1&2&x\\1&4&x^2\end{vmatrix}`,
+                '3',
+                t`C_2\leftarrow C_2-C_1,\ C_3\leftarrow C_3-C_1\text{을 하면 첫째 행이 }(1,0,0)\text{이 되어 }\begin{vmatrix}1&x-1\\3&x^2-1\end{vmatrix}=(x-1)(x+1-3)=(x-1)(x-2)\text{이다. 따라서 }x=1,2\text{이고 합은 3이다. 두 열이 같아지는 }x\text{가 근이 된다는 점과 일치한다.}`, [4, 5]),
+            q('constant_matrix', 5, '대각만 다른 행렬식의 인수분해',
+                t`\text{다음 행렬식이 0이 되는 실수 }x\text{ 중 음수인 값을 구하시오.}\quad\begin{vmatrix}x&1&1&1\\1&x&1&1\\1&1&x&1\\1&1&1&x\end{vmatrix}`,
+                '-3',
+                t`\text{모든 열을 첫째 열에 더하면 첫째 열의 성분이 모두 }x+3\text{이 되므로 이를 묶어낸다. 이어서 각 행에서 첫째 행을 빼면 대각성분이 }x-1\text{인 상삼각행렬이 되어 행렬식은 }(x+3)(x-1)^3\text{이다. 따라서 근은 }x=1,-3\text{이고 음수는 }-3\text{이다.}`, [4, 5]),
+            q('tridiagonal', 5, '삼중대각 행렬식의 점화식',
+                t`6\times6\text{ 행렬 }T_6\text{의 대각성분은 모두 3, 바로 위와 아래의 성분은 모두 1, 나머지는 0이다. }\det T_6\text{를 구하시오.}`,
+                '377',
+                t`n\text{차 행렬식을 }D_n\text{이라 하고 첫째 행으로 전개한 뒤, 둘째 항을 다시 첫째 열로 전개하면 }D_n=3D_{n-1}-D_{n-2}\text{이다. }D_1=3,\ D_2=8\text{에서 }D_3=21,\ D_4=55,\ D_5=144,\ D_6=377\text{이다.}`, [4])
+        ]),
+        collection(5, '행렬식의 성질과 딸림행렬', [
+            q('det_product', 3, '곱·역·전치의 행렬식',
+                t`3\times3\text{ 행렬 }A,B\text{에 대하여 }\det A=2,\ \det B=-3\text{일 때 }\det(2A^{-1}B^T)\text{의 값을 구하시오.}`,
+                '-12',
+                t`n\text{차 행렬에서 }\det(kM)=k^n\det M\text{이므로 }\det(2A^{-1}B^T)=2^3\cdot\det(A^{-1})\cdot\det(B^T)=8\cdot\tfrac12\cdot(-3)=-12\text{이다.}`, [5]),
+            q('cramer', 3, '크래머 공식으로 한 미지수만 구하기',
+                t`\text{크래머 공식을 이용하여 다음 연립방정식의 해에서 }x_2\text{의 값을 구하시오.}\quad\begin{cases}x_1+2x_3=6\\-3x_1+4x_2+6x_3=30\\-x_1-2x_2+3x_3=8\end{cases}`,
+                t`\frac{18}{11}`,
+                t`x_2=\det A_2/\det A\text{이고 }A_2\text{는 계수행렬의 둘째 열을 상수항으로 바꾼 행렬이다. }\det A=44,\ \det A_2=\begin{vmatrix}1&6&2\\-3&30&6\\-1&8&3\end{vmatrix}=72\text{이므로 }x_2=72/44=18/11\text{이다.}`, [5]),
+            q('inverse_entry', 4, '여인수로 구하는 역행렬의 한 성분',
+                t`\text{다음 행렬 }A\text{에 대하여 }A^{-1}\text{의 }(2,3)\text{ 성분을 구하시오.}\quad A=\begin{pmatrix}3&2&-1\\1&6&3\\2&-4&0\end{pmatrix}`,
+                t`-\frac{5}{32}`,
+                t`A^{-1}=\tfrac{1}{\det A}\mathrm{adj}A\text{이고 딸림행렬은 여인수행렬의 전치이므로 }(A^{-1})_{23}=C_{32}/\det A\text{이다. }\det A=64\text{이고 }C_{32}=(-1)^{3+2}\begin{vmatrix}3&-1\\1&3\end{vmatrix}=-10\text{이므로 답은 }-10/64=-5/32\text{이다. 첨자를 바꿔 }C_{23}\text{을 쓰지 않도록 주의한다.}`, [5]),
+            q('singular_param', 4, '가역이 아니게 되는 매개변수',
+                t`\text{다음 행렬이 가역행렬이 아니게 되는 모든 실수 }k\text{의 합을 구하시오.}\quad A=\begin{pmatrix}1&k&2\\k&4&4\\1&2&k\end{pmatrix}`,
+                '-2',
+                t`A\text{가 가역이 아닐 필요충분조건은 }\det A=0\text{이다. 첫째 행으로 전개하면 }\det A=(4k-8)-k(k^2-4)+2(2k-4)=-(k-2)^2(k+4)\text{이므로 }k=2,-4\text{이다. 서로 다른 값의 합은 }-2\text{이다.}`, [4, 5]),
+            q('recover_from_adj', 4, '딸림행렬에서 원래 행렬 복원',
+                t`3\times3\text{ 행렬 }A\text{에 대하여 }\det A>0\text{이고 }\mathrm{adj}\,A=\begin{pmatrix}3&-2&1\\-2&4&-2\\1&-2&3\end{pmatrix}\text{이다. 행렬 }A\text{를 구하시오.}`,
+                t`\begin{pmatrix}2&1&0\\1&2&1\\0&1&2\end{pmatrix}`,
+                t`A\,\mathrm{adj}A=(\det A)I\text{에서 }\det(\mathrm{adj}A)=(\det A)^{3-1}\text{이다. }\det(\mathrm{adj}A)=16\text{이고 }\det A>0\text{이므로 }\det A=4\text{이다. 따라서 }A=(\det A)(\mathrm{adj}A)^{-1}=4(\mathrm{adj}A)^{-1}\text{을 계산하면 답을 얻는다.}`, [5]),
+            q('alien_cofactor', 4, '다른 행의 여인수와 곱하기',
+                t`A=\begin{pmatrix}3&1&-4\\2&5&6\\1&4&8\end{pmatrix}\text{의 }(i,j)\text{ 여인수를 }C_{ij}\text{라 할 때 }C_{11}+2C_{12}+3C_{13}\text{의 값을 구하시오.}`,
+                '5',
+                t`C_{1j}\text{는 첫째 행을 지우고 계산하므로 첫째 행의 값과 무관하다. 따라서 이 식은 첫째 행을 }(1,2,3)\text{으로 바꾼 행렬의 첫째 행 전개이고, }\begin{vmatrix}1&2&3\\2&5&6\\1&4&8\end{vmatrix}=16-20+9=5\text{이다. 같은 원리로 }a_{21}C_{11}+a_{22}C_{12}+a_{23}C_{13}=0\text{이 된다.}`, [5]),
+            q('adj_transpose', 4, '딸림행렬과 역행렬을 함께 쓰는 행렬식',
+                t`3\times3\text{ 행렬 }A\text{에 대하여 }\det A=2\text{일 때 }\det\big(A^{-1}(\mathrm{adj}\,A)^T\big)\text{의 값을 구하시오.}`,
+                '2',
+                t`\det(\mathrm{adj}A)=(\det A)^{2}=4\text{이고 전치는 행렬식을 바꾸지 않는다. 따라서 }\det(A^{-1})\det((\mathrm{adj}A)^T)=\tfrac12\cdot4=2\text{이다.}`, [5]),
+            q('product_invertible', 4, '곱이 가역이 아니게 되는 조건',
+                t`A=\begin{pmatrix}1&k\\2&3\end{pmatrix},\ B=\begin{pmatrix}k&1\\1&1\end{pmatrix}\text{에 대하여 }AB\text{가 가역이 아니게 되는 모든 실수 }k\text{의 합을 구하시오.}`,
+                t`\frac{5}{2}`,
+                t`\det(AB)=\det A\det B=(3-2k)(k-1)\text{이다. 곱의 행렬식이 0이 되려면 한 인수가 0이어야 하므로 }k=\tfrac32\text{ 또는 }k=1\text{이고, 합은 }\tfrac52\text{이다.}`, [5]),
+            q('adj_scaled', 5, '스칼라배의 딸림행렬',
+                t`3\times3\text{ 행렬 }A\text{에 대하여 }\det A=-2\text{일 때 }\det\big(\mathrm{adj}(2A)\big)\text{의 값을 구하시오.}`,
+                '256',
+                t`n\text{차 가역행렬 }M\text{에 대해 }\det(\mathrm{adj}M)=(\det M)^{n-1}\text{이다. }\det(2A)=2^3\cdot(-2)=-16\text{이므로 }\det(\mathrm{adj}(2A))=(-16)^2=256\text{이다. 또는 }\mathrm{adj}(2A)=2^{2}\mathrm{adj}A\text{를 이용해 }4^3\cdot(-2)^2=256\text{으로 구할 수도 있다.}`, [5]),
+            q('inverse_plus_adj', 5, '역행렬과 딸림행렬의 합',
+                t`3\times3\text{ 행렬 }A\text{에 대하여 }\det A=2\text{일 때 }\det(A^{-1}+\mathrm{adj}\,A)\text{의 값을 구하시오.}`,
+                t`\frac{27}{2}`,
+                t`\mathrm{adj}A=(\det A)A^{-1}=2A^{-1}\text{이므로 }A^{-1}+\mathrm{adj}A=3A^{-1}\text{이다. 따라서 행렬식은 }3^3\det(A^{-1})=27\cdot\tfrac12=\tfrac{27}{2}\text{이다.}`, [5])
+        ]),
+        collection(6, '일차독립·기저·좌표', [
+            q('dependence', 3, '일차종속이 되는 조건',
+                t`\text{세 벡터 }(1,2,3),\ (5,6,1),\ (3,2,k)\text{가 일차종속이 되도록 하는 실수 }k\text{를 구하시오.}`,
+                '-5',
+                t`\mathbb R^3\text{의 세 벡터가 일차종속일 필요충분조건은 이들을 열로 하는 행렬의 행렬식이 0인 것이다. }\begin{vmatrix}1&5&3\\2&6&2\\3&1&k\end{vmatrix}=-4k-20\text{이므로 }k=-5\text{이다. 이때 }(3,2,-5)=(5,6,1)-2(1,2,3)\text{처럼 하나가 나머지의 일차결합이 된다.}`, [6, 7]),
+            q('combination', 3, '일차결합의 계수',
+                t`\mathbf w=(9,2,7)\text{을 }\mathbf u=(1,2,-1),\ \mathbf v=(6,4,2)\text{의 일차결합 }\mathbf w=k_1\mathbf u+k_2\mathbf v\text{로 나타낼 때 }(k_1,k_2)^T\text{를 구하시오.}`,
+                t`\begin{pmatrix}-3\\2\end{pmatrix}`,
+                t`\text{성분을 비교하면 }k_1+6k_2=9,\ 2k_1+4k_2=2,\ -k_1+2k_2=7\text{이다. 앞의 두 식에서 }k_1=-3,\ k_2=2\text{이고 셋째 식도 성립하므로 }\mathbf w\text{는 }\mathbf u,\mathbf v\text{가 생성하는 공간에 속한다.}`, [6]),
+            q('coordinates', 4, '기저에 대한 좌표벡터',
+                t`\mathbb R^3\text{의 기저 }B=\{(1,2,1),(2,9,0),(3,3,4)\}\text{에 대한 }\mathbf v=(1,10,-2)\text{의 좌표벡터 }[\mathbf v]_B\text{를 구하시오.}`,
+                t`\begin{pmatrix}2\\1\\-1\end{pmatrix}`,
+                t`c_1(1,2,1)+c_2(2,9,0)+c_3(3,3,4)=(1,10,-2)\text{에서 }c_1+2c_2+3c_3=1,\ 2c_1+9c_2+3c_3=10,\ c_1+4c_3=-2\text{이다. 소거하면 }c_1=2,\ c_2=1,\ c_3=-1\text{이고, 기저이므로 이 표현은 유일하다.}`, [7, 8]),
+            q('nullspace_dim', 4, '해공간의 차원',
+                t`\text{다음 행렬 }A\text{에 대하여 }A\mathbf x=\mathbf 0\text{의 해공간의 차원을 구하시오.}\quad A=\begin{pmatrix}1&2&0&1&-1\\2&4&1&3&0\\1&2&1&2&1\end{pmatrix}`,
+                '3',
+                t`R_2\leftarrow R_2-2R_1,\ R_3\leftarrow R_3-R_1\text{을 하면 둘째·셋째 행이 모두 }(0,0,1,1,2)\text{가 되어 하나는 영행이 된다. 선행변수는 }x_1,x_3\text{의 두 개이고 자유변수는 }x_2,x_4,x_5\text{의 세 개이므로 해공간의 차원은 }5-2=3\text{이다.}`, [7, 8]),
+            q('transition', 4, '기저 변환 행렬',
+                t`\mathbb R^2\text{의 두 기저 }B=\{(1,2),(1,3)\},\ B'=\{(1,1),(2,1)\}\text{에 대하여 }B'\text{-좌표를 }B\text{-좌표로 바꾸는 전이행렬 }P_{B'\to B}\text{를 구하시오.}`,
+                t`\begin{pmatrix}2&5\\-1&-3\end{pmatrix}`,
+                t`P_{B'\to B}\text{의 열은 }B'\text{의 각 벡터를 }B\text{로 나타낸 좌표이다. }(1,1)=2(1,2)-(1,3),\ (2,1)=5(1,2)-3(1,3)\text{이므로 열이 }(2,-1)^T,(5,-3)^T\text{이다. 첨가행렬 }(B\mid B')\text{를 기약 행사다리꼴로 만들어도 같은 결과를 얻는다.}`, [9]),
+            q('span_membership', 4, '생성공간에 속할 조건',
+                t`\text{벡터 }(1,k,4)\text{가 }\mathrm{span}\{(1,1,2),(1,0,1),(2,1,3)\}\text{에 속하도록 하는 실수 }k\text{를 구하시오.}`,
+                '3',
+                t`(2,1,3)=(1,1,2)+(1,0,1)\text{이므로 생성공간은 앞의 두 벡터가 생성하는 평면이다. }c_1(1,1,2)+c_2(1,0,1)=(a,b,c)\text{가 해를 가질 조건을 소거로 구하면 }a+b-c=0\text{이다. }1+k-4=0\text{에서 }k=3\text{이다.}`, [6, 8]),
+            q('poly_coordinates', 4, '다항식 기저에 대한 좌표',
+                t`\text{이차 이하 다항식 공간의 기저 }B=\{1+x,\ x+x^2,\ 1+x^2\}\text{에 대하여 }p(x)=5+3x+4x^2\text{의 좌표벡터 }[p]_B\text{를 구하시오.}`,
+                t`\begin{pmatrix}2\\1\\3\end{pmatrix}`,
+                t`a(1+x)+b(x+x^2)+c(1+x^2)=5+3x+4x^2\text{에서 상수항, }x\text{, }x^2\text{의 계수를 비교하면 }a+c=5,\ a+b=3,\ b+c=4\text{이다. 세 식을 더하면 }a+b+c=6\text{이므로 }a=2,\ b=1,\ c=3\text{이다.}`, [7]),
+            q('coordinate_change', 4, '전이행렬로 좌표 바꾸기',
+                t`\mathbb R^2\text{의 기저 }B=\{(1,2),(1,3)\},\ B'=\{(1,1),(2,1)\}\text{에 대하여 }[\mathbf v]_B=(3,-1)^T\text{일 때 }[\mathbf v]_{B'}\text{를 구하시오.}`,
+                t`\begin{pmatrix}4\\-1\end{pmatrix}`,
+                t`\mathbf v=3(1,2)-(1,3)=(2,3)\text{이다. }a(1,1)+b(2,1)=(2,3)\text{에서 }a+2b=2,\ a+b=3\text{이므로 }b=-1,\ a=4\text{이다. 전이행렬 }P_{B\to B'}=P_{B'\to B}^{-1}\text{을 }(3,-1)^T\text{에 곱해도 같은 결과이다.}`, [8, 9]),
+            q('span_dim', 5, '생성 공간의 차원',
+                t`\text{네 벡터 }(1,2,0,1),\ (2,4,1,1),\ (0,0,1,-1),\ (3,6,2,1)\text{이 생성하는 }\mathbb R^4\text{의 부분공간의 차원을 구하시오.}`,
+                '2',
+                t`\text{벡터들을 행으로 놓고 소거하면 }(2,4,1,1)-2(1,2,0,1)=(0,0,1,-1)\text{이고 }(3,6,2,1)-3(1,2,0,1)=(0,0,2,-2)\text{이다. 남는 0이 아닌 행은 }(1,2,0,1),(0,0,1,-1)\text{두 개뿐이므로 이것이 기저이고 차원은 2이다. 벡터의 개수 4를 차원으로 착각하지 않아야 한다.}`, [6, 8]),
+            q('shifted_basis', 5, '이동된 다항식 기저의 좌표',
+                t`\text{이차 이하 다항식 공간의 기저 }B'=\{1,\ 1+x,\ (1+x)^2\}\text{에 대하여 }p(x)=3-x+2x^2\text{의 좌표벡터 }[p]_{B'}\text{를 구하시오.}`,
+                t`\begin{pmatrix}6\\-5\\2\end{pmatrix}`,
+                t`\text{표준기저 }\{1,x,x^2\}\text{에 대한 }B'\text{의 좌표를 열로 놓으면 }P=\begin{pmatrix}1&1&1\\0&1&2\\0&0&1\end{pmatrix}\text{이고 }[p]_{B'}=P^{-1}(3,-1,2)^T\text{이다. 또는 }u=1+x\text{로 두고 }x=u-1\text{을 대입하면 }3-(u-1)+2(u-1)^2=6-5u+2u^2\text{이다.}`, [9])
+        ])
+    ];
+}());

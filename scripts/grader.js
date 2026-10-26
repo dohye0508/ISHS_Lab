@@ -39,8 +39,9 @@ self.onmessage = async function(e) {
             self.pyodide.globals.set("py_u", e.data.userTex);
             self.pyodide.globals.set("py_s", e.data.solTex);
             self.pyodide.globals.set("py_strict", e.data.strictC);
+            self.pyodide.globals.set("py_exact", Boolean(e.data.exactAnswer));
             
-            const res = await self.pyodide.runPythonAsync("grade(py_u, py_s, py_strict)");
+            const res = await self.pyodide.runPythonAsync("grade(py_u, py_s, py_strict, py_exact)");
             self.postMessage({ type: 'result', content: res });
         } catch(err) {
             self.postMessage({ type: 'result', content: "Runtime Error: " + err });
@@ -139,6 +140,15 @@ def preprocess_for_sympy_parser(tex):
     s = re.sub(r"(?:\\\\text\\{csch\\}|\\\\operatorname\\{csch\\}|\\\\mathrm\\{csch\\}|(?<!\\\\)csch)\\s*\\(([^()]*)\\)", r"\\\\frac{1}{\\\\sinh(\\1)}", s)
     s = re.sub(r"(?:\\\\text\\{coth\\}|\\\\operatorname\\{coth\\}|\\\\mathrm\\{coth\\}|(?<!\\\\)coth)\\s*\\(([^()]*)\\)", r"\\\\frac{\\\\cosh(\\1)}{\\\\sinh(\\1)}", s)
 
+    # Also accept a simple unparenthesized argument: sech x, \text{sech} x.
+    for fn, numerator, denominator in [('sech', '1', 'cosh'), ('csch', '1', 'sinh'), ('coth', None, 'sinh')]:
+        pattern = r"(?:\\\\(?:text|operatorname|mathrm)\\{" + fn + r"\\}|\\\\" + fn + r"\\b|(?<![a-zA-Z\\\\])" + fn + r"\\b)\\s*([a-zA-Z]|[0-9]+)(?![a-zA-Z0-9])"
+        def reciprocal(match):
+            arg = match.group(1)
+            top = numerator if numerator else r"\\cosh(" + arg + ")"
+            return r"\\frac{" + top + "}{" + chr(92) + denominator + "(" + arg + ")}"
+        s = re.sub(pattern, reciprocal, s)
+
     # Cleanup remaining wrappers
     s = s.replace(r"\\text", "")
     s = s.replace(r"\\operatorname", "")
@@ -148,6 +158,8 @@ def preprocess_for_sympy_parser(tex):
     # MathLive or replacements might leave layers of braces that confuse parse_latex
     s = re.sub(r"\\{+(\\\\(?:sec|csc|cot|sinh|cosh|tanh)\\^\\{-1\\})\\}+", r"\\1", s)
 
+    # Pi times parentheses is multiplication, not an undefined function pi(...).
+    s = re.sub(r"\\\\pi\\s*\\(", r"\\\\pi \\\\cdot (", s)
     # 6. x(...) -> x \\cdot (...) to prevent Function interpretation
     # Only target 'x' to avoid breaking \\ln, \\cos, etc.
     # Case A: x(
@@ -268,7 +280,7 @@ def grade_matrix_or_special(u_in, s_in):
 
     return None
 
-def grade(u_in, s_in, strict_c=False):
+def grade(u_in, s_in, strict_c=False, exact_answer=False):
     global result_log
     result_log = []
     
@@ -373,6 +385,13 @@ def grade(u_in, s_in, strict_c=False):
                 is_correct_math = abs(num_diff) < 1e-4
             except Exception:
                 pass
+        elif exact_answer:
+            try:
+                is_correct_math = sympy.simplify(u_expr - s_expr) == 0
+                if not is_correct_math and len(diffs) >= 3:
+                    is_correct_math = all(abs(complex(d)) < 1e-8 for d in diffs)
+            except Exception:
+                pass
         elif len(diffs) < 3:
              try:
                  sim_diff = sympy.simplify(u_expr - s_expr)
@@ -429,7 +448,7 @@ function initGrader() {
     graderWorker.postMessage({ type: 'init', code: pythonGraderCode });
 }
 
-async function gradeProblem(userTex, solTex, strictC, timeoutMs = 30000) {
+async function gradeProblem(userTex, solTex, strictC, timeoutMs = 30000, exactAnswer = false) {
     if (!userTex || !userTex.trim()) {
         return Promise.resolve("EMPTY INPUT");
     }
@@ -473,6 +492,6 @@ async function gradeProblem(userTex, solTex, strictC, timeoutMs = 30000) {
             }
         };
 
-        graderWorker.postMessage({ userTex: userTex, solTex: solTex, strictC: strictC });
+        graderWorker.postMessage({ userTex: userTex, solTex: solTex, strictC: strictC, exactAnswer });
     });
 }
