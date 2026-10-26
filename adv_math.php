@@ -159,6 +159,34 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
             color: #fff;
             border-color: var(--primary);
         }
+        /* 중간고사/기말고사 -- 과목 탭 위의 한 단계 위 탭. 과목 탭과 같은 색·테두리에
+           글자만 더 크고 굵게 해서 위계를 보이고, 좁은 화면에서는 두 버튼이 반반씩 차지한다. */
+        .studio-page #collection-modal .exam-tabs {
+            display: flex;
+            gap: 8px;
+            padding: 16px var(--collection-gutter) 0;
+            flex-shrink: 0;
+        }
+        .exam-tab {
+            flex: 0 0 auto;
+            padding: 10px 22px;
+            border-radius: 9px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text);
+            font-weight: 800;
+            font-size: 1.02rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .exam-tab.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+        @media (max-width: 590px) {
+            .exam-tab { flex: 1 1 0; }
+        }
 
         /* 증명 감상 (Proof Gallery) -- #proof-view reuses the exact same visual language
            as the real quiz's #app-view (.header/.badges/.action-bar, and the same
@@ -334,7 +362,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
 
                             <div class="rules-section">
                                 <h3 class="rules-title">💡 이용 가이드</h3>
-                                <ul class="rules-list">
+                                <ul class="rules-list" id="rules-midterm">
                                     <li><strong>미적분</strong> 문제는 정답에 <strong>적분상수 C</strong>를 포함하세요.</li>
                                     <li><strong>대수</strong> 문제의 답이 행렬/벡터면 <strong>행렬 입력 버튼</strong>을 사용하고, 자유변수는 <strong>t</strong>로 나타내세요.</li>
                                     <li><strong>적분 불가능·역행렬 없음·해 없음</strong>인 문제는 <strong>"포기"</strong> 버튼으로 처리하세요.</li>
@@ -342,10 +370,16 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                                     <li><strong>역함수</strong>는 <strong>-1 표기</strong>와 <strong>arc 표기</strong> 모두 정답으로 인정됩니다.</li>
                                     <li>그 외에는 <strong>Integral Studio</strong>와 동일합니다.</li>
                                 </ul>
+                                <ul class="rules-list hidden" id="rules-final">
+                                    <li><strong>판정</strong> 문제는 입력칸 아래 <strong>절대수렴·조건수렴·수렴·발산</strong> 버튼으로 답하세요.</li>
+                                    <li><strong>수렴구간</strong>은 구간 버튼으로 <strong>[a, b)</strong> 꼴로 입력하고, 무한대는 <strong>∞</strong> 버튼을 쓰세요.</li>
+                                    <li><strong>미분방정식의 해</strong>는 <strong>y=</strong> 없이 우변만 입력하세요.</li>
+                                    <li>값은 소수 대신 <strong>정확한 값</strong>(분수·근호·π·e)으로 입력하세요.</li>
+                                </ul>
                             </div>
                         </div>
 
-                        <div class="option-section">
+                        <div class="option-section" id="options-midterm">
                             <div class="option-item">
                                 <label class="checkbox-container">
                                     <input type="checkbox" id="chk-strict-c" checked>
@@ -364,6 +398,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                     </div>
                     <input type="hidden" id="sel-collection-value" value="">
                     <input type="hidden" id="sel-collection-value-algebra" value="">
+                    <input type="hidden" id="sel-collection-value-final" value="">
                 </div>
 
                 <div class="landing-right">
@@ -387,13 +422,20 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                         </svg>
                     </button>
                 </div>
+                <div class="exam-tabs">
+                    <button type="button" id="exam-tab-midterm" class="exam-tab active" onclick="switchExam('midterm')">중간고사</button>
+                    <button type="button" id="exam-tab-final" class="exam-tab" onclick="switchExam('final')">기말고사</button>
+                </div>
                 <div class="subject-tabs">
-                    <button type="button" id="subject-tab-trig" class="subject-tab active" onclick="switchModalSubject('trig')">고급미적분-역삼각함수</button>
-                    <button type="button" id="subject-tab-hyp" class="subject-tab" onclick="switchModalSubject('hyp')">고급미적분-쌍곡함수</button>
-                    <button type="button" id="subject-tab-polar" class="subject-tab" onclick="switchModalSubject('polar')">고급미적분-극좌표</button>
-                    <button type="button" id="subject-tab-apps" class="subject-tab" onclick="switchModalSubject('apps')">정적분의 활용</button>
-                    <button type="button" id="subject-tab-algebra" class="subject-tab" onclick="switchModalSubject('algebra')">고급대수</button>
-                    <button type="button" id="subject-tab-proof" class="subject-tab" onclick="switchModalSubject('proof')">증명</button>
+                    <button type="button" id="subject-tab-trig" class="subject-tab active" data-exam="midterm" onclick="switchModalSubject('trig')">고급미적분-역삼각함수</button>
+                    <button type="button" id="subject-tab-hyp" class="subject-tab" data-exam="midterm" onclick="switchModalSubject('hyp')">고급미적분-쌍곡함수</button>
+                    <button type="button" id="subject-tab-polar" class="subject-tab" data-exam="midterm" onclick="switchModalSubject('polar')">고급미적분-극좌표</button>
+                    <button type="button" id="subject-tab-apps" class="subject-tab" data-exam="midterm" onclick="switchModalSubject('apps')">정적분의 활용</button>
+                    <button type="button" id="subject-tab-algebra" class="subject-tab" data-exam="midterm" onclick="switchModalSubject('algebra')">고급대수</button>
+                    <button type="button" id="subject-tab-proof" class="subject-tab" data-exam="midterm" onclick="switchModalSubject('proof')">증명</button>
+                    <button type="button" id="subject-tab-series" class="subject-tab hidden" data-exam="final" onclick="switchModalSubject('series')">급수</button>
+                    <button type="button" id="subject-tab-ode" class="subject-tab hidden" data-exam="final" onclick="switchModalSubject('ode')">미분방정식</button>
+                    <button type="button" id="subject-tab-mock" class="subject-tab hidden" data-exam="final" onclick="switchModalSubject('mock')">실전 모의</button>
                 </div>
                 <div class="collection-sections">
                     <div id="collection-grid" style="display:none;"></div> <!-- logic.js compatibility -->
@@ -435,6 +477,21 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                                 Level 5 · 여러 보조정리를 결합하는 종합 논증</div>
                         </details>
                         <div id="collection-grid-proof" class="collection-grid"></div>
+                    </div>
+
+                    <div id="modal-section-series" class="hidden">
+                        <h3>▶ 급수 · 교과서 III단원 (p.98–155)</h3>
+                        <div id="collection-grid-series" class="collection-grid"></div>
+                    </div>
+
+                    <div id="modal-section-ode" class="hidden">
+                        <h3>▶ 미분방정식 · 교과서 IV단원 (p.156–191)</h3>
+                        <div id="collection-grid-ode" class="collection-grid"></div>
+                    </div>
+
+                    <div id="modal-section-mock" class="hidden">
+                        <h3>▶ 실전 모의 · 급수 8 + 미분방정식 2</h3>
+                        <div id="collection-grid-mock" class="collection-grid"></div>
                     </div>
 
                     <div id="collection-footnote" style="padding: 15px; text-align: center; border-top: 1px solid var(--border); margin-top: 20px;">
@@ -547,9 +604,12 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
     <script src="data/math/proof_levels.js?v=20260918_v1"></script>
     <script src="data/math/proof_orthogonal.js?v=20260928_v1"></script>
     <script src="data/math/proof_sources.js?v=20261006_v1"></script>
+    <script src="data/math/final/ode.js?v=20261026_final"></script>
     <script>window.STUDIO_SCORE_CONFIG = { studio: 'advanced_math' };</script>
     <script src="scripts/grader.js?v=20260922_audit"></script>
     <script src="scripts/logic.js?v=20261006_keys"></script>
+    <script src="scripts/adv_final_grading.js?v=20261026_final"></script>
+    <script src="scripts/adv_final.js?v=20261026_final"></script>
     <script src="scripts/study_scores.js?v=20260922_history"></script>
     <script src="scripts/adv_anim.js?v=debug_v2"></script>
     <!-- Global Theme Toggle (Top-Right) -->
@@ -773,17 +833,51 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
         // through the same startGame()/selectCollection() engine; only algebra differs.
         let selectedSubject = 'calc';
 
-        const MODAL_SUBJECTS = ['trig', 'hyp', 'polar', 'apps', 'algebra', 'proof'];
+        // 문제집 창은 시험(중간/기말) → 과목 2단이다. 각 과목 탭이 어느 시험 아래 있는지는
+        // EXAM_OF 하나로 정하고, 시험 탭을 누르면 그 시험에서 마지막으로 보던 과목이 열린다.
+        const MODAL_SUBJECTS = ['trig', 'hyp', 'polar', 'apps', 'algebra', 'proof', 'series', 'ode', 'mock'];
+        const EXAM_OF = {
+            trig: 'midterm', hyp: 'midterm', polar: 'midterm', apps: 'midterm', algebra: 'midterm', proof: 'midterm',
+            series: 'final', ode: 'final', mock: 'final'
+        };
+        const lastTabByExam = { midterm: 'trig', final: 'series' };
         let lastModalTab = 'trig'; // so the home button can reopen the modal on the same tab
         function switchModalSubject(subject) {
             lastModalTab = subject;
+            const exam = EXAM_OF[subject];
+            lastTabByExam[exam] = subject;
+            ['midterm', 'final'].forEach(e => document.getElementById(`exam-tab-${e}`).classList.toggle('active', e === exam));
             MODAL_SUBJECTS.forEach(s => {
-                document.getElementById(`subject-tab-${s}`).classList.toggle('active', s === subject);
+                const tab = document.getElementById(`subject-tab-${s}`);
+                tab.classList.toggle('active', s === subject);
+                tab.classList.toggle('hidden', EXAM_OF[s] !== exam);
                 document.getElementById(`modal-section-${s}`).classList.toggle('hidden', s !== subject);
             });
             // "* 각 컬렉션은 여러 문제로 구성되어 있습니다" only makes sense for the
             // collection tabs -- the proof tab isn't a collection you start a quiz from.
             document.getElementById('collection-footnote')?.classList.toggle('hidden', subject === 'proof');
+        }
+
+        function switchExam(exam) {
+            switchModalSubject(lastTabByExam[exam]);
+        }
+
+        // 시작 카드의 이용 가이드와 옵션은 고른 문제집의 시험을 따른다. 적분상수 C와 증명 해설
+        // 옵션은 중간고사 문제에만 의미가 있다.
+        function applyExamToLanding(exam) {
+            document.getElementById('rules-midterm').classList.toggle('hidden', exam !== 'midterm');
+            document.getElementById('rules-final').classList.toggle('hidden', exam !== 'final');
+            document.getElementById('options-midterm').classList.toggle('hidden', exam !== 'midterm');
+        }
+
+        // 중간고사 미적분 카드: logic.js의 selectCollection()은 그대로 두고 시험 표시만 덧붙인다.
+        function selectMidtermCollection(id) {
+            selectedSubject = 'calc';
+            selectCollection(id);
+            const col = window.generatedCollections?.find(c => c.id === id);
+            if (col) document.getElementById('current-collection-name').innerText = `중간 · ${col.name}`;
+            applyExamToLanding('midterm');
+            writeStore('adv_last_exam', 'midterm');
         }
 
         // 증명 감상 (Proof Gallery) -- read-only, no grading, no math-input. The modal tab
@@ -904,7 +998,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                 polGrid.innerHTML = "";
                 appsGrid.innerHTML = "";
                 window.generatedCollections.forEach(col => {
-                    const card = buildCollectionCard(col, () => { selectedSubject = 'calc'; selectCollection(col.id); });
+                    const card = buildCollectionCard(col, () => selectMidtermCollection(col.id));
                     if (col.id.includes('adv_col1a')) {
                         trigGrid.appendChild(card);
                     } else if (col.id.includes('adv_col1b')) {
@@ -932,6 +1026,11 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                 proofGrid.innerHTML = "";
                 window.proofTheorems.forEach((ch, idx) => proofGrid.appendChild(buildProofChapterCard(ch, idx)));
             }
+
+            // 기말 카드는 adv_final.js가 그린다. logic.js가 쿠키의 중간 문제집을 먼저 고른 뒤라서
+            // 마지막에 고른 시험(중간/기말)을 여기서 복원해 덮어쓴다.
+            renderFinalGrids();
+            restoreLastSelection();
         });
 
         // --- Algebra: shares the same collection modal/label/hidden-input pattern as the
@@ -945,7 +1044,9 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
             document.getElementById('sel-collection-value-algebra').value = id;
             document.querySelectorAll('#collection-grid-algebra .collection-card').forEach(c => c.classList.toggle('selected', c.dataset.id === id));
             const col = window.algebraCollections?.find(c => c.id === id);
-            if (col) document.getElementById('current-collection-name').innerText = col.name;
+            if (col) document.getElementById('current-collection-name').innerText = `중간 · ${col.name}`;
+            applyExamToLanding('midterm');
+            writeStore('adv_last_exam', 'midterm');
             setTimeout(closeCollectionModal, 200);
         }
         // Override logic.js's giveUpProblem (only takes effect on THIS page -- integral.php
