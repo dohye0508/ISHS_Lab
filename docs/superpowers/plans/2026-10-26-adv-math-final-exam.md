@@ -10,18 +10,25 @@
 
 **Spec:** `docs/superpowers/specs/2026-10-26-adv-math-final-exam-design.md`
 
+## 실행 중 변경 (사용자 요청, Task 4 진행 중)
+
+"모의는 빼고 그냥 문제를 더 만들어 어렵게. 특히 급수." 이에 따라:
+- 실전 모의 탭·`mock.js`·`fin_mock_` 단위를 없앤다(Task 4에서 탭과 섹션 제거, Task 5에서 검사 규칙 갱신).
+- 모든 5문항 세트의 레벨을 `[3,4,4,5,5]`로 올린다. 아래 슬롯 표의 Lv 열은 위에서부터 3·4·4·5·5로 읽고, 각 슬롯은 적힌 유형을 한 번 더 비틀어(매개변수, 판정법 연결, 끝점·부호 함정) 어렵게 만든다. 이미 쓴 미분방정식 1세트도 Task 5에서 이 기준으로 고친다.
+- 급수를 14세트(70문항)로 늘린다. Task 11은 급수 11–14(심화 종합)로 바꾼다.
+
 ## Global Constraints
 
 - `scripts/grader.js`, `scripts/logic.js`, `sql/`, `api/`는 수정하지 않는다.
 - 기존 스크립트 태그의 `?v=` 값은 바꾸지 않는다(기존 검사 스크립트가 문자열로 확인한다). 새 태그만 추가한다.
 - `adv_math.php`의 다음 주석·함수 시작 줄은 그대로 두고 순서도 유지한다. 기존 검사 스크립트가 이 문자열 사이를 잘라 실행한다: `        function escapeHtmlText`, `        // Override logic.js's renderMath`, `        function normalizeLatex`, `        // 문장형`, `        function buildProblemHtml`, `        function renderResult(res)`, `        function readHistory`, `        function buildProofChapterCard`, `        const proofState =`, `        window.addEventListener('DOMContentLoaded'`, `        async function startAlgebraGame`, `        // Single "Get Started"`.
 - 위 구간 안에 넣는 코드는 그 구간만 따로 실행해도 오류가 나지 않아야 한다(`window.finalGrading`이 없을 수 있으므로 반드시 존재 확인).
-- 기말 데이터 id: 문제집 `fin_{ser|ode|mock}_{두자리}_v1`, 문항 `{문제집id}_{영문 소문자·밑줄 키}`.
+- 기말 데이터 id: 문제집 `fin_{ser|ode}_{두자리}_v1`, 문항 `{문제집id}_{영문 소문자·밑줄 키}`.
 - 기말 정답 형식: 식·값은 LaTeX 그대로, 판정 `verdict:절대수렴|조건수렴|수렴|발산`, 구간 `interval:[a,b)` 꼴, 무한대 `\infty`.
 - 기말 `tools`: `'verdict' | 'interval' | 'value' | 'expr'`.
 - 함수 답의 독립변수는 `x`. 미분방정식은 초깃값 문제만.
-- 문제집당 레벨 구성: 5문항 세트는 `[2,3,3,4,5]`, 모의는 2–5 혼합.
-- 교과서 쪽 범위: 급수 98–155, 미분방정식 156–191, 모의 98–191.
+- 문제집당 레벨 구성: `[3,4,4,5,5]` (실행 중 변경).
+- 교과서 쪽 범위: 급수 98–155, 미분방정식 156–191.
 - 교과서 예제·문제를 그대로 옮기지 않는다. 교과서 유형을 따르되 수치·구성은 새로 만든다.
 - 기존 "역삼각함수 심화 7 · 급수와 국소 구조"의 arcsin 매클로린 계수 유형은 쓰지 않는다.
 - localStorage 키: `adv_last_exam`(`'midterm'|'final'`), `adv_final_selected`(문제집 id). 모든 읽기·쓰기는 try/catch.
@@ -555,27 +562,27 @@ Run: `node scripts/check_final_browser.cjs` → 두 PASS 줄
 
 ---
 
-### Task 11: 실전 모의 1세트
+### Task 11: 급수 11–14 (심화 종합)
 
-**Files:** Create `data/math/final/mock.js`; Modify `adv_math.php`(스크립트 태그 `series.js` 다음), `scripts/check_final.py`
+**Files:** Modify `data/math/final/series.js`, `scripts/check_final.py`
 
-`fin_mock_01_v1` · `실전 모의 1` · `급수 8 · 미분방정식 2 · 시험 비율`. 앞 세트와 다른 새 문항 10개:
+단원을 넘나드는 세트. 모두 레벨 `[3,4,4,5,5]`, 앞 세트와 겹치지 않는 새 문항.
 
-| 구분 | 수 | 포함할 유형 |
-|---|---|---|
-| 급수 | 8 | 판정 2(그중 조건수렴 1), 수렴구간 1, 망원·등비 합 1, 멱급수 합 함수 또는 수치 합 1, 테일러 다항식 1, 테일러 극한 1, 비·근판정 1 |
-| 미분방정식 | 2 | 풀이(초깃값 해) 1, 활용(값) 1 |
+| 세트 | 이름 | 포함할 유형 | page 범위 |
+|---|---|---|---|
+| `fin_ser_11_v1` | 급수 11 · 심화 판정 종합 | 판정법을 직접 골라야 하는 판정 3(조건수렴 1 포함), 매개변수에 따른 수렴 범위(구간) 2 | 106–128 |
+| `fin_ser_12_v1` | 급수 12 · 심화 급수의 합 | 멱급수·테일러급수로 인식하는 수치 급수 합 4, 망원 심화 1 | 106–150 |
+| `fin_ser_13_v1` | 급수 13 · 심화 멱급수와 테일러 | 수렴구간(구간) 1, 합 함수(식) 2, 계수·고계도함수 1, 나머지 상계 1 | 131–146 |
+| `fin_ser_14_v1` | 급수 14 · 심화 극한과 근사 | 테일러 극한 3, 오차 한계 1, 수열 극한 1 | 101–150 |
 
-레벨: 2를 2개, 3을 3개, 4를 3개, 5를 2개.
-
-- [ ] **Step 1: TARGETS 10개 추가 → 실패 확인** (`node scripts/check_final.cjs python`)
-- [ ] **Step 2: 10문항 작성**
+- [ ] **Step 1: TARGETS 20개 추가 → 실패 확인** (`node scripts/check_final.cjs python`)
+- [ ] **Step 2: 20문항 작성**
 - [ ] **Step 3: 전체 완성 검사**
 
 Run: `node scripts/check_final.cjs --complete python`
-Expected: `PASS: structure (13 collections, 70 problems)` 그리고 `PASS: 70 final answers verified and graded`
+Expected: `PASS: structure (16 collections, 80 problems)` 그리고 `PASS: 80 final answers verified and graded`
 
-- [ ] **Step 4: 커밋** — `git commit -m "feat(adv-math): add final-exam mock set"`
+- [ ] **Step 4: 커밋** — `git commit -m "feat(adv-math): add advanced final-exam series sets 11-14"`
 
 ---
 
