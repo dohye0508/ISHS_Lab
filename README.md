@@ -135,6 +135,39 @@ Upload `data/math/adv_collections_final.js`,
 `adv_math.php`, and `integral.php` for this audit. The page versions refresh
 the cached data and grader. No database changes are required.
 
+## Final-exam (기말고사) collections
+
+The Advanced Math Studio collection picker now has two levels: 중간고사 (the
+existing trig/hyperbolic/polar/applications/algebra/proof tabs, unchanged) and
+기말고사 (급수 and 미분방정식, textbook units III–IV, p.98–191). First visits
+open 기말고사 → 급수; the last picked exam and final collection are remembered
+per browser in `localStorage` (`adv_last_exam`, `adv_final_selected`).
+
+- `data/math/final/series.js`: 14 series sets, `data/math/final/ode.js`: 2 ODE
+  sets, 80 problems, every set at levels 3·4·4·5·5, each with a worked
+  explanation and the textbook page shown in the results.
+- Answers are exact LaTeX values or functions of `x`, plus three final-only
+  forms: `verdict:절대수렴|조건수렴|수렴|발산`, `interval:[a,b)`, and `\infty`.
+  `scripts/adv_final_grading.js` grades them; everything else goes to the
+  existing SymPy grader. A problem's `tools` (`verdict`, `interval`, `value`,
+  `expr`) chooses the answer buttons, so buttons never reveal the answer.
+- `scripts/adv_final.js` wraps `gradeProblem`, `loadCurrentProblem` and
+  `updateNavButtons` only while `state.exam === 'final'`; midterm grading and
+  screens are unchanged, and `grader.js`/`logic.js` are not modified.
+
+Checks (answers are recomputed independently with SymPy, and the browser check
+grades every final answer in the real Pyodide grader):
+
+```bash
+node scripts/check_final_grading.cjs
+node scripts/check_final.cjs --complete python
+node scripts/check_final_browser.cjs
+```
+
+Upload `adv_math.php`, `scripts/adv_final_grading.js`, `scripts/adv_final.js`,
+`data/math/final/series.js` and `data/math/final/ode.js`. No database changes
+are required; the check scripts and reference PDFs are local only.
+
 ## License
 
 - **Developer:** Dohye Lee
