@@ -75,6 +75,15 @@ for (const col of collections) {
         checkText(p.id, 'explanation', p.explanation);
     }
 }
+// 문제집 카드는 첫 문항의 제목을 미리 보여 준다(adv_math.php buildCollectionCard). 판정 문제라면
+// 그 제목이 판정 결과나 쓸 판정법을 드러내지 않아야 한다.
+const SPOILERS = ['수렴', '발산', '절댓값', '판정', '조화급수', '누르기'];
+for (const col of collections) {
+    const first = col.problems[0];
+    if (grading.answerKind(first.solution) !== 'verdict') continue;
+    const hit = SPOILERS.filter(w => first.title.includes(w));
+    assert.deepEqual(hit, [], `${first.id}: card preview title gives away the verdict (${first.title})`);
+}
 const problems = collections.flatMap(c => c.problems.map(p => ({ ...p, collection: c.id, unit: c.unit })));
 
 if (flag('--complete')) {

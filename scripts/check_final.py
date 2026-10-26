@@ -154,6 +154,12 @@ def _cubic_log_product():
     return s.log(s.limit(F, N, s.oo))
 
 
+def _skip_two_telescoping():
+    # closed-form partial sum of 1/(n(n+2)(n+4)) up to N, then N -> oo
+    N = s.Symbol('N', integer=True, positive=True)
+    return s.limit(s.summation(1 / (n * (n + 2) * (n + 4)), (n, 1, N)), N, s.oo)
+
+
 def _periodic_cosine_sum():
     # sum cos(n pi/2)/2^n: only even n survive, n = 2k gives (-1)^k/4^k
     exact = s.summation((-1)**n / 4**n, (n, 1, s.oo))
@@ -196,14 +202,20 @@ def _log_power(p):
     return '수렴' if s.integrate(u**(-q), (u, s.log(2), s.oo)).is_finite else '발산'
 
 
-def _cube_remainder_n():
+def _rational_remainder_n():
+    # sum n/(n^2+1)^2: f(X) = X/(X^2+1)^2 decreases on [1, oo), so R_N <= int_N^oo f(X) dX.
     import mpmath as mp
-    N = 1
-    while not s.Rational(1, 2 * N**2) < s.Rational(1, 10**4):
-        N += 1
-    true_tail = mp.zeta(3) - mp.fsum(mp.mpf(1) / k**3 for k in range(1, N + 1))
-    assert 0 < true_tail < mp.mpf(1) / (2 * N**2)
-    return N
+    X, N = s.Symbol('X', positive=True), s.Symbol('N', positive=True)
+    fx = X / (X**2 + 1)**2
+    num, den = s.fraction(s.together(s.diff(fx, X)))
+    assert s.expand(num.subs(X, 1 + u)).is_negative and den.is_positive  # f' < 0 for X > 1
+    bound = s.integrate(fx, (X, N, s.oo))
+    M = 1
+    while not bound.subs(N, M) < s.Rational(1, 10**4):
+        M += 1
+    true_tail = mp.nsum(lambda j: j / (j**2 + 1)**2, [M + 1, mp.inf])
+    assert 0 < true_tail < mp.mpf(str(s.N(bound.subs(N, M), 30)))
+    return M
 
 
 def _sqrt_gap_power(a):
@@ -274,14 +286,25 @@ def _alternating_error_n():
     return N
 
 
+def _alternating_root_minus_one():
+    # b_n = n^{1/n} - 1 decreases only from n = 3 on, tends to 0, and b_n * n -> oo (sum b_n diverges).
+    b = n**(1 / n) - 1
+    alternating(b, 3)
+    assert b.subs(n, 2) < b.subs(n, 3), 'b_2 < b_3: not decreasing from the start'
+    assert seq_limit(n * b) == s.oo  # b_n / (1/n) -> oo, so |terms| dominate the harmonic series
+    return '조건수렴'
+
+
 def _non_monotone_alternating():
-    # (-1)^n/(sqrt n + (-1)^n) = (-1)^n sqrt(n)/(n-1) - 1/(n-1): convergent alternating part minus a divergent part.
+    # (-1)^n/(n^{1/3} + (-1)^n) = (-1)^n n^{1/3}/(n^{2/3}-1) - 1/(n^{2/3}-1):
+    # convergent alternating part minus a divergent part.
     for parity in (0, 1):
         k = 2 * n + parity
         sign = (-1)**parity
-        assert s.simplify(sign / (s.sqrt(k) + sign) - (sign * s.sqrt(k) / (k - 1) - 1 / (k - 1))) == 0
-    alternating(s.sqrt(n) / (n - 1), 2)
-    assert limit_compare(1 / (n - 1), 1) == '발산'
+        c = s.cbrt(k)
+        assert s.simplify(sign / (c + sign) - (sign * c / (c**2 - 1) - 1 / (c**2 - 1))) == 0
+    alternating(s.cbrt(n) / (s.cbrt(n)**2 - 1), 2)
+    assert limit_compare(1 / (s.cbrt(n)**2 - 1), s.Rational(2, 3)) == '발산'
     return '발산'
 
 
@@ -307,12 +330,26 @@ def _interval_shifted():
     return ('[' if left else '(', -s.Rational(5, 2), s.Rational(3, 2), ']' if right else ')')
 
 
-def _interval_cubic_powers():
-    # sum x^{3n}/(n 8^n): |x|^3 < 8 -> |x| < 2
-    assert radius(1 / (n * 8**n), 3) == 2
-    right = endpoint((2**(3 * n) / (n * 8**n)).simplify())
-    left = endpoint(((-2)**(3 * n) / (n * 8**n)).simplify())
-    return ('[' if left else '(', -2, 2, ']' if right else ')')
+def _interval_factorial_ratio():
+    # sum n!/n^n x^n: radius e; at x = +-e the ratio test gives 1 and |terms| n! e^n/n^n -> oo.
+    c = s.factorial(n) / n**n
+    r = radius(c)
+    assert r == s.E, r
+    mag = c * r**n
+    assert seq_limit(s.combsimp(mag.subs(n, n + 1) / mag)) == 1  # ratio test is inconclusive there
+    assert seq_limit(mag) == s.oo  # terms do not tend to 0 at either endpoint
+    return ('(', -r, r, ')')
+
+
+def _interval_central_binomial():
+    # sum (n!)^2/(2n)! x^{2n}: radius 2; at x = +-2 the terms 4^n (n!)^2/(2n)! increase from 2.
+    c = s.factorial(n)**2 / s.factorial(2 * n)
+    r = radius(c, 2)
+    assert r == 2, r
+    mag = c * (r**2)**n
+    growth = s.combsimp(mag.subs(n, n + 1) / mag)
+    assert s.simplify(growth - 1).is_positive and mag.subs(n, 1) == 2  # terms >= 2, never -> 0
+    return ('(', -r, r, ')')
 
 
 def _expect(value, wanted):
@@ -357,10 +394,13 @@ def _log_factorial_alternating():
     return '조건수렴'
 
 
-def _cosine_power(p):
-    if p <= 0:
-        return '발산'  # terms >= 1 or blow up
-    return limit_compare((1 - s.cos(1 / n))**p, 2 * p)  # (1 - cos(1/n))^p ~ (1/(2n^2))^p
+def _alternating_log_power(p):
+    # sum (-1)^n/(n^p ln n): converges iff |terms| -> 0 (then they also decrease: alternating series test).
+    b = 1 / (n**p * s.log(n))
+    if seq_limit(b) != 0:
+        return '발산'
+    alternating(b, 2)
+    return '수렴'
 
 
 def _double_factorial_interval():
@@ -400,13 +440,17 @@ def _cos_remainder_bound():
     return bound
 
 
-def _erf_next_term():
-    # int_0^{1/2} e^{-x^2} dx = sum (-1)^k (1/2)^{2k+1}/((2k+1) k!); three terms used, error < |4th term|
+def _erf_terms_needed():
+    # int_0^{1/2} e^{-x^2} dx = sum (-1)^k (1/2)^{2k+1}/((2k+1) k!); first N terms (k < N) leave error <= term(N)
     term = lambda k: s.Rational(1, 2)**(2 * k + 1) / ((2 * k + 1) * s.factorial(k))
-    approx = sum((-1)**k * term(k) for k in range(3))
+    assert all(term(k + 1) < term(k) for k in range(20))
+    N = 1
+    while not term(N) < s.Rational(1, 10**5):
+        N += 1
+    approx = sum((-1)**k * term(k) for k in range(N))
     exact = s.N(s.Integral(s.exp(-x**2), (x, 0, s.Rational(1, 2))), 40)
-    assert abs(exact - approx) < term(3)
-    return term(3)
+    assert abs(exact - approx) < term(N) < s.Rational(1, 10**5)
+    return N
 
 
 def _diverges_by_nth_term(term):
@@ -424,16 +468,16 @@ TARGETS = {
     'fin_ser_01_v1_monotone_recursive': ('value', _recursive_limit()),
     'fin_ser_01_v1_factorial_ratio_root': ('value', _factorial_ratio_root()),
     # 급수 2 · 급수의 합과 일반항판정법
-    'fin_ser_02_v1_telescoping_cubic': ('value', s.summation(1 / (n * (n + 1) * (n + 2)), (n, 1, s.oo))),
+    'fin_ser_02_v1_telescoping_skip_two': ('value', _skip_two_telescoping()),
     'fin_ser_02_v1_periodic_cosine_sum': ('value', _periodic_cosine_sum()),
-    'fin_ser_02_v1_nth_term_trap': ('verdict', _diverges_by_nth_term((1 - 1 / n)**n)),
+    'fin_ser_02_v1_nth_term_trap': ('verdict', _diverges_by_nth_term(((n**2 + 1) / (n**2 + n))**n)),
     'fin_ser_02_v1_factorial_quadratic': ('value', s.summation(n**2 / s.factorial(n + 1), (n, 1, s.oo))),
     'fin_ser_02_v1_log_cubic_telescoping': ('value', _cubic_log_product()),
     # 급수 3 · 적분판정법과 p-급수
     'fin_ser_03_v1_p_series_verdict': ('verdict', lambda: limit_compare(1 / (s.sqrt(n) * n**s.Rational(2, 3)), s.Rational(7, 6))),
     'fin_ser_03_v1_integral_test_log': ('verdict', lambda: '수렴' if s.integrate(1 / s.sqrt(u), (u, s.log(2), s.oo)).is_finite else '발산'),
     'fin_ser_03_v1_log_power_range': ('interval', param_range(_log_power, ('(', 1, s.oo, ')'), [s.Rational(1, 2), 1, s.Rational(101, 100), 3])),
-    'fin_ser_03_v1_remainder_bound': ('value', _cube_remainder_n()),
+    'fin_ser_03_v1_remainder_bound': ('value', _rational_remainder_n()),
     'fin_ser_03_v1_exponent_range': ('interval', param_range(_sqrt_gap_power, ('(', -s.oo, 1, ')'), [-5, s.Rational(9, 10), 1, 2])),
     # 급수 4 · 비교판정법과 극한비교판정법
     'fin_ser_04_v1_direct_comparison': ('verdict', lambda: p_series(s.Rational(3, 2))),  # 0 <= sin^2 n / n^{3/2} <= 1/n^{3/2}
@@ -444,21 +488,21 @@ TARGETS = {
     # 급수 5 · 비판정법과 근판정법
     'fin_ser_05_v1_ratio_polynomial_exponential': ('verdict', lambda: by_limit(ratio_limit(n**3 * 2**n / 3**n))),
     'fin_ser_05_v1_ratio_limit_value': ('value', ratio_limit(s.factorial(2 * n) / (n**n * s.factorial(n)))),
-    'fin_ser_05_v1_root_test': ('verdict', lambda: by_limit(seq_limit((n / (n + 1))**n))),
+    'fin_ser_05_v1_root_test_dominant': ('verdict', lambda: by_limit(seq_limit(s.exp(s.expand_log(s.log(3**n * (1 - 1 / n)**(n**2)), force=True) / n)))),
     'fin_ser_05_v1_ratio_inconclusive': ('verdict', _ratio_inconclusive),
     'fin_ser_05_v1_root_parameter_range': ('interval', param_range(_root_parameter, ('(', -2, 2, ')'), [-3, -2, 0, s.Rational(3, 2), 2, s.Rational(5, 2)])),
     # 급수 6 · 절대수렴, 조건수렴, 교대급수
     'fin_ser_06_v1_alternating_rational': ('verdict', lambda: '조건수렴' if limit_compare(alternating(n / (n**2 + 1), 2), 1) == '발산' else '절대수렴'),
     'fin_ser_06_v1_absolute_cosine': ('verdict', _cos_pi_over_n),
-    'fin_ser_06_v1_alternating_nonzero_term': ('verdict', lambda: '발산' if seq_limit(n**(1 / n)) != 0 else None),
     'fin_ser_06_v1_alternating_error_terms': ('value', _alternating_error_n()),
+    'fin_ser_06_v1_alternating_root_minus_one': ('verdict', _alternating_root_minus_one),
     'fin_ser_06_v1_non_monotone_alternating': ('verdict', _non_monotone_alternating),
     # 급수 7 · 수렴반경과 수렴구간
     'fin_ser_07_v1_radius_even_powers': ('value', radius(2**n / n, 2)),
     'fin_ser_07_v1_interval_shifted': ('interval', _interval_shifted()),
     'fin_ser_07_v1_radius_infinite': ('infinity', _expect(radius(1 / s.sqrt(s.factorial(n))), s.oo)),
-    'fin_ser_07_v1_interval_cubic_powers': ('interval', _interval_cubic_powers()),
-    'fin_ser_07_v1_radius_central_binomial': ('value', radius(s.factorial(n)**2 / s.factorial(2 * n), 2)),
+    'fin_ser_07_v1_interval_factorial_ratio': ('interval', _interval_factorial_ratio()),
+    'fin_ser_07_v1_interval_central_binomial': ('interval', _interval_central_binomial()),
     # 급수 8 · 멱급수의 기본 성질
     'fin_ser_08_v1_differentiate_geometric': ('expr', (at_points(n * x**(2 * n)), [s.Rational(1, 3), s.Rational(1, 2)])),
     'fin_ser_08_v1_integrate_geometric': ('expr', (at_points((-1)**(n + 1) * x**(2 * n) / n), [s.Rational(1, 3), s.Rational(1, 2)])),
@@ -470,18 +514,18 @@ TARGETS = {
     'fin_ser_09_v1_taylor_shifted_center': ('expr', taylor(x * s.log(x), 1, 3)),
     'fin_ser_09_v1_high_derivative_from_series': ('value', s.diff(x**3 * s.exp(-x**2), x, 9).subs(x, 0)),
     'fin_ser_09_v1_remainder_degree': ('value', _exp_remainder_degree()),
-    'fin_ser_09_v1_tan_quintic': ('expr', taylor(s.tan(x), 0, 5)),
+    'fin_ser_09_v1_tan_seventh_coefficient': ('value', s.series(s.tan(x), x, 0, 9).removeO().coeff(x, 7)),
     # 급수 10 · 테일러급수의 활용
     'fin_ser_10_v1_limit_sine_cubic': ('value', s.limit((s.sin(x) - x * s.cos(x)) / x**3, x, 0)),
-    'fin_ser_10_v1_limit_tan_sine': ('value', s.limit((s.tan(x) - s.sin(x)) / x**3, x, 0)),
+    'fin_ser_10_v1_limit_tan_over_sine_gap': ('value', s.limit((s.tan(x) - x) / (x - s.sin(x)), x, 0)),
     'fin_ser_10_v1_integral_approx': ('value', _sin_square_integral()),
-    'fin_ser_10_v1_recognize_sine_value': ('value', s.simplify(s.summation((-1)**n * (s.pi / 2)**(2 * n) / s.factorial(2 * n + 1), (n, 0, s.oo)))),
+    'fin_ser_10_v1_recognize_cosine_value': ('value', s.simplify(s.summation((-1)**n * s.pi**(2 * n) / (4**n * s.factorial(2 * n + 2)), (n, 0, s.oo)))),
     'fin_ser_10_v1_composite_derivative': ('value', s.diff(s.exp(x**2) * s.sin(x), x, 5).subs(x, 0)),
     # 급수 11 · 심화 판정 종합
     'fin_ser_11_v1_root_alternating_absolute': ('verdict', lambda: '절대수렴' if by_limit(seq_limit(n / (2 * n + 1))) == '수렴' else None),
     'fin_ser_11_v1_log_factorial_alternating': ('verdict', _log_factorial_alternating),
     'fin_ser_11_v1_harmonic_log_difference': ('verdict', lambda: limit_compare(1 / n - s.log(1 + 1 / n), 2)),
-    'fin_ser_11_v1_cosine_power_range': ('interval', param_range(_cosine_power, ('(', s.Rational(1, 2), s.oo, ')'), [-1, 0, s.Rational(1, 2), s.Rational(3, 4), 2])),
+    'fin_ser_11_v1_alternating_log_power_range': ('interval', param_range(_alternating_log_power, ('[', 0, s.oo, ')'), [-1, -s.Rational(1, 2), 0, s.Rational(1, 2), 1, 2])),
     'fin_ser_11_v1_double_factorial_interval': ('interval', _double_factorial_interval()),
     # 급수 12 · 심화 급수의 합
     'fin_ser_12_v1_exponential_weighted': ('value', s.summation((n + 1) / s.factorial(n), (n, 0, s.oo))),
@@ -500,7 +544,7 @@ TARGETS = {
     'fin_ser_14_v1_limit_log_sine': ('value', s.limit((s.log(1 + x) - s.sin(x)) / x**2, x, 0)),
     'fin_ser_14_v1_e_sequence_correction': ('value', seq_limit(n * (s.E - (1 + 1 / n)**n))),
     'fin_ser_14_v1_limit_reciprocal_squares': ('value', s.limit(1 / s.sin(x)**2 - 1 / x**2, x, 0)),
-    'fin_ser_14_v1_integral_error_bound': ('value', _erf_next_term()),
+    'fin_ser_14_v1_integral_error_terms': ('value', _erf_terms_needed()),
     # 미분방정식 1 · 풀이
     'fin_ode_01_v1_euler_three_steps': ('value', euler(lambda X, Y: X - Y**2, 0, 1, s.Rational(1, 2), 3)),
     'fin_ode_01_v1_separable_tangent_sum': ('ode', (lambda y: y.diff(x) - (1 + y**2) / (1 + x**2), 0, 1)),
