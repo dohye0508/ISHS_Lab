@@ -164,6 +164,69 @@ def _periodic_cosine_sum():
     return exact
 
 
+u = s.Symbol('u', positive=True)
+
+
+def p_series(exponent):
+    return '수렴' if exponent > 1 else '발산'
+
+
+def limit_compare(term, exponent):
+    """Positive-term verdict by limit comparison with sum 1/n^exponent."""
+    ratio = seq_limit(term * n**exponent)
+    assert ratio.is_positive and ratio.is_finite, (term, ratio)
+    return p_series(exponent)
+
+
+def param_range(classify, interval, samples):
+    """Check a verdict function on sample parameters against the claimed convergence interval."""
+    left, a, b, right = interval
+    for value in samples:
+        inside = (a < value or (left == '[' and a == value)) and (value < b or (right == ']' and b == value))
+        got = classify(value)
+        assert got == ('수렴' if inside else '발산'), (interval, value, got)
+    return interval
+
+
+def _log_power(p):
+    # sum 1/(n (ln n)^q), q = 2p-1: with u = ln x the test integral is int u^{-q} du.
+    q = 2 * p - 1
+    if q <= 0:
+        return '발산'  # (ln n)^{-q} >= 1 for n >= 3, so the terms are at least 1/n
+    return '수렴' if s.integrate(u**(-q), (u, s.log(2), s.oo)).is_finite else '발산'
+
+
+def _cube_remainder_n():
+    import mpmath as mp
+    N = 1
+    while not s.Rational(1, 2 * N**2) < s.Rational(1, 10**4):
+        N += 1
+    true_tail = mp.zeta(3) - mp.fsum(mp.mpf(1) / k**3 for k in range(1, N + 1))
+    assert 0 < true_tail < mp.mpf(1) / (2 * N**2)
+    return N
+
+
+def _sqrt_gap_power(a):
+    return limit_compare(n**a * (s.sqrt(n**2 + 1) - n)**2, 2 - a)
+
+
+def _log_tower():
+    # (ln n)^{ln n} = n^{ln ln n} >= n^2 once ln ln n >= 2, i.e. n >= e^{e^2}
+    assert s.simplify(s.expand_log(s.log(s.log(n)**s.log(n)), force=True) - s.log(n) * s.log(s.log(n))) == 0
+    assert s.log(s.log(s.exp(s.exp(2)))) == 2
+    return p_series(2)
+
+
+def _root_minus_one(p):
+    assert seq_limit((n**(1 / n) - 1) / (s.log(n) / n)) == 1  # same verdict as sum (ln n / n)^p
+    if p <= 0:
+        return '발산'  # terms do not tend to 0
+    if p > 1:
+        assert seq_limit(s.log(n)**p / n**((p - 1) / 2)) == 0  # (ln n/n)^p <= 1/n^{(p+1)/2} eventually
+        return p_series((p + 1) / 2)
+    return p_series(p)  # ln n >= 1 for n >= 3, so terms >= 1/n^p
+
+
 def _diverges_by_nth_term(term):
     def verdict():
         assert seq_limit(term) != 0
@@ -184,6 +247,18 @@ TARGETS = {
     'fin_ser_02_v1_nth_term_trap': ('verdict', _diverges_by_nth_term((1 - 1 / n)**n)),
     'fin_ser_02_v1_factorial_quadratic': ('value', s.summation(n**2 / s.factorial(n + 1), (n, 1, s.oo))),
     'fin_ser_02_v1_log_cubic_telescoping': ('value', _cubic_log_product()),
+    # 급수 3 · 적분판정법과 p-급수
+    'fin_ser_03_v1_p_series_verdict': ('verdict', lambda: limit_compare(1 / (s.sqrt(n) * n**s.Rational(2, 3)), s.Rational(7, 6))),
+    'fin_ser_03_v1_integral_test_log': ('verdict', lambda: '수렴' if s.integrate(1 / s.sqrt(u), (u, s.log(2), s.oo)).is_finite else '발산'),
+    'fin_ser_03_v1_log_power_range': ('interval', param_range(_log_power, ('(', 1, s.oo, ')'), [s.Rational(1, 2), 1, s.Rational(101, 100), 3])),
+    'fin_ser_03_v1_remainder_bound': ('value', _cube_remainder_n()),
+    'fin_ser_03_v1_exponent_range': ('interval', param_range(_sqrt_gap_power, ('(', -s.oo, 1, ')'), [-5, s.Rational(9, 10), 1, 2])),
+    # 급수 4 · 비교판정법과 극한비교판정법
+    'fin_ser_04_v1_direct_comparison': ('verdict', lambda: p_series(s.Rational(3, 2))),  # 0 <= sin^2 n / n^{3/2} <= 1/n^{3/2}
+    'fin_ser_04_v1_limit_comparison_sine': ('verdict', lambda: limit_compare(s.sin(1 / s.sqrt(n)) / s.sqrt(n), 1)),
+    'fin_ser_04_v1_limit_comparison_cosine': ('verdict', lambda: limit_compare(n * (1 - s.cos(1 / n)), 1)),
+    'fin_ser_04_v1_log_power_tower': ('verdict', _log_tower),
+    'fin_ser_04_v1_root_minus_one_range': ('interval', param_range(_root_minus_one, ('(', 1, s.oo, ')'), [-1, s.Rational(1, 2), 1, s.Rational(11, 10), 3])),
     # 미분방정식 1 · 풀이
     'fin_ode_01_v1_euler_three_steps': ('value', euler(lambda X, Y: X - Y**2, 0, 1, s.Rational(1, 2), 3)),
     'fin_ode_01_v1_separable_tangent_sum': ('ode', (lambda y: y.diff(x) - (1 + y**2) / (1 + x**2), 0, 1)),
