@@ -131,5 +131,86 @@ async function shoot(page, name) {
         assert.deepEqual(blockedErrors, [], 'blocked storage must not throw');
         await blocked.close();
         console.log('PASS: exam tabs, final tabs, landing guide, selection restore');
+        if (layoutOnly) return;
+
+        await page.waitForFunction(() => isGraderReady, {}, { timeout: 150000 });
+        // 모든 기말 문항: 정답 입력은 정답, 대표 오답은 오답 (실제 Pyodide 채점)
+        const bad = await page.evaluate(async () => {
+            state.exam = 'final';
+            const out = [];
+            for (const c of finalCollections) for (const p of c.problems) {
+                const kind = finalGrading.answerKind(p.solution);
+                const right = kind === 'verdict' ? '\\text{' + p.solution.slice(8) + '}' : kind === 'interval' ? p.solution.slice(9) : p.solution;
+                const wrong = kind === 'verdict' ? '포기 ' : kind === 'interval' ? right.replace(/^[[(]/, m => m === '[' ? '(' : '[') : '(' + p.solution + ')+1';
+                if (await gradeProblem(right, p.solution, false, 30000, true) !== 'CORRECT') out.push(p.id + ' right');
+                if (await gradeProblem(wrong, p.solution, false, 30000, true) === 'CORRECT') out.push(p.id + ' wrong');
+            }
+            state.exam = undefined;
+            return out;
+        });
+        assert.deepEqual(bad, []);
+
+        // 실제 흐름: fin_ode_01_v1 시작
+        await page.evaluate(() => selectFinalCollection('fin_ode_01_v1'));
+        await page.waitForTimeout(300);
+        await page.evaluate(() => startSelectedGame());
+        await page.waitForFunction(() => state.exam === 'final' && state.problems.length === 5 && document.getElementById('app-view').style.display === 'block');
+        assert.equal(await page.textContent('#slogan-text'), 'Solve the flow');
+
+        // 구간 템플릿을 실제로 눌러 입력한 값이 정답 처리되는지 (MathLive 표기 정규화)
+        await page.evaluate(() => renderFinalTools('interval'));
+        await page.click('#final-answer-tools [data-template="[a,b)"]');
+        await page.keyboard.type('-1');
+        await page.keyboard.press('Tab');
+        await page.keyboard.type('1');
+        const typed = await page.evaluate(() => document.getElementById('math-input').value);
+        assert.equal(await page.evaluate(v => gradeProblem(v, 'interval:[-1,1)', false, 30000, true), typed), 'CORRECT', `template value ${typed}`);
+        await page.evaluate(() => renderFinalTools('verdict'));
+        await page.click('#final-answer-tools [data-verdict="조건수렴"]');
+        assert.equal(await page.evaluate(() => document.getElementById('math-input').value), '\\text{조건수렴}');
+        await page.evaluate(() => { document.getElementById('math-input').value = ''; saveAnswer(); loadCurrentProblem(); });
+
+        // #math-input itself is 6px wider than a 390px viewport on midterm problems too (pre-existing),
+        // so check what the final exam adds: the widest tools row and the problem statement.
+        await page.setViewportSize({ width: 390, height: 844 });
+        await page.evaluate(() => renderFinalTools('interval'));
+        const wide = await page.evaluate(() => [...document.querySelectorAll('#final-answer-tools button, #problem-area')]
+            .filter(el => el.getBoundingClientRect().right > innerWidth + 1).map(el => el.id || el.textContent));
+        assert.deepEqual(wide, [], 'mobile final tools/problem overflow');
+        await shoot(page, 'quiz-final-mobile');
+        await page.evaluate(() => loadCurrentProblem());
+        await page.setViewportSize({ width: 1280, height: 960 });
+
+        for (let i = 0; i < 5; i++) {
+            const p = await page.evaluate(() => state.problems[state.currentIndex]);
+            assert(await page.locator('#btn-giveup').isHidden(), `giveup hidden on Q${i + 1}`);
+            assert.equal(await page.locator('#final-answer-tools').isVisible(), p.tools !== 'expr', `tools row on Q${i + 1}`);
+            if (p.tools === 'verdict') await page.click(`#final-answer-tools [data-verdict="${p.solution.slice(8)}"]`);
+            else await page.evaluate(sol => { document.getElementById('math-input').value = sol.startsWith('interval:') ? sol.slice(9) : sol; saveAnswer(); }, p.solution);
+            if (i < 4) await page.evaluate(() => nextProblem());
+        }
+        await page.evaluate(() => finishTest());
+        await page.waitForFunction(() => document.getElementById('result-view').style.display === 'block', {}, { timeout: 150000 });
+        assert.equal(await page.textContent('#score-area'), 'Score: 5 / 5');
+        const detail = await page.textContent('#detail-list');
+        assert(!detail.includes('verdict:') && !detail.includes('interval:'), 'raw answer prefixes in results');
+        assert(detail.includes('교과서 p.'), 'textbook page in results');
+        await shoot(page, 'result-final-desktop');
+
+        // 기말을 푼 뒤 같은 페이지에서 중간 문제집으로 돌아가기
+        await page.evaluate(() => { returnToCollections(); selectMidtermCollection(generatedCollections[0].id); });
+        await page.waitForTimeout(300);
+        await page.evaluate(() => startSelectedGame());
+        await page.waitForFunction(() => state.exam === 'midterm' && document.getElementById('app-view').style.display === 'block' && state.problems[0]?.solution === generatedCollections[0].problems[0].solution);
+        assert.equal(await page.evaluate(() => gradeProblem('포기', '발산', false, 30000, false)), 'CORRECT', 'midterm give-up grading unchanged');
+        assert(await page.evaluate(() => document.getElementById('final-answer-tools').classList.contains('hidden')), 'final tools hidden in midterm');
+        const giveupShown = await page.evaluate(() => {
+            state.currentIndex = state.problems.findIndex(p => p.level >= 3);
+            updateHeader(); loadCurrentProblem();
+            return !document.getElementById('btn-giveup').classList.contains('hidden');
+        });
+        assert(giveupShown, 'midterm give-up button back on level 3+');
+        assert.deepEqual(errors, []);
+        console.log('PASS: final session grading, tools, results, and midterm return');
     } finally { await browser.close(); server.close(); }
 })().catch(e => { console.error(e); server.close(); process.exitCode = 1; });

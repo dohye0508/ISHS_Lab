@@ -435,7 +435,6 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                     <button type="button" id="subject-tab-proof" class="subject-tab" data-exam="midterm" onclick="switchModalSubject('proof')">증명</button>
                     <button type="button" id="subject-tab-series" class="subject-tab hidden" data-exam="final" onclick="switchModalSubject('series')">급수</button>
                     <button type="button" id="subject-tab-ode" class="subject-tab hidden" data-exam="final" onclick="switchModalSubject('ode')">미분방정식</button>
-                    <button type="button" id="subject-tab-mock" class="subject-tab hidden" data-exam="final" onclick="switchModalSubject('mock')">실전 모의</button>
                 </div>
                 <div class="collection-sections">
                     <div id="collection-grid" style="display:none;"></div> <!-- logic.js compatibility -->
@@ -489,11 +488,6 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                         <div id="collection-grid-ode" class="collection-grid"></div>
                     </div>
 
-                    <div id="modal-section-mock" class="hidden">
-                        <h3>▶ 실전 모의 · 급수 8 + 미분방정식 2</h3>
-                        <div id="collection-grid-mock" class="collection-grid"></div>
-                    </div>
-
                     <div id="collection-footnote" style="padding: 15px; text-align: center; border-top: 1px solid var(--border); margin-top: 20px;">
                         <p style="font-size: 0.85em; color: var(--text-secondary); margin: 0;">
                             * 각 컬렉션은 여러 문제로 구성되어 있습니다.
@@ -531,6 +525,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                     <button type="button" class="btn secondary" onclick="insertMatrixTemplate(3,1)">3×1 벡터</button>
                     <button type="button" class="btn secondary" onclick="insertMatrixTemplate(4,1)">4×1 벡터</button>
                 </div>
+                <div id="final-answer-tools" class="hidden" style="display:flex; gap:8px; margin: 10px 0; flex-wrap:wrap;"></div>
                 <div class="action-bar">
                     <button id="btn-prev" class="btn secondary hidden" onclick="prevProblem()">← Previous</button>
                     <div style="flex-grow: 1; text-align: center;">
@@ -786,6 +781,10 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                 const icon = d.isSkipped ? '—' : (d.isCorrect ? '✓' : '✗');
                 const label = d.isSkipped ? '건너뜀' : (d.isCorrect ? '정답' : '오답');
                 const cLabel = p.solution.includes("적포") || p.latex.includes("\\text{") ? "" : " + C";
+                // 기말 정답의 verdict:/interval: 접두어는 채점용 표기라 화면에는 떼고 보여 준다.
+                const solutionTex = state.exam === 'final' && window.finalGrading
+                    ? window.finalGrading.displaySolution(p.solution) : `${p.solution}${cLabel}`;
+                const pageLabel = p.page ? ` · 교과서 p.${p.page}` : '';
                 return `<li class="detail-item">
                     <div class="detail-status ${cls}"><span class="detail-status-icon">${icon}</span>Q${d.id} · ${label}</div>
                     <div class="detail-problem">${buildProblemHtml(p.latex)}</div>
@@ -795,9 +794,9 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                     </div>
                     <div class="detail-answer-row">
                         <span class="detail-answer-label">정답</span>
-                        <span>$$${p.solution}${cLabel}$$</span>
+                        <span>$$${solutionTex}$$</span>
                     </div>
-                    ${p.explanation ? `<details class="problem-explanation"><summary>풀이 해설 · ${escapeHtmlText(p.title || '핵심 논리')}</summary>${buildProblemHtml(p.explanation)}</details>` : ''}
+                    ${p.explanation ? `<details class="problem-explanation"><summary>풀이 해설 · ${escapeHtmlText(p.title || '핵심 논리')}${pageLabel}</summary>${buildProblemHtml(p.explanation)}</details>` : ''}
                 </li>`;
             }).join("");
             document.querySelectorAll('.problem-explanation').forEach(detail => {
@@ -835,10 +834,10 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
 
         // 문제집 창은 시험(중간/기말) → 과목 2단이다. 각 과목 탭이 어느 시험 아래 있는지는
         // EXAM_OF 하나로 정하고, 시험 탭을 누르면 그 시험에서 마지막으로 보던 과목이 열린다.
-        const MODAL_SUBJECTS = ['trig', 'hyp', 'polar', 'apps', 'algebra', 'proof', 'series', 'ode', 'mock'];
+        const MODAL_SUBJECTS = ['trig', 'hyp', 'polar', 'apps', 'algebra', 'proof', 'series', 'ode'];
         const EXAM_OF = {
             trig: 'midterm', hyp: 'midterm', polar: 'midterm', apps: 'midterm', algebra: 'midterm', proof: 'midterm',
-            series: 'final', ode: 'final', mock: 'final'
+            series: 'final', ode: 'final'
         };
         const lastTabByExam = { midterm: 'trig', final: 'series' };
         let lastModalTab = 'trig'; // so the home button can reopen the modal on the same tab
@@ -1118,6 +1117,8 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
         // Single "Get Started" button on the unified landing card dispatches to whichever
         // subject's start flow matches the last collection picked in the modal.
         function startSelectedGame() {
+            if (selectedSubject === 'final') return startFinalGame();
+            state.exam = 'midterm'; // 기말을 푼 뒤 같은 페이지에서 중간으로 돌아와도 기말 채점 래퍼가 꺼지게
             if (selectedSubject === 'algebra') return startAlgebraGame();
             state.subject = 'calc';
             const slogan = document.getElementById('slogan-text');

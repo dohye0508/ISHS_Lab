@@ -13,7 +13,7 @@ function writeStore(key, value) {
     try { localStorage.setItem(key, value); } catch (e) { /* 저장하지 못해도 선택은 이번 방문 동안 유지된다 */ }
 }
 
-const FINAL_UNIT_TAB = { series: 'series', ode: 'ode', mock: 'mock' };
+const FINAL_UNIT_TAB = { series: 'series', ode: 'ode' };
 
 function renderFinalGrids() {
     const grids = {};
@@ -69,3 +69,101 @@ function restoreLastSelection() {
     applyExamToLanding('final');
     switchModalSubject('series');
 }
+
+async function startFinalGame() {
+    const id = document.getElementById('sel-collection-value-final').value;
+    const col = window.finalCollections?.find(c => c.id === id);
+    if (!col) return alert("문제집을 선택해주세요.");
+    try {
+        state.studyAttempt = await window.studyScores?.startAttempt({ collectionId: id, totalCount: col.problems.length });
+        if (!state.studyAttempt) throw new Error('점수 기록 시스템을 시작할 수 없습니다.');
+    } catch (error) {
+        alert(`문제집을 시작할 수 없습니다. ${error.message}`);
+        return;
+    }
+    document.getElementById('app-view').classList.remove('polar-session');
+
+    state.strictC = false; // 기말 문제에는 적분상수가 없다
+    state.subject = 'final';
+    state.exam = 'final';
+    const slogan = document.getElementById('slogan-text');
+    if (slogan) slogan.innerText = col.unit === 'ode' ? 'Solve the flow' : 'Converge with confidence';
+    state.problems = col.problems.map((p, idx) => ({
+        id: idx + 1,
+        level: p.level,
+        title: p.title,
+        latex: normalizeLatex(p.latex),
+        solution: p.solution,
+        explanation: p.explanation,
+        answerMode: p.answerMode,
+        page: p.page,
+        tools: p.tools,
+        userAnswer: ""
+    }));
+    state.totalCount = state.problems.length;
+    state.currentIndex = 0;
+    state.giveUpUnlocked = false;
+
+    document.getElementById('landing-view').style.display = 'none';
+    document.getElementById('loading-view').style.display = 'block';
+    setTimeout(() => {
+        document.getElementById('loading-view').style.display = 'none';
+        document.getElementById('app-view').style.display = 'block';
+        updateHeader();
+        loadCurrentProblem();
+    }, 500);
+}
+
+// 입력칸 아래 도구 줄. 버튼은 정답이 아니라 문제 유형(tools)으로 정해서 답을 흘리지 않는다.
+// 값 문제에는 항상 ∞와 발산을 같이 보여 주므로 둘 중 무엇이 답인지 드러나지 않는다.
+const FINAL_VERDICTS = ['절대수렴', '조건수렴', '수렴', '발산'];
+const FINAL_INTERVAL_TEMPLATES = { '[a,b]': '[#0,#0]', '[a,b)': '[#0,#0)', '(a,b]': '(#0,#0]', '(a,b)': '(#0,#0)' };
+
+function renderFinalTools(tools) {
+    const row = document.getElementById('final-answer-tools');
+    if (!row) return;
+    row.innerHTML = '';
+    const field = () => document.getElementById('math-input');
+    const add = (label, attr, value, onClick) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'btn secondary';
+        button.textContent = label;
+        button.setAttribute(attr, value);
+        button.onclick = onClick;
+        row.appendChild(button);
+    };
+    // 판정은 덧붙이지 않고 입력칸 전체를 바꾼다. 포커스를 입력칸으로 돌려 Enter로 바로 넘어갈 수 있게 한다.
+    const setVerdict = verdict => { const f = field(); f.value = `\\text{${verdict}}`; saveAnswer(); f.focus(); };
+    const insert = latex => { const f = field(); f.focus(); f.executeCommand(['insert', latex, { feedback: false, mode: 'math' }]); saveAnswer(); };
+    if (tools === 'verdict') {
+        FINAL_VERDICTS.forEach(v => add(v, 'data-verdict', v, () => setVerdict(v)));
+    } else if (tools === 'interval') {
+        Object.entries(FINAL_INTERVAL_TEMPLATES).forEach(([label, latex]) => add(label, 'data-template', label, () => insert(latex)));
+        add('∞', 'data-insert', 'infty', () => insert('\\infty'));
+    } else if (tools === 'value') {
+        add('∞', 'data-insert', 'infty', () => insert('\\infty'));
+        add('발산', 'data-verdict', '발산', () => setVerdict('발산'));
+    }
+    row.classList.toggle('hidden', !row.children.length);
+}
+
+// logic.js·grader.js의 전역 함수를 기말 세션에서만 감싼다. 중간 세션(state.exam이 'final'이
+// 아님)에서는 원래 함수를 그대로 부르므로 중간고사 채점과 화면은 바뀌지 않는다.
+(function installFinalWrappers() {
+    const baseGrade = window.gradeProblem;
+    window.gradeProblem = function (userTex, solTex, strictC, timeoutMs = 30000, exactAnswer = false) {
+        if (state.exam !== 'final') return baseGrade(userTex, solTex, strictC, timeoutMs, exactAnswer);
+        return window.finalGrading.gradeFinal(userTex, solTex, (u, s) => baseGrade(u, s, false, timeoutMs, true));
+    };
+    const baseLoad = window.loadCurrentProblem;
+    window.loadCurrentProblem = function () {
+        baseLoad();
+        renderFinalTools(state.exam === 'final' ? state.problems[state.currentIndex]?.tools : undefined);
+    };
+    const baseNav = window.updateNavButtons;
+    window.updateNavButtons = function () {
+        baseNav();
+        if (state.exam === 'final') document.getElementById('btn-giveup').classList.add('hidden');
+    };
+}());
