@@ -600,6 +600,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
     <script src="data/math/proof_orthogonal.js?v=20260928_v1"></script>
     <script src="data/math/proof_sources.js?v=20261006_v1"></script>
     <script src="data/math/final/ode.js?v=20261026_final"></script>
+    <script src="data/math/final/series.js?v=20261026_final"></script>
     <script>window.STUDIO_SCORE_CONFIG = { studio: 'advanced_math' };</script>
     <script src="scripts/grader.js?v=20260922_audit"></script>
     <script src="scripts/logic.js?v=20261006_keys"></script>
