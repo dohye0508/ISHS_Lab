@@ -379,8 +379,8 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                             </div>
                         </div>
 
-                        <div class="option-section" id="options-midterm">
-                            <div class="option-item">
+                        <div class="option-section">
+                            <div class="option-item" id="options-midterm">
                                 <label class="checkbox-container">
                                     <input type="checkbox" id="chk-strict-c" checked>
                                     <span>적분상수(C) 포함 필수 (미적분 문제에만 적용)</span>
@@ -862,8 +862,8 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
             switchModalSubject(lastTabByExam[exam]);
         }
 
-        // 시작 카드의 이용 가이드와 옵션은 고른 문제집의 시험을 따른다. 적분상수 C와 증명 해설
-        // 옵션은 중간고사 문제에만 의미가 있다.
+        // 시작 카드의 이용 가이드와 적분상수 C 옵션은 고른 문제집의 시험을 따른다. 증명 해설 옵션은
+        // 증명 탭에서 쓰므로 어느 시험이 선택돼 있든 그대로 둔다.
         function applyExamToLanding(exam) {
             document.getElementById('rules-midterm').classList.toggle('hidden', exam !== 'midterm');
             document.getElementById('rules-final').classList.toggle('hidden', exam !== 'final');

@@ -66,6 +66,9 @@ async function shoot(page, name) {
         assert(await page.locator('#subject-tab-series.active').isVisible(), 'series tab active by default');
         assert(await page.locator('#subject-tab-trig').isHidden(), 'midterm tabs hidden under final');
         assert(await page.locator('#rules-final').isVisible(), 'final guide on first visit');
+        // 증명 해설 옵션은 증명 탭에서 쓰므로 기말이 기본일 때도 보여야 하고, 적분상수 옵션만 숨긴다
+        assert(await page.locator('#chk-proof-keep-open').isVisible(), 'proof option visible on final');
+        assert(await page.locator('#chk-strict-c').isHidden(), 'constant-of-integration option hidden on final');
         await shoot(page, 'modal-final-desktop');
 
         // 중간고사 안에는 기존 6개 탭
@@ -157,6 +160,19 @@ async function shoot(page, name) {
         await page.waitForFunction(() => state.exam === 'final' && state.problems.length === 5 && document.getElementById('app-view').style.display === 'block');
         assert.equal(await page.textContent('#slogan-text'), 'Solve the flow');
 
+        // 도구 버튼을 누른 뒤 Enter: 포커스가 입력칸에 남아 답이 한 번만 들어가고 다음 문제로 넘어가야 한다
+        await page.evaluate(() => { const f = document.getElementById('math-input'); f.value = ''; renderFinalTools('value'); f.focus(); });
+        await page.click('#final-answer-tools [data-insert="infty"]');
+        await page.keyboard.press('Enter');
+        await page.waitForFunction(() => state.currentIndex === 1, {}, { timeout: 5000 });
+        assert.equal(await page.evaluate(() => state.problems[0].userAnswer), '\\infty', 'tool click then Enter');
+        await page.evaluate(() => { prevProblem(); renderFinalTools('verdict'); });
+        await page.click('#final-answer-tools [data-verdict="발산"]');
+        await page.keyboard.press('Enter');
+        await page.waitForFunction(() => state.currentIndex === 1, {}, { timeout: 5000 });
+        assert.equal(await page.evaluate(() => state.problems[0].userAnswer), '\\text{발산}', 'verdict click then Enter');
+        await page.evaluate(() => { prevProblem(); state.problems[0].userAnswer = ''; loadCurrentProblem(); });
+
         // 구간 템플릿을 실제로 눌러 입력한 값이 정답 처리되는지 (MathLive 표기 정규화)
         await page.evaluate(() => renderFinalTools('interval'));
         await page.click('#final-answer-tools [data-template="[a,b)"]');
@@ -196,6 +212,15 @@ async function shoot(page, name) {
         assert(!detail.includes('verdict:') && !detail.includes('interval:'), 'raw answer prefixes in results');
         assert(detail.includes('교과서 p.'), 'textbook page in results');
         await shoot(page, 'result-final-desktop');
+
+        // 결과 화면에서 홈 → 다른 기말 문제집 시작: 이전 결과가 아니라 새 문제가 보여야 한다
+        await page.evaluate(() => { returnToCollections(); selectFinalCollection('fin_ode_02_v1'); });
+        await page.waitForTimeout(300);
+        await page.evaluate(() => startSelectedGame());
+        await page.waitForFunction(() => state.exam === 'final' && document.getElementById('app-view').style.display === 'block'
+            && state.problems[0]?.solution === finalCollections.find(c => c.id === 'fin_ode_02_v1').problems[0].solution);
+        assert(await page.locator('#quiz-area').isVisible(), 'quiz shown for the next final set');
+        assert(await page.locator('#result-view').isHidden(), 'previous result hidden for the next final set');
 
         // 기말을 푼 뒤 같은 페이지에서 중간 문제집으로 돌아가기
         await page.evaluate(() => { returnToCollections(); selectMidtermCollection(generatedCollections[0].id); });

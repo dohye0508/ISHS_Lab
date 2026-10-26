@@ -82,6 +82,9 @@ async function startFinalGame() {
         return;
     }
     document.getElementById('app-view').classList.remove('polar-session');
+    // 결과 화면에서 홈으로 돌아와 다음 문제집을 시작하면 이전 결과가 남아 있지 않게 한다.
+    document.getElementById('quiz-area').style.display = '';
+    document.getElementById('result-view').style.display = 'none';
 
     state.strictC = false; // 기말 문제에는 적분상수가 없다
     state.subject = 'final';
@@ -130,6 +133,10 @@ function renderFinalTools(tools) {
         button.className = 'btn secondary';
         button.textContent = label;
         button.setAttribute(attr, value);
+        // 버튼이 포커스를 가져가면 MathLive가 포커스를 되찾지 못해 Enter가 버튼을 다시 누른다
+        // (∞가 두 번 들어가고 다음 문제로 넘어가지 않음). 누를 때 포커스를 입력칸에 그대로 둔다.
+        button.addEventListener('mousedown', e => e.preventDefault());
+        button.addEventListener('pointerdown', e => e.preventDefault());
         button.onclick = onClick;
         row.appendChild(button);
     };
