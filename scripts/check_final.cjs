@@ -10,7 +10,7 @@ const flag = name => args.includes(name);
 
 const context = vm.createContext({ window: {} });
 vm.runInContext(read('scripts/adv_final_grading.js'), context);
-for (const name of ['ode', 'series', 'mock']) {
+for (const name of ['ode', 'series']) {
     const file = `data/math/final/${name}.js`;
     if (fs.existsSync(path.join(root, file))) vm.runInContext(read(file), context);
 }
@@ -22,10 +22,11 @@ const page = read('adv_math.php');
 vm.runInContext(page.slice(page.indexOf('        function escapeHtmlText'), page.indexOf('        // Override logic.js\'s renderMath')), context);
 
 const UNITS = {
-    series: { prefix: 'fin_ser_', size: 5, pages: [98, 155] },
-    ode: { prefix: 'fin_ode_', size: 5, pages: [156, 191] },
-    mock: { prefix: 'fin_mock_', size: 10, pages: [98, 191] },
+    series: { prefix: 'fin_ser_', pages: [98, 155] },
+    ode: { prefix: 'fin_ode_', pages: [156, 191] },
 };
+// 사용자 요청으로 난이도를 올렸다: 모든 세트가 Level 3·4·4·5·5.
+const SET_LEVELS = [3, 4, 4, 5, 5];
 const TOOLS = new Set(['verdict', 'interval', 'value', 'expr']);
 const VERDICTS = new Set(['절대수렴', '조건수렴', '수렴', '발산']);
 const ids = new Set();
@@ -45,13 +46,12 @@ function checkText(id, field, value) {
 for (const col of collections) {
     const unit = UNITS[col.unit];
     assert(unit, `${col.id}: unknown unit ${col.unit}`);
-    assert(/^fin_(ser|ode|mock)_\d{2}_v\d+$/.test(col.id) && col.id.startsWith(unit.prefix), `${col.id}: bad collection id`);
+    assert(/^fin_(ser|ode)_\d{2}_v\d+$/.test(col.id) && col.id.startsWith(unit.prefix), `${col.id}: bad collection id`);
     assert(!ids.has(col.id), `${col.id}: duplicate id`); ids.add(col.id);
     assert(col.name && col.description, `${col.id}: name/description`);
-    assert.equal(col.problems.length, unit.size, `${col.id}: problem count`);
+    assert.equal(col.problems.length, SET_LEVELS.length, `${col.id}: problem count`);
     const levels = Array.from(col.problems, p => p.level).sort((a, b) => a - b); // this realm's Array for deepEqual
-    if (unit.size === 5) assert.deepEqual(levels, [2, 3, 3, 4, 5], `${col.id}: levels`);
-    else assert(levels.every(l => l >= 2 && l <= 5), `${col.id}: levels`);
+    assert.deepEqual(levels, SET_LEVELS, `${col.id}: levels`);
     for (const p of col.problems) {
         assert(p.id.startsWith(col.id + '_') && /^[a-z0-9_]+$/.test(p.id.slice(col.id.length + 1)), `${p.id}: bad problem id`);
         assert(!ids.has(p.id), `${p.id}: duplicate id`); ids.add(p.id);
@@ -79,10 +79,7 @@ const problems = collections.flatMap(c => c.problems.map(p => ({ ...p, collectio
 
 if (flag('--complete')) {
     const count = unit => collections.filter(c => c.unit === unit).length;
-    assert.deepEqual([count('series'), count('ode'), count('mock')], [10, 2, 1], 'set counts');
-    const mock = problems.filter(p => p.unit === 'mock');
-    assert.equal(mock.filter(p => p.page <= 155).length, 8, 'mock: series problems');
-    assert.equal(mock.filter(p => p.page >= 156).length, 2, 'mock: ODE problems');
+    assert.deepEqual([count('series'), count('ode')], [14, 2], 'set counts');
 }
 console.log(`PASS: structure (${collections.length} collections, ${problems.length} problems)`);
 if (flag('--structure-only')) process.exit(0);
