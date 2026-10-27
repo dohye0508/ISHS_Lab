@@ -69,6 +69,27 @@ async function shoot(page, name) {
         // 증명 해설 옵션은 증명 탭에서 쓰므로 기말이 기본일 때도 보여야 하고, 적분상수 옵션만 숨긴다
         assert(await page.locator('#chk-proof-keep-open').isVisible(), 'proof option visible on final');
         assert(await page.locator('#chk-strict-c').isHidden(), 'constant-of-integration option hidden on final');
+
+        // 문제집은 카드 격자가 아니라 단원별로 묶인 한 줄 목록이다 (번호 · 짧은 제목 · 설명 · 문항 수 · 점수)
+        const listOf = id => page.evaluate(gridId => {
+            const grid = document.getElementById(gridId);
+            return {
+                groups: [...grid.querySelectorAll('.collection-group-title')].map(h => h.textContent.trim()),
+                rows: grid.querySelectorAll('.collection-row').length,
+                firstTitle: grid.querySelector('.collection-row .collection-row-title')?.textContent.trim(),
+                firstNo: grid.querySelector('.collection-row .collection-row-no')?.textContent.trim(),
+                lastNo: [...grid.querySelectorAll('.collection-row .collection-row-no')].pop()?.textContent.trim(),
+            };
+        }, id);
+        const series = await listOf('collection-grid-series');
+        assert.equal(series.groups.length, 3, 'series grouped into 3 units');
+        assert(series.groups[0].startsWith('수렴 판정'), series.groups[0]);
+        assert.deepEqual([series.rows, series.firstNo, series.lastNo, series.firstTitle], [14, '01', '14', '수열의 극한']);
+        const ode = await listOf('collection-grid-ode');
+        assert.deepEqual([ode.groups.length, ode.rows], [0, 2], 'single-group tab has no group header');
+        // (logic.js still fills its hidden #collection-grid with old cards; only visible previews matter)
+        assert.equal(await page.locator('#collection-modal .problem-preview:visible').count(), 0, 'no math previews in the picker');
+        assert.equal(await page.textContent('#collection-grid-series .collection-row .collection-row-page'), 'p.101–105', 'textbook pages shown as row meta');
         await shoot(page, 'modal-final-desktop');
 
         // 중간고사 안에는 기존 6개 탭
@@ -76,6 +97,10 @@ async function shoot(page, name) {
         assert(await page.locator('#subject-tab-trig.active').isVisible(), 'midterm opens on trig');
         assert.equal(await page.locator('.subject-tab[data-exam="midterm"]:visible').count(), 6);
         assert(await page.locator('#subject-tab-series').isHidden(), 'final tabs hidden under midterm');
+        const trig = await listOf('collection-grid-trig');
+        assert.deepEqual([trig.groups, trig.rows], [['기본', '심화'], 10]);
+        assert.equal(trig.groups.length && (await listOf('collection-grid-algebra')).groups.length, 2, 'algebra grouped in two');
+        assert.equal((await listOf('collection-grid-proof')).rows, 10, 'proof chapters as rows');
         await shoot(page, 'modal-midterm-desktop');
 
         // 기말 문제집 선택 → 시작 카드

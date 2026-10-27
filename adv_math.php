@@ -58,18 +58,85 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
             background-repeat:no-repeat;
             background-attachment:fixed;
         }
-        .collection-grid {
-            max-height: none !important;
-            overflow-y: visible !important;
+        /* 문제집 목록 -- 카드 격자 대신 단원별로 묶은 한 줄짜리 목록이다. 카드가 수십 장 깔리면
+           어디서부터 풀지 한눈에 들어오지 않아서, 번호·짧은 제목·한 줄 설명·문항 수·점수만 남겼다.
+           각 줄은 .collection-card 클래스를 유지해 study_scores.js의 점수 갱신과 선택 표시가
+           그대로 동작한다(style.css의 카드 모양은 아래에서 덮어쓴다). */
+        #collection-modal .collection-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
-        .problem-preview {
+        #collection-modal .collection-group-title {
+            margin: 16px 0 2px;
+            font-size: .8rem;
+            font-weight: 700;
+            letter-spacing: .02em;
+            color: var(--text-secondary);
+        }
+        #collection-modal .collection-group-title:first-child { margin-top: 0; }
+        #collection-modal .collection-card.collection-row {
+            display: grid;
+            grid-template-columns: 2.2rem minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 4px 14px;
+            min-height: 0;
+            padding: 11px 16px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--surface);
+            box-shadow: none;
+            transform: none;
+        }
+        #collection-modal .collection-card.collection-row:hover {
+            border-color: var(--primary);
+            background: rgba(var(--primary-rgb), .04);
+            box-shadow: none;
+            transform: none;
+        }
+        #collection-modal .collection-card.collection-row.selected {
+            border-color: var(--primary);
+            background: rgba(var(--primary-rgb), .09);
+            box-shadow: inset 3px 0 0 var(--primary);
+        }
+        .collection-row-no {
+            font-weight: 800;
+            font-size: .95rem;
+            font-variant-numeric: tabular-nums;
+            color: var(--primary);
+        }
+        .collection-row-main { min-width: 0; }
+        .collection-row-title {
+            font-weight: 700;
+            font-size: .98rem;
+            line-height: 1.35;
+            color: var(--text);
+        }
+        .collection-row-desc {
+            margin-top: 2px;
+            font-size: .82rem;
+            color: var(--text-secondary);
             white-space: nowrap;
             overflow: hidden;
-            -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
-            mask-image: linear-gradient(to right, black 85%, transparent 100%);
+            text-overflow: ellipsis;
         }
-        .problem-preview mjx-container {
-            text-align: left !important;
+        .collection-row-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
+        .collection-row-chips .badge { font-size: .72rem; padding: 2px 7px; }
+        .collection-row-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: .8rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+        #collection-modal .collection-row .collection-score { font-size: .8rem; }
+        @media (max-width: 590px) {
+            #collection-modal .collection-card.collection-row {
+                grid-template-columns: 1.8rem minmax(0, 1fr);
+                padding: 10px 12px;
+            }
+            .collection-row-meta { grid-column: 2; gap: 10px; }
         }
         /* Word-problem statements (see the renderMath override below) split into a
            wrapping prose sentence plus one proper centered display formula for the
@@ -94,12 +161,6 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
             width: 100%;
             text-align: center;
             margin-top: 18px;
-        }
-        .collection-card--polar .problem-preview {
-            white-space: normal;
-            overflow-wrap: anywhere;
-            -webkit-mask-image: none;
-            mask-image: none;
         }
         .polar-session #math-input {
             box-sizing: border-box;
@@ -441,28 +502,28 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
 
                     <div id="modal-section-trig">
                         <h3>▶ 역삼각함수 미적분</h3>
-                        <div id="collection-grid-trig" class="collection-grid"></div>
+                        <div id="collection-grid-trig" class="collection-list"></div>
                     </div>
 
                     <div id="modal-section-hyp" class="hidden">
                         <h3>▶ 쌍곡함수 미적분</h3>
-                        <div id="collection-grid-hyp" class="collection-grid"></div>
+                        <div id="collection-grid-hyp" class="collection-list"></div>
                     </div>
 
                     <div id="modal-section-polar" class="hidden">
                         <h3>▶ 극좌표와 극곡선 · 심화 탐구</h3>
-                        <div id="collection-grid-polar" class="collection-grid"></div>
+                        <div id="collection-grid-polar" class="collection-list"></div>
                     </div>
 
                     <div id="modal-section-apps" class="hidden">
                         <h3>▶ 정적분의 활용 (고난도)</h3>
-                        <div id="collection-grid-apps" class="collection-grid"></div>
+                        <div id="collection-grid-apps" class="collection-list"></div>
                     </div>
 
                     <div id="modal-section-algebra" class="hidden">
                         <h3>▶ 고급대수 · 유형별 심화</h3>
                         <p class="proof-level-guide">연립방정식·역행렬·행렬식·기저 6개 문제집(각 10문항)과 내적·정사영·정규직교기저 6개 문제집(각 5문항), 총 90문항입니다.<br>난이도는 Level 3 응용 · Level 4 심화 · Level 5 종합으로 구성되며, 결과 화면에서 풀이를 확인할 수 있습니다.</p>
-                        <div id="collection-grid-algebra" class="collection-grid"></div>
+                        <div id="collection-grid-algebra" class="collection-list"></div>
                     </div>
 
                     <div id="modal-section-proof" class="hidden">
@@ -475,17 +536,17 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                                 Level 4 · 보조 아이디어, 경우 분류, 직접 구성<br>
                                 Level 5 · 여러 보조정리를 결합하는 종합 논증</div>
                         </details>
-                        <div id="collection-grid-proof" class="collection-grid"></div>
+                        <div id="collection-grid-proof" class="collection-list"></div>
                     </div>
 
                     <div id="modal-section-series" class="hidden">
                         <h3>▶ 급수 · 교과서 III단원 (p.98–155)</h3>
-                        <div id="collection-grid-series" class="collection-grid"></div>
+                        <div id="collection-grid-series" class="collection-list"></div>
                     </div>
 
                     <div id="modal-section-ode" class="hidden">
                         <h3>▶ 미분방정식 · 교과서 IV단원 (p.156–191)</h3>
-                        <div id="collection-grid-ode" class="collection-grid"></div>
+                        <div id="collection-grid-ode" class="collection-list"></div>
                     </div>
 
                     <div id="collection-footnote" style="padding: 15px; text-align: center; border-top: 1px solid var(--border); margin-top: 20px;">
@@ -812,18 +873,58 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
             return window.studyScores?.historyLabel(colId, expectedTotal) || '불러오는 중…';
         }
 
-        function buildCollectionCard(col, onClick) {
+        // 목록에 보일 짧은 제목. 번호는 줄 앞에 따로 붙으므로 "급수 1 · 수열의 극한" → "수열의 극한",
+        // "정적분의 활용 3 (역함수와 부피의 융합)" → "역함수와 부피의 융합". 시작 카드에는 전체 이름이 나온다.
+        function shortCollectionTitle(name) {
+            const dot = name.indexOf(' · ');
+            if (dot !== -1) return name.slice(dot + 3);
+            const paren = name.match(/^.*?\d+\s*\((.+)\)$/);
+            return paren ? paren[1] : name;
+        }
+
+        function buildCollectionCard(col, onClick, number = 1) {
             const score = readHistory(col.id, col.problems.length);
-            const card = document.createElement('div');
-            card.className = col.description ? 'collection-card collection-card--polar' : 'collection-card';
+            const scoreClass = score.startsWith("Best") ? "collection-score has-score" : "collection-score";
+            // 기말 설명 끝의 "· 교과서 p.101–105"는 좁은 화면에서 잘리므로 오른쪽 정보 칸으로 옮긴다.
+            const pageMatch = (col.description || '').match(/\s*·\s*교과서\s*(p\.[^·]+)$/);
+            const card = buildCollectionRow({
+                number,
+                title: shortCollectionTitle(col.name),
+                fullTitle: col.name,
+                desc: pageMatch ? col.description.slice(0, pageMatch.index) : col.description,
+                meta: `${pageMatch ? `<span class="collection-row-page">${escapeHtmlText(pageMatch[1].trim())}</span>` : ''}<span>${levelRange(col.problems.map(p => p.level))}</span><span>${col.problems.length}문항</span><span class="${scoreClass}">${score}</span>`
+            });
             card.dataset.id = col.id;
             card.dataset.totalCount = col.problems.length;
             card.onclick = onClick;
-            let scoreClass = (score.startsWith("Best")) ? "collection-score has-score" : "collection-score";
-            let preview = col.description ? escapeHtmlText(col.problems[0].title) : buildMathPreview(col.problems[0].latex);
-            card.innerHTML = `<div><h3>${col.name}</h3>${col.description ? `<p style="font-size: .85rem; line-height: 1.5;">${escapeHtmlText(col.description)} · ${col.problems.length}문항</p>` : ''}<span class="${scoreClass}">${score}</span></div>
-            <div class="problem-preview">${preview}</div>`;
             return card;
+        }
+
+        // 같은 탭 안의 문제집을 묶음(기본/심화, 단원 등)별 소제목과 함께 그린다. 묶음이 하나뿐이면 소제목은 생략한다.
+        function renderCollectionList(container, entries) {
+            if (!container) return;
+            container.innerHTML = '';
+            const grouped = new Set(entries.map(e => e.group || '')).size > 1;
+            let current = null;
+            entries.forEach(({ group = '', card }) => {
+                if (grouped && group !== current) {
+                    const title = document.createElement('div');
+                    title.className = 'collection-group-title';
+                    title.textContent = group;
+                    container.appendChild(title);
+                    current = group;
+                }
+                container.appendChild(card);
+            });
+        }
+
+        // 중간고사 탭 안의 묶음. 기말 문제집은 adv_final.js의 finalGroup()이 정한다.
+        function midtermGroup(col) {
+            if (/^adv_col1[ab]_v2_/.test(col.id)) return '심화';
+            if (/^adv_col1[ab]_\d+$/.test(col.id)) return '기본';
+            if (col.id.startsWith('alg_col_v3_')) return '연립방정식 · 역행렬 · 행렬식 · 기저 (각 10문항)';
+            if (col.id.startsWith('alg_orth_')) return '내적 · 정사영 · 정규직교기저 (각 5문항)';
+            return '';
         }
 
         // Which subject the currently-selected collection belongs to ('calc' | 'algebra').
@@ -886,18 +987,40 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
         // action-bar layout so a theorem reads exactly like a normal problem -- just with
         // Previous/Next navigation and an optional proof explanation.
         function buildProofChapterCard(chapter, idx) {
-            const card = document.createElement('div');
-            card.className = 'collection-card';
-            card.onclick = () => startProofChapter(idx);
             const levelCounts = [1, 2, 3, 4, 5].map(level => {
                 const count = chapter.theorems.filter(t => t.level === level).length;
                 return count ? `<span class="badge" title="${escapeHtmlText(window.proofLevelDescriptions[level])}">Level ${level} · ${count}개</span>` : '';
             }).join('');
             const referenceCount = chapter.theorems.filter(t => t.referenceSource).length;
-            card.innerHTML = `<div><h3>${escapeHtmlText(chapter.chapter)}</h3></div>
-            <div class="problem-preview">정리 ${chapter.theorems.length}개</div>
-            <div class="proof-level-summary">${levelCounts}${referenceCount ? `<span class="badge proof-ref-count" title="참고자료 PDF에 실린 정리">참고자료 · ${referenceCount}개</span>` : ''}</div>`;
+            const card = buildCollectionRow({
+                number: idx + 1,
+                title: chapter.chapter,
+                fullTitle: chapter.chapter,
+                chips: levelCounts + (referenceCount ? `<span class="badge proof-ref-count" title="참고자료 PDF에 실린 정리">참고자료 · ${referenceCount}개</span>` : ''),
+                meta: `<span>${levelRange(chapter.theorems.map(t => t.level))}</span><span>정리 ${chapter.theorems.length}개</span>`
+            });
+            card.onclick = () => startProofChapter(idx);
             return card;
+        }
+
+        // 아래 두 함수는 모든 탭의 목록이 함께 쓴다(증명 장 목록 바로 뒤에 둔 것은 check_proof_explanations가
+        // buildProofChapterCard부터 proofState 앞까지를 잘라 실행하기 때문이다).
+        function levelRange(levels) {
+            const valid = levels.filter(Number.isFinite);
+            if (!valid.length) return '';
+            const lo = Math.min(...valid), hi = Math.max(...valid);
+            return lo === hi ? `Lv ${lo}` : `Lv ${lo}–${hi}`;
+        }
+
+        // 한 줄: 번호 | 제목 + 한 줄 설명(또는 칩) | 레벨 범위 · 문항 수 · 최고 점수
+        function buildCollectionRow({ number, title, fullTitle, desc, chips, meta }) {
+            const row = document.createElement('div');
+            row.className = 'collection-card collection-row';
+            row.title = fullTitle;
+            row.innerHTML = `<span class="collection-row-no">${String(number).padStart(2, '0')}</span>
+                <div class="collection-row-main"><div class="collection-row-title">${escapeHtmlText(title)}</div>${desc ? `<div class="collection-row-desc">${escapeHtmlText(desc)}</div>` : ''}${chips ? `<div class="collection-row-chips">${chips}</div>` : ''}</div>
+                <div class="collection-row-meta">${meta}</div>`;
+            return row;
         }
 
         const proofState = { theorems: [], index: 0, chapterName: '' };
@@ -988,43 +1111,27 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
         });
 
         window.addEventListener('DOMContentLoaded', () => {
-            const trigGrid = document.getElementById('collection-grid-trig');
-            const hypGrid = document.getElementById('collection-grid-hyp');
-            const polGrid = document.getElementById('collection-grid-polar');
-            const appsGrid = document.getElementById('collection-grid-apps');
-            if (trigGrid && hypGrid && polGrid && appsGrid && window.generatedCollections) {
-                trigGrid.innerHTML = "";
-                hypGrid.innerHTML = "";
-                polGrid.innerHTML = "";
-                appsGrid.innerHTML = "";
+            if (window.generatedCollections) {
+                const tabs = { trig: [], hyp: [], polar: [], apps: [] };
                 window.generatedCollections.forEach(col => {
-                    const card = buildCollectionCard(col, () => selectMidtermCollection(col.id));
-                    if (col.id.includes('adv_col1a')) {
-                        trigGrid.appendChild(card);
-                    } else if (col.id.includes('adv_col1b')) {
-                        hypGrid.appendChild(card);
-                    } else if (col.id.includes('adv_col3')) {
-                        appsGrid.appendChild(card);
-                    } else {
-                        polGrid.appendChild(card);
-                    }
+                    const tab = col.id.includes('adv_col1a') ? 'trig' : col.id.includes('adv_col1b') ? 'hyp'
+                        : col.id.includes('adv_col3') ? 'apps' : 'polar';
+                    tabs[tab].push(col);
                 });
-                if (window.MathJax) MathJax.typesetPromise([trigGrid, hypGrid, polGrid, appsGrid]);
+                Object.entries(tabs).forEach(([tab, cols]) => renderCollectionList(document.getElementById(`collection-grid-${tab}`),
+                    cols.map((col, i) => ({ group: midtermGroup(col), card: buildCollectionCard(col, () => selectMidtermCollection(col.id), i + 1) }))));
             }
 
-            const algGrid = document.getElementById('collection-grid-algebra');
-            if (algGrid && window.algebraCollections) {
-                algGrid.innerHTML = "";
-                window.algebraCollections.forEach(col => {
-                    algGrid.appendChild(buildCollectionCard(col, () => { selectedSubject = 'algebra'; selectAlgebraCollection(col.id); }));
-                });
-                if (window.MathJax) MathJax.typesetPromise([algGrid]);
+            if (window.algebraCollections) {
+                renderCollectionList(document.getElementById('collection-grid-algebra'), window.algebraCollections.map((col, i) => ({
+                    group: midtermGroup(col),
+                    card: buildCollectionCard(col, () => { selectedSubject = 'algebra'; selectAlgebraCollection(col.id); }, i + 1)
+                })));
             }
 
-            const proofGrid = document.getElementById('collection-grid-proof');
-            if (proofGrid && window.proofTheorems) {
-                proofGrid.innerHTML = "";
-                window.proofTheorems.forEach((ch, idx) => proofGrid.appendChild(buildProofChapterCard(ch, idx)));
+            if (window.proofTheorems) {
+                renderCollectionList(document.getElementById('collection-grid-proof'),
+                    window.proofTheorems.map((ch, idx) => ({ card: buildProofChapterCard(ch, idx) })));
             }
 
             // 기말 카드는 adv_final.js가 그린다. logic.js가 쿠키의 중간 문제집을 먼저 고른 뒤라서

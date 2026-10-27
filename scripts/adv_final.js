@@ -15,16 +15,23 @@ function writeStore(key, value) {
 
 const FINAL_UNIT_TAB = { series: 'series', ode: 'ode' };
 
+// 급수 14세트는 교과서 흐름대로 세 묶음으로 나눠 보여 준다. 세트 번호(id의 두 자리)로 정한다.
+function finalGroup(col) {
+    if (col.unit !== 'series') return '';
+    const n = Number(col.id.match(/^fin_ser_(\d{2})_/)?.[1]);
+    if (n <= 6) return '수렴 판정 · 교과서 p.101–128';
+    if (n <= 10) return '멱급수와 테일러 · 교과서 p.131–150';
+    return '심화 종합 · 단원 넘나들기';
+}
+
 function renderFinalGrids() {
-    const grids = {};
     Object.keys(FINAL_UNIT_TAB).forEach(unit => {
-        grids[unit] = document.getElementById(`collection-grid-${unit}`);
-        if (grids[unit]) grids[unit].innerHTML = '';
+        const cols = (window.finalCollections || []).filter(col => col.unit === unit);
+        renderCollectionList(document.getElementById(`collection-grid-${unit}`), cols.map((col, i) => ({
+            group: finalGroup(col),
+            card: buildCollectionCard(col, () => selectFinalCollection(col.id), i + 1)
+        })));
     });
-    (window.finalCollections || []).forEach(col => {
-        grids[col.unit]?.appendChild(buildCollectionCard(col, () => selectFinalCollection(col.id)));
-    });
-    if (window.MathJax?.typesetPromise) MathJax.typesetPromise(Object.values(grids).filter(Boolean));
 }
 
 function markFinalSelection(col) {

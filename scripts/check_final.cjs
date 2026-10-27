@@ -75,8 +75,8 @@ for (const col of collections) {
         checkText(p.id, 'explanation', p.explanation);
     }
 }
-// 문제집 카드는 첫 문항의 제목을 미리 보여 준다(adv_math.php buildCollectionCard). 판정 문제라면
-// 그 제목이 판정 결과나 쓸 판정법을 드러내지 않아야 한다.
+// 문항 제목은 결과 화면의 해설 요약에 나오고, 예전 카드형 목록에서는 첫 문항 제목이 미리 보였다.
+// 판정 문제의 첫 문항 제목이 판정 결과나 쓸 판정법을 드러내지 않도록 계속 막아 둔다.
 const SPOILERS = ['수렴', '발산', '절댓값', '판정', '조화급수', '누르기'];
 for (const col of collections) {
     const first = col.problems[0];
