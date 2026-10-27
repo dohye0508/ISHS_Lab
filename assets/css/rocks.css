@@ -175,7 +175,8 @@ main { width: 100%; max-width: 720px; margin: 0 auto; padding: 28px 16px 40px; f
 .rk-toggle input:checked::after { transform: translateX(14px); }
 
 .rk-start { width: 100%; margin-top: 22px; padding: 15px; font-size: 17px; border-radius: 14px; }
-.rk-tools { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+.rk-tools { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 16px; }
+.rk-tool-hot { border-color: rgba(var(--primary-rgb), .45); background: linear-gradient(135deg, rgba(var(--primary-rgb), .12), var(--glass) 70%); }
 .rk-tool {
     display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-align: left;
     padding: 14px; border-radius: 16px; border: 1px solid var(--rule); background: var(--glass);
@@ -320,6 +321,38 @@ main { width: 100%; max-width: 720px; margin: 0 auto; padding: 28px 16px 40px; f
 .rk-key-result { display: grid; grid-template-columns: 180px 1fr; gap: 18px; align-items: start; }
 .rk-key-result .rk-card-photo img { border-radius: 14px; aspect-ratio: 1; }
 
+/* ---------- 순서도 게임 ---------- */
+.rk-name-card { text-align: center; padding: 26px 16px; border-radius: 18px; background: var(--glass); border: 1px solid var(--rule); box-shadow: var(--shadow); }
+.rk-big-name { margin-top: 8px; font-size: 40px; font-weight: 800; letter-spacing: -.04em; }
+.rk-stage.rk-stage-sm { max-width: 300px; }
+.rk-seq-box { margin-top: 18px; padding: 14px; border-radius: 16px; border: 1.5px dashed var(--rule-2); background: var(--glass); min-height: 90px; }
+.rk-seq-title { font-size: 13px; font-weight: 800; color: var(--ink-3); margin-bottom: 8px; }
+.rk-seq-title small { font-weight: 600; margin-left: 4px; }
+.rk-seq { list-style: none; counter-reset: seq; padding: 0; margin: 0; display: grid; gap: 6px; }
+.rk-seq li { counter-increment: seq; display: flex; align-items: center; gap: 8px; }
+.rk-seq li::before { content: counter(seq); flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: var(--primary); color: var(--on-primary); font-size: 12px; font-weight: 800; }
+.rk-seq button { flex: 1; display: flex; justify-content: space-between; align-items: center; gap: 8px; text-align: left; padding: 9px 12px; border-radius: 10px; border: 1px solid var(--rule-2); background: var(--patch); font-size: 15px; font-weight: 700; }
+.rk-seq button i { font-style: normal; color: var(--ink-3); font-size: 12px; }
+.rk-seq button:disabled i { display: none; }
+.rk-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.rk-chip { padding: 9px 13px; border-radius: 99px; border: 1.5px solid var(--rule-2); background: var(--patch); font-size: 14px; font-weight: 600; text-align: left; transition: border-color .15s, opacity .15s; }
+.rk-chip:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); }
+.rk-chip:disabled { opacity: .3; }
+.rk-path { list-style: none; counter-reset: step; padding: 0; margin: 12px 0 0; display: grid; gap: 6px; }
+.rk-path li { counter-increment: step; position: relative; padding: 9px 12px 9px 42px; border-radius: 12px; background: var(--paper-2); border: 1px solid var(--rule); }
+.rk-path li::before { content: counter(step); position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: var(--rule-2); font-size: 12px; font-weight: 800; }
+.rk-path li.ok { border-color: color-mix(in srgb, var(--ok) 45%, transparent); }
+.rk-path li.ok::before { background: var(--ok); color: #fff; }
+.rk-path li.bad { border-color: color-mix(in srgb, var(--bad) 45%, transparent); }
+.rk-path li.bad::before { background: var(--bad); color: #fff; }
+.rk-path-q { display: block; font-size: 12px; color: var(--ink-3); font-weight: 600; }
+.rk-path b { font-size: 15px; }
+.rk-step-q { margin-top: 18px; font-size: 17px; font-weight: 800; }
+.rk-key-opt.stop { border-style: dashed; border-color: rgba(var(--primary-rgb), .6); color: var(--primary); }
+.rk-key-opt.stop::after { content: ''; }
+.rk-twenty-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin: 14px 0; font-size: 14px; color: var(--ink-2); }
+.rk-twenty-bar b { color: var(--primary); }
+
 /* ---------- 라이트박스 ---------- */
 .rk-lightbox { position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; background: rgba(0, 0, 0, .9); cursor: zoom-out; }
 .rk-lightbox-stage { width: min(92vw, 86vh); aspect-ratio: 1; overflow: hidden; border-radius: 12px; background: var(--stage); }
@@ -330,8 +363,10 @@ main { width: 100%; max-width: 720px; margin: 0 auto; padding: 28px 16px 40px; f
     .rk-panel { padding: 18px; }
     .rk-seg button { font-size: 14px; padding: 9px 6px; }
     .rk-toggles { grid-template-columns: 1fr; }
+    .rk-tools { grid-template-columns: 1fr 1fr; }
     .rk-tool { padding: 12px; }
     .rk-tool small { display: none; }
+    .rk-big-name { font-size: 32px; }
     .rk-opt { font-size: 16px; }
     .rk-cards { grid-template-columns: 1fr 1fr; gap: 10px; }
     .rk-card-body { padding: 10px; }
