@@ -30,10 +30,11 @@ A client-side analyzer for KakaoTalk chat exports (`kakaotalk.php`). Files are p
 - **Check:** `node scripts/check_kakaotalk.cjs [export.txt ...]` verifies the parser and the filters against independent line counts.
 
 ### 5. Rock ID Studio
-A photo quiz for the earth-science rock identification lab (`rocks.php`), covering 22 igneous, sedimentary and metamorphic rocks. Uses the shared studio layout (`style.css`, `studio-layout.css`). No scores are saved to the server; settings and the wrong-answer log stay in localStorage.
-- **Modes:** multiple choice (confusable distractors first), typed answers with initial-consonant hints, a timed exam graded at the end, rock-type classification, a study deck with hidden names, and a wrong-answer notebook that records which rocks get mixed up.
+A photo quiz for the earth-science rock identification lab (`rocks.php`), covering 22 igneous, sedimentary and metamorphic rocks. Self-contained page in the ISHS LAB tone; no scores are saved to the server, and settings, streaks and the wrong-answer log stay in localStorage.
+- **Modes:** multiple choice (confusable distractors first), typed answers with initial-consonant hints, photo pick (name → choose 1 of 4 photos), rock type only, and a timed exam graded at the end. Ranges: all, by type, or weak rocks only.
+- **Tools:** study deck with hidden names, an identification helper that walks the lab sheet's yes/no key to a rock, and a wrong-answer notebook that records which rocks get mixed up.
 - **Photo variation:** random rotation/flip, zoom crop that hides backgrounds and specimen labels, color jitter and grayscale, so students practice on the rock rather than the photo.
-- **Data:** `data/rocks/rocks.js`; add photos to `assets/images/rocks/` and list them in a rock's `images` array.
+- **Data:** `data/rocks/rocks.js` (rocks and `ROCK_KEY`); add photos to `assets/images/rocks/` and list them in a rock's `images` array.
 
 ## Project Structure
 

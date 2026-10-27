@@ -115,3 +115,54 @@ const ROCKS = [
 ROCKS.forEach(r => { if (!r.images) r.images = [`assets/images/rocks/${r.id}-1.jpg`]; });
 
 const CREDIT = '사진: Wikimedia Commons — GeoDIL(CC0), USGS(퍼블릭 도메인), James St. John(현무암·안산암·석회암·응회암·편암·편마암, CC BY 2.0)';
+
+// 판별 도우미: 실험지 「탐구 과정」의 예/아니요 판별 순서를 22종에 맞게 줄인 것.
+// option에 next가 있으면 다음 질문, rock이 있으면 결론.
+const ROCK_KEY = {
+  start: { q: '구멍(기공)이 숭숭 뚫려 있나요?', hint: '용암 속 가스가 빠져나간 자리입니다.', options: [
+    { label: '예, 구멍이 많아요', next: 'hole' },
+    { label: '아니요', next: 'glass' } ] },
+  hole: { q: '색과 무게는 어떤가요?', options: [
+    { label: '하얗거나 밝고, 들어 보면 아주 가벼움', rock: 'pumice' },
+    { label: '검붉거나 검고, 구멍이 크고 아주 많음', rock: 'scoria' },
+    { label: '검은 회색이고 묵직함, 구멍은 드문드문', rock: 'basalt' } ] },
+  glass: { q: '유리처럼 반짝이고, 깨진 면이 조개껍데기처럼 매끈한가요?', options: [
+    { label: '예, 까만 유리 같아요', rock: 'obsidian' },
+    { label: '아니요', next: 'layer' } ] },
+  layer: { q: '줄무늬나 얇은 층이 보이나요?', hint: '변성암의 엽리, 셰일의 층리를 찾아보세요.', options: [
+    { label: '예', next: 'layerKind' },
+    { label: '아니요', next: 'clast' } ] },
+  layerKind: { q: '줄무늬·층은 어떤 모습인가요?', options: [
+    { label: '밝고 어두운 굵은 띠가 번갈아 나타남', rock: 'gneiss' },
+    { label: '운모가 은빛으로 반짝, 붉은 알갱이가 박히기도', rock: 'schist' },
+    { label: '평평한 판으로 쪼개지고 단단함, 검푸른 색', rock: 'slate' },
+    { label: '얇게 부스러지고 무름, 회색 진흙 느낌', rock: 'shale' } ] },
+  clast: { q: '자갈·조각·모래 같은 알갱이가 박혀 있나요?', hint: '퇴적물이 쌓여 굳은 쇄설성 퇴적암인지 보는 단계입니다.', options: [
+    { label: '예', next: 'clastKind' },
+    { label: '아니요', next: 'acid' } ] },
+  clastKind: { q: '박혀 있는 알갱이는?', options: [
+    { label: '2mm보다 큰 둥근 자갈', rock: 'conglomerate' },
+    { label: '2mm보다 큰 각진 조각', rock: 'breccia' },
+    { label: '모래 알갱이, 만지면 까칠까칠', rock: 'sandstone' },
+    { label: '화산재가 굳은 듯 연하고 푸석함', rock: 'tuff' } ] },
+  acid: { q: '묽은 염산을 떨어뜨리면 거품이 나나요?', hint: '탄산칼슘(방해석)으로 된 암석만 거품이 납니다.', options: [
+    { label: '예, 거품이 나요', next: 'acidKind' },
+    { label: '아니요', next: 'crystal' } ] },
+  acidKind: { q: '결정이 보이나요?', options: [
+    { label: '반짝이는 하얀 결정이 맞물려 보임', rock: 'marble' },
+    { label: '결정은 안 보이고 흐린 회색, 화석이 있기도', rock: 'limestone' } ] },
+  crystal: { q: '광물 결정 알갱이가 눈에 보이나요?', options: [
+    { label: '예, 알갱이가 다 보여요', next: 'coarse' },
+    { label: '아니요, 고와서 안 보여요', next: 'fine' } ] },
+  coarse: { q: '알갱이의 색은?', options: [
+    { label: '설탕 같은 밝은 결정, 아주 단단함', rock: 'quartzite' },
+    { label: '흰 바탕에 검은 점', rock: 'granite' },
+    { label: '흰색과 검은색이 반반', rock: 'diorite' },
+    { label: '대부분 검은 점박이', rock: 'gabbro' } ] },
+  fine: { q: '어떤 느낌인가요?', options: [
+    { label: '매끈한 도자기 같고 깨진 면이 날카로움', rock: 'chert' },
+    { label: '짙은 색, 치밀하고 아주 단단, 줄무늬 없음', rock: 'hornfels' },
+    { label: '분홍빛이나 밝은 회색', rock: 'rhyolite' },
+    { label: '회색 바탕에 작은 흰 점', rock: 'andesite' },
+    { label: '검은 회색, 묵직함', rock: 'basalt' } ] },
+};

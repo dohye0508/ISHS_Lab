@@ -3,6 +3,7 @@
 
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const app = $('#app');
 
 // ---------- 저장 ----------
 const store = {
@@ -11,24 +12,26 @@ const store = {
 };
 
 const DEFAULTS = {
-    collection: 'all', mode: 'choice', count: 10, choices: 4, timer: 20,
+    mode: 'choice', range: 'all', count: 10, choices: 4, timer: 20,
     tricky: true, rotate: true, zoom: false, color: false, gray: false,
 };
 let settings = { ...DEFAULTS, ...store.get('settings', {}) };
 let stats = store.get('stats', {}); // id -> { seen, wrong, mix: { 헷갈린id: 횟수 } }
+let best = store.get('best', {});   // mode -> 최고 연속 정답
 let quiz = null;
-let hideNames = false;
+let study = { hide: false, type: 'all' };
+let keyPath = [];
 
 const byId = Object.fromEntries(ROCKS.map(r => [r.id, r]));
-const MODE_TITLE = { choice: '객관식', type: '주관식', exam: '실전', kind: '종류' };
 
-// 문제집: 종류별 + 생김새별(PDF 분류)
-const COLLECTIONS = [
-    { id: 'all', name: '전체 22종', desc: '화성암 9 · 퇴적암 7 · 변성암 6', section: 'type', ids: ROCKS.map(r => r.id) },
-    ...TYPES.map((t, i) => ({ id: ['igneous', 'sedimentary', 'metamorphic'][i], name: `${t} ${ROCKS.filter(r => r.type === t).length}종`, desc: ROCKS.filter(r => r.type === t).map(r => r.name).join(' · '), section: 'type', ids: ROCKS.filter(r => r.type === t).map(r => r.id) })),
-    ...Object.entries(GROUPS).map(([g, info]) => ({ id: `look-${g}`, name: info.title, desc: ROCKS.filter(r => r.group === g).map(r => r.name).join(' · '), section: 'look', ids: ROCKS.filter(r => r.group === g).map(r => r.id) })),
-];
-const collectionById = id => COLLECTIONS.find(c => c.id === id) || COLLECTIONS[0];
+const MODES = {
+    choice: { title: '객관식', desc: '사진을 보고 보기에서 이름을 고릅니다. 헷갈리는 돌이 보기로 먼저 나와요.' },
+    type:   { title: '주관식', desc: '사진을 보고 이름을 직접 씁니다. 초성·특징 힌트를 쓸 수 있어요.' },
+    pick:   { title: '사진 찾기', desc: '이름을 보고 사진 4장 중에서 그 암석을 찾습니다.' },
+    kind:   { title: '종류', desc: '화성암·퇴적암·변성암 중 무엇인지만 맞힙니다.' },
+    exam:   { title: '실전', desc: '수행평가처럼 시간 안에 이름을 쓰고, 끝까지 푼 뒤 한 번에 채점합니다.' },
+};
+const RANGE_KEYS = ['all', ...TYPES, 'weak'];
 
 // ---------- 유틸 ----------
 const shuffle = a => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
@@ -62,7 +65,8 @@ const hasBatchim = w => { const c = w.charCodeAt(w.length - 1) - 0xAC00; return 
 const roOf = w => { const c = w.charCodeAt(w.length - 1) - 0xAC00; return hasBatchim(w) && c % 28 !== 8 ? '으로' : '로'; };
 
 const typeClass = t => ({ 화성암: 'igneous', 퇴적암: 'sedimentary', 변성암: 'metamorphic' }[t]);
-const typeTag = t => `<span class="rock-type ${typeClass(t)}">${t}</span>`;
+const typeTag = t => `<span class="rk-type ${typeClass(t)}">${t}</span>`;
+const backBtn = (label = '홈') => `<button type="button" class="rk-btn ghost" data-go="home" aria-label="처음으로">← ${label}</button>`;
 
 // ---------- 사진 변형 ----------
 function makeView(rock) {
@@ -76,10 +80,9 @@ function makeView(rock) {
     return v;
 }
 const viewStyle = v => `transform:translate(${v.tx}%,${v.ty}%) scale(${v.zoom}) rotate(${v.rot}deg) scaleX(${v.flip ? -1 : 1});filter:${v.filter}`;
-const miniPhoto = v => `<div class="rock-mini" data-zoom="${esc(v.src)}" data-style="${esc(viewStyle(v))}"><img src="${esc(v.src)}" alt="" style="${viewStyle(v)}" loading="lazy"></div>`;
-const thumb = (rock, note = '') => `<button type="button" class="rock-thumb" data-zoom="${esc(rock.images[0])}">
-    <img src="${esc(rock.images[0])}" alt="${esc(rock.name)}" loading="lazy">
-    <span class="rock-thumb-name">${esc(rock.name)} ${note}</span><small>${esc(rock.feature)}</small></button>`;
+const photo = (v, cls) => `<div class="${cls}" data-zoom="${esc(v.src)}" data-style="${esc(viewStyle(v))}"><img src="${esc(v.src)}" alt="암석 사진" style="${viewStyle(v)}" draggable="false"></div>`;
+const thumb = (rock, note = '') => `<button type="button" class="rk-thumb" data-zoom="${esc(rock.images[0])}">
+    <img src="${esc(rock.images[0])}" alt="${esc(rock.name)}" loading="lazy"><b>${esc(rock.name)} ${note}</b><small>${esc(rock.feature)}</small></button>`;
 
 // ---------- 기록 ----------
 function record(id, correct, mixedWith) {
@@ -90,80 +93,88 @@ function record(id, correct, mixedWith) {
     store.set('stats', stats);
 }
 const weakIds = () => ROCKS.filter(r => stats[r.id]?.wrong).map(r => r.id);
+const poolOf = range => range === 'all' ? ROCKS.map(r => r.id) : range === 'weak' ? weakIds() : ROCKS.filter(r => r.type === range).map(r => r.id);
 
-// ---------- 화면 전환 ----------
-function showView(name) {
-    ['landing', 'app', 'study', 'notes'].forEach(v => { $(`#${v}-view`).style.display = v === name ? 'block' : 'none'; });
-    window.scrollTo(0, 0);
+function render(html, keepScroll) {
+    app.innerHTML = html;
+    if (!keepScroll) window.scrollTo(0, 0);
 }
 
-function returnToLanding() {
+// ---------- 홈 ----------
+function homeView(keepScroll) {
     clearTimer();
     quiz = null;
-    renderLanding();
-    showView('landing');
-}
-
-// ---------- 메인(랜딩) ----------
-function renderCollections() {
-    for (const section of ['type', 'look']) {
-        $(`#collection-grid-${section}`).innerHTML = COLLECTIONS.filter(c => c.section === section).map(c => {
-            return `<div class="collection-card${c.id === settings.collection ? ' selected' : ''}" data-id="${c.id}" onclick="selectCollection('${c.id}')">
-                <div><h3>${esc(c.name)}</h3><span class="collection-score">${c.ids.length}문항</span></div>
-                <p class="rock-collection-desc">${esc(c.desc)}</p>
-                <div class="rock-preview">${c.ids.slice(0, 4).map(id => `<img src="${esc(byId[id].images[0])}" alt="" loading="lazy">`).join('')}</div>
-            </div>`;
-        }).join('');
-    }
-}
-
-function renderLanding() {
-    const col = collectionById(settings.collection);
-    $('#current-collection-name').textContent = `${col.name} (${col.ids.length}문항)`;
-    const pairs = [['#mode-selector', 'mode'], ['#count-selector', 'count'], ['#choices-selector', 'choices'], ['#timer-selector', 'timer']];
-    for (const [sel, key] of pairs)
-        $$(`${sel} .cnt-btn`).forEach(b => b.classList.toggle('selected', String(settings[key]) === b.dataset[key]));
-    for (const key of ['rotate', 'zoom', 'color', 'gray', 'tricky']) $(`#chk-${key}`).checked = settings[key];
-    $('#row-count').classList.toggle('hidden', settings.mode === 'exam');
-    $('#row-timer').classList.toggle('hidden', settings.mode !== 'exam');
-    $('#row-choices').classList.toggle('hidden', settings.mode !== 'choice');
-    $('#row-tricky').classList.toggle('hidden', settings.mode !== 'choice');
+    if (settings.range === 'weak' && !weakIds().length) settings.range = 'all';
+    const n = poolOf(settings.range).length;
+    const seg = (key, items) => `<div class="rk-seg" role="group">${items.map(([v, label, sub, disabled]) =>
+        `<button type="button" class="${String(settings[key]) === String(v) ? 'on' : ''}" data-set="${key}" data-val="${v}" ${disabled ? 'disabled' : ''}>${label}${sub !== undefined ? `<small>${sub}</small>` : ''}</button>`).join('')}</div>`;
+    const toggle = (key, label) => `<label class="rk-toggle"><input type="checkbox" data-toggle="${key}" ${settings[key] ? 'checked' : ''}>${label}</label>`;
+    const photoOn = ['rotate', 'zoom', 'color', 'gray'].filter(k => settings[k]).map(k => ({ rotate: '회전', zoom: '확대', color: '색감', gray: '흑백' }[k]));
     const weak = weakIds().length;
-    $('#weak-count').textContent = weak ? `(${weak})` : '';
+
+    render(`
+    <section class="rk-hero">
+        <p class="rk-eyebrow">ROCK ID STUDIO · 지구과학 실험</p>
+        <h1>사진 보고,<br><em>암석 맞히기.</em></h1>
+        <p>실물은 사진과 색·각도·크기가 다릅니다. 사진을 돌리고 확대해 가며 돌 자체를 보는 눈을 기르세요.</p>
+    </section>
+
+    <section class="rk-panel">
+        <div class="rk-field">
+            <div class="rk-field-label">모드</div>
+            ${seg('mode', Object.entries(MODES).map(([k, m]) => [k, m.title]))}
+            <p class="rk-mode-desc">${MODES[settings.mode].desc}</p>
+        </div>
+        <div class="rk-field">
+            <div class="rk-field-label">범위</div>
+            ${seg('range', RANGE_KEYS.map(k => [k, k === 'all' ? '전체' : k === 'weak' ? '약점' : k, poolOf(k).length, k === 'weak' && !weak]))}
+        </div>
+        ${settings.mode === 'exam' ? `
+        <div class="rk-field">
+            <div class="rk-field-label">문항당 제한 시간 <span>${n}문항 모두 출제</span></div>
+            ${seg('timer', [10, 20, 30, 60].map(v => [v, `${v}초`]))}
+        </div>` : `
+        <div class="rk-field">
+            <div class="rk-field-label">문항 수</div>
+            ${seg('count', [[10, '10'], [20, '20'], ['all', `전체 ${n}`], [0, '무한']])}
+        </div>`}
+        <details class="rk-more">
+            <summary><span>사진 변형 · 보기 설정<small>${photoOn.length ? photoOn.join(' · ') : '변형 없음'}</small></span></summary>
+            <div class="rk-toggles">
+                ${toggle('rotate', '회전·뒤집기')}
+                ${toggle('zoom', '확대 (배경·번호표 가리기)')}
+                ${toggle('color', '색감 흔들기')}
+                ${toggle('gray', '흑백')}
+                ${toggle('tricky', '헷갈리는 보기 우선')}
+            </div>
+            ${settings.mode === 'choice' ? `<div class="rk-field" style="margin-top:14px">
+                <div class="rk-field-label">객관식 보기 수</div>
+                ${seg('choices', [4, 5, 6].map(v => [v, `${v}지선다`]))}
+            </div>` : ''}
+        </details>
+        <button type="button" class="rk-btn primary rk-start" data-action="start">시작하기 →</button>
+    </section>
+
+    <section class="rk-tools">
+        <button type="button" class="rk-tool" data-go="study"><span>📖</span><b>암석 도감</b><small>22종 특징 · 헷갈리는 짝</small></button>
+        <button type="button" class="rk-tool" data-go="key"><span>🧭</span><b>판별 도우미</b><small>질문에 답하며 이름 찾기</small></button>
+        <button type="button" class="rk-tool" data-go="notes"><span>📝</span><b>오답 노트</b><small>${weak ? `약점 ${weak}종` : '아직 기록 없음'}</small></button>
+    </section>`, keepScroll);
 }
 
-function saveSettings() { store.set('settings', settings); renderLanding(); }
-
-function openCollectionModal() {
-    renderCollections();
-    $('#collection-modal').classList.add('visible');
-    document.body.style.overflow = 'hidden';
-}
-function closeCollectionModal() {
-    $('#collection-modal').classList.remove('visible');
-    document.body.style.overflow = '';
-}
-function selectCollection(id) {
-    settings.collection = id;
-    $$('.collection-card').forEach(c => c.classList.toggle('selected', c.dataset.id === id));
-    saveSettings();
-    setTimeout(closeCollectionModal, 200);
-}
-
-function startSelected() {
-    const col = collectionById(settings.collection);
-    startQuiz(settings.mode, col.ids);
+function changeSetting(key, raw) {
+    settings[key] = key === 'mode' || key === 'range' || raw === 'all' ? raw : Number(raw);
+    store.set('settings', settings);
+    const open = $('.rk-more')?.open;
+    homeView(true);
+    if (open) $('.rk-more').open = true;
 }
 
 // ---------- 퀴즈 ----------
 function startQuiz(mode, pool, total) {
     if (!pool.length) return;
     if (total === undefined) total = mode === 'exam' || settings.count === 'all' ? pool.length : Number(settings.count);
-    quiz = { mode, pool, total, deck: [], i: 0, answers: [], last: null, timer: null };
-    $('#quiz-area').style.display = 'block';
-    $('#result-view').style.display = 'none';
-    $('#result-view').classList.remove('expanded');
-    showView('app');
+    quiz = { mode, pool, total, deck: [], i: 0, answers: [], last: null, timer: null, streak: 0, bestRun: 0 };
     nextQuestion();
 }
 
@@ -175,9 +186,8 @@ function drawNext() {
     return (quiz.last = quiz.deck.shift());
 }
 
-function optionsFor(rock) {
+function optionsFor(rock, n) {
     if (quiz.mode === 'kind') return TYPES;
-    const n = Math.min(settings.choices, ROCKS.length);
     const base = quiz.pool.length >= n ? quiz.pool : ROCKS.map(r => r.id);
     let ordered = shuffle(base.filter(id => id !== rock.id));
     if (settings.tricky) {
@@ -187,55 +197,55 @@ function optionsFor(rock) {
     return shuffle([rock.id, ...ordered.slice(0, n - 1)]);
 }
 
-const isLast = () => quiz.total && quiz.i + 1 >= quiz.total;
-
 function nextQuestion() {
     clearTimer();
-    if (quiz.total && quiz.i >= quiz.total) return showResult();
+    if (quiz.total && quiz.i >= quiz.total) return resultView();
     const rock = byId[drawNext()];
-    quiz.cur = { id: rock.id, view: makeView(rock), answered: false, hints: [] };
-    const { mode, cur } = quiz;
-    const choiceMode = mode === 'choice' || mode === 'kind';
-    const right = quiz.answers.filter(a => a.correct).length;
+    const { mode } = quiz;
+    const cur = quiz.cur = { id: rock.id, view: makeView(rock), answered: false, hints: [] };
+    if (mode === 'choice') cur.options = optionsFor(rock, Math.min(settings.choices, ROCKS.length));
+    if (mode === 'kind') cur.options = TYPES;
+    if (mode === 'pick') { cur.options = optionsFor(rock, 4); cur.views = cur.options.map(id => makeView(byId[id])); }
 
-    $('#mode-badge').textContent = MODE_TITLE[mode];
-    $('#progress-badge').textContent = quiz.total ? `${quiz.i + 1} / ${quiz.total}` : `${quiz.i + 1}번째 · 정답 ${right}`;
-    $('#question-text').textContent = mode === 'kind' ? '이 암석은 화성암·퇴적암·변성암 중 무엇일까요?' : '이 암석의 이름은?';
-    const img = $('#rock-photo');
-    img.src = cur.view.src;
-    img.setAttribute('style', viewStyle(cur.view));
-
-    const choiceArea = $('#choice-area');
-    choiceArea.classList.toggle('hidden', !choiceMode);
-    choiceArea.classList.toggle('kind', mode === 'kind');
-    if (choiceMode) {
-        cur.options = optionsFor(rock);
-        choiceArea.innerHTML = cur.options.map((o, k) =>
-            `<button type="button" class="btn secondary rock-opt" data-ans="${esc(o)}"><kbd>${k + 1}</kbd><span>${mode === 'kind' ? o : esc(byId[o].name)}</span></button>`).join('');
+    const progress = quiz.total ? `${quiz.i + 1} / ${quiz.total}` : `${quiz.i + 1}번째`;
+    let body;
+    if (mode === 'pick') {
+        body = `<h2 class="rk-question"><em>${esc(rock.name)}</em>${hasBatchim(rock.name) ? '은' : '는'} 어느 것일까요?</h2>
+            <div class="rk-picks">${cur.options.map((id, k) => `<button type="button" class="rk-pick" data-ans="${id}"><kbd>${k + 1}</kbd><img src="${esc(cur.views[k].src)}" alt="" style="${viewStyle(cur.views[k])}" draggable="false"></button>`).join('')}</div>`;
+    } else {
+        const answerArea = mode === 'choice' || mode === 'kind'
+            ? `<div class="rk-opts ${mode === 'kind' ? 'kind' : ''}">${cur.options.map((o, k) =>
+                `<button type="button" class="rk-opt" data-ans="${esc(o)}"><kbd>${k + 1}</kbd><span>${mode === 'kind' ? o : esc(byId[o].name)}</span></button>`).join('')}</div>`
+            : `<form class="rk-type-form" id="type-form" autocomplete="off">
+                    <input id="answer" type="text" placeholder="암석 이름" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" aria-label="암석 이름">
+                    <button type="submit" class="rk-btn primary">확인</button>
+               </form>
+               ${mode === 'type' ? `<div class="rk-hints">
+                    <button type="button" class="rk-btn" data-action="hint-cho">초성 힌트</button>
+                    <button type="button" class="rk-btn" data-action="hint-feat">특징 힌트</button>
+                    <button type="button" class="rk-btn ghost" data-action="giveup">모르겠어요</button>
+               </div><div class="rk-hint-box" id="hint-box"></div>` : `<div class="rk-hints"><button type="button" class="rk-btn ghost" data-action="giveup">모름 · 넘기기</button></div>`}`;
+        body = `<h2 class="rk-question">${mode === 'kind' ? '화성암·퇴적암·변성암 중 무엇일까요?' : '이 암석의 이름은?'}</h2>
+            ${photo(cur.view, 'rk-stage')}
+            ${mode === 'exam' ? '<div class="rk-timer"><div id="timer-bar"></div></div>' : '<p class="rk-cap">사진을 누르면 크게 볼 수 있어요</p>'}
+            ${answerArea}`;
     }
-    $('#type-area').classList.toggle('hidden', choiceMode);
-    const input = $('#answer-input');
-    input.value = '';
-    input.disabled = false;
 
-    $('#hint-buttons').style.visibility = mode === 'type' || mode === 'exam' ? 'visible' : 'hidden';
-    $('#btn-hint-cho').classList.toggle('hidden', mode === 'exam');
-    $('#btn-hint-feat').classList.toggle('hidden', mode === 'exam');
-    $$('#hint-buttons button').forEach(b => { b.disabled = false; });
-    $('#btn-giveup').textContent = mode === 'exam' ? '모름' : '포기';
-    $('#hint-box').innerHTML = '';
-    $('#feedback').innerHTML = '';
+    render(`
+    <section class="rk-quiz">
+        <div class="rk-qbar">
+            <button type="button" class="rk-btn ghost" data-action="quit">${quiz.total ? '← 그만하기' : '← 끝내기'}</button>
+            <span class="rk-qbar-title">${MODES[mode].title}</span>
+            <span class="rk-qbar-right">${mode !== 'exam' && quiz.streak >= 2 ? `<span class="rk-streak">🔥 ${quiz.streak}연속</span>` : ''}${progress}</span>
+        </div>
+        ${quiz.total ? `<div class="rk-progress"><div style="width:${(quiz.i / quiz.total) * 100}%"></div></div>` : '<div class="rk-progress"></div>'}
+        ${body}
+        <div id="feedback"></div>
+        <div class="rk-actions" id="actions" hidden><button type="button" class="rk-btn primary rk-next" data-action="next">다음 →</button></div>
+    </section>`);
 
-    const examLast = mode === 'exam' && isLast();
-    $('#btn-finish').classList.toggle('hidden', !examLast);
-    $('#btn-next').classList.toggle('hidden', examLast);
-    $('#btn-next').textContent = mode === 'exam' ? 'Next →' : mode === 'type' ? '확인' : 'Next →';
-    $('#btn-next').disabled = mode === 'choice' || mode === 'kind';
-    $('#btn-quit').textContent = quiz.total ? '그만하기' : '끝내고 결과 보기';
-
-    $('#timer').classList.toggle('hidden', mode !== 'exam');
+    if (mode === 'type' || mode === 'exam') $('#answer').focus({ preventScroll: true });
     if (mode === 'exam') startTimer(settings.timer);
-    if (!choiceMode) input.focus({ preventScroll: true });
 }
 
 function startTimer(sec) {
@@ -245,7 +255,7 @@ function startTimer(sec) {
         const left = Math.max(0, end - Date.now());
         bar.style.width = `${(left / (sec * 1000)) * 100}%`;
         bar.classList.toggle('low', left < 5000);
-        if (left <= 0) answer($('#answer-input').value); // 시간이 끝나면 입력해 둔 만큼 제출
+        if (left <= 0) answer($('#answer').value); // 시간이 끝나면 입력해 둔 만큼 제출
     }, 100);
 }
 function clearTimer() { if (quiz?.timer) { clearInterval(quiz.timer); quiz.timer = null; } }
@@ -258,10 +268,13 @@ function answer(given) {
     const rock = byId[cur.id];
     let correct, mixed = null;
     if (quiz.mode === 'kind') correct = given === rock.type;
-    else if (quiz.mode === 'choice') { correct = given === rock.id; mixed = given; }
+    else if (quiz.mode === 'choice' || quiz.mode === 'pick') { correct = given === rock.id; mixed = given; }
     else { correct = isCorrect(rock, given); mixed = rockByName(given)?.id; }
-    quiz.answers.push({ id: rock.id, given, correct, view: cur.view, hints: cur.hints.length });
+    quiz.answers.push({ id: rock.id, given, correct, view: cur.view });
     record(rock.id, correct, correct ? null : mixed);
+    quiz.streak = correct ? quiz.streak + 1 : 0;
+    quiz.bestRun = Math.max(quiz.bestRun, quiz.streak);
+    if (quiz.mode !== 'exam' && quiz.streak > (best[quiz.mode] || 0)) { best[quiz.mode] = quiz.streak; store.set('best', best); }
     quiz.i++;
     if (quiz.mode === 'exam') return nextQuestion();
     showFeedback(rock, given, correct);
@@ -269,168 +282,171 @@ function answer(given) {
 
 function showFeedback(rock, given, correct) {
     const mode = quiz.mode;
-    $$('.rock-opt').forEach(b => {
+    $$('.rk-opt, .rk-pick').forEach((b, k) => {
         b.disabled = true;
         const v = b.dataset.ans;
         if (mode === 'kind' ? v === rock.type : v === rock.id) b.classList.add('right');
         else if (v === given) b.classList.add('wrong');
+        if (mode === 'pick') b.insertAdjacentHTML('beforeend', `<span class="rk-pick-name">${esc(byId[v].name)}</span>`);
     });
-    $('#answer-input').disabled = true;
-    $$('#hint-buttons button').forEach(b => { b.disabled = true; });
+    $$('#type-form input, #type-form button, .rk-hints button').forEach(el => { el.disabled = true; });
 
-    let given_ = '';
+    let givenLine = '';
     if (!correct && mode === 'type' && given.trim()) {
         const other = rockByName(given);
-        given_ = `<div class="detail-answer-row"><span class="detail-answer-label">내가 쓴 답</span><span>${esc(given)}${other ? ` → 그건 <strong>${esc(other.name)}</strong>${hasBatchim(other.name) ? '이에요' : '예요'}` : nearMiss(rock, given) ? ' → 철자가 조금 달라요. 시험에선 오답!' : ''}</span></div>`;
+        givenLine = `<p class="rk-given">입력: <b>${esc(given)}</b>${other ? ` → 그건 <b>${esc(other.name)}</b>${hasBatchim(other.name) ? '이에요' : '예요'}` : nearMiss(rock, given) ? ' → 철자가 조금 달라요. 시험에선 오답!' : ''}</p>`;
     }
-    const chosen = !correct ? (mode === 'choice' ? byId[given] : mode === 'type' ? rockByName(given) : null) : null;
+    const chosen = correct ? null : mode === 'choice' || mode === 'pick' ? byId[given] : mode === 'type' ? rockByName(given) : null;
     const confuse = rock.confuse.map(id => byId[id]).filter(r => r && r !== chosen);
-    const status = correct ? 'success' : 'error';
+    const last = quiz.total && quiz.i >= quiz.total;
+    const streakNote = correct && quiz.streak >= 3 ? ` <small>🔥 ${quiz.streak}연속</small>` : correct && quiz.cur.hints.length ? ' <small>힌트 사용</small>' : '';
     $('#feedback').innerHTML = `
-        <div class="detail-item rock-feedback">
-            <div class="detail-status ${status}"><span class="detail-status-icon">${correct ? '✓' : '✗'}</span>${correct ? '정답' : '오답'}${correct && quiz.cur.hints.length ? ' · 힌트 사용' : ''}</div>
-            ${given_}
-            <div class="rock-answer-name">${esc(rock.name)} ${typeTag(rock.type)} <span class="rock-en">${esc(rock.en)}</span></div>
-            <p class="rock-feature">${esc(rock.feature)}</p>
-            <p class="rock-detail">${esc(rock.detail)}</p>
-            ${chosen ? `<h4>내가 고른 돌과 비교</h4><div class="rock-thumbs">${thumb(rock, '(정답)')}${thumb(chosen, '(선택)')}</div>` : ''}
-            ${confuse.length ? `<h4>헷갈리기 쉬운 돌</h4><div class="rock-thumbs">${confuse.map(r => thumb(r)).join('')}</div>` : ''}
+        <div class="rk-feedback ${correct ? 'ok' : 'bad'}">
+            <p class="rk-verdict">${correct ? '정답!' : '아쉬워요'}${streakNote}</p>
+            ${givenLine}
+            <p class="rk-name">${esc(rock.name)} ${typeTag(rock.type)} <span class="rk-en">${esc(rock.en)}</span></p>
+            <p class="rk-feature">${esc(rock.feature)}</p>
+            <p class="rk-detail">${esc(rock.detail)}</p>
+            ${chosen ? `<h4>내가 고른 돌과 비교</h4><div class="rk-thumbs">${thumb(rock, '(정답)')}${thumb(chosen, '(선택)')}</div>` : ''}
+            ${confuse.length ? `<h4>헷갈리기 쉬운 돌</h4><div class="rk-thumbs">${confuse.map(r => thumb(r)).join('')}</div>` : ''}
         </div>`;
-    const next = $('#btn-next');
-    next.disabled = false;
-    next.textContent = quiz.total && quiz.i >= quiz.total ? '결과 보기 →' : 'Next →';
+    const actions = $('#actions');
+    actions.hidden = false;
+    const next = $('.rk-next', actions);
+    next.textContent = last ? '결과 보기 →' : '다음 →';
     next.focus({ preventScroll: true });
     $('#feedback').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-}
-
-function onNext() {
-    if (!quiz) return;
-    if (quiz.cur.answered) return nextQuestion();
-    if (quiz.mode === 'type' || quiz.mode === 'exam') answer($('#answer-input').value);
 }
 
 function giveHint(kind) {
     const rock = byId[quiz.cur.id];
     if (!quiz.cur.hints.includes(kind)) quiz.cur.hints.push(kind);
     const parts = [];
-    if (quiz.cur.hints.includes('cho')) parts.push(`초성: <strong>${chosung(rock.name)}</strong> (${rock.name.length}글자)`);
-    if (quiz.cur.hints.includes('feat')) parts.push(`특징: <strong>${esc(rock.feature)}</strong> · ${rock.type}`);
+    if (quiz.cur.hints.includes('cho')) parts.push(`초성: <b>${chosung(rock.name)}</b> (${rock.name.length}글자)`);
+    if (quiz.cur.hints.includes('feat')) parts.push(`특징: <b>${esc(rock.feature)}</b> · ${rock.type}`);
     $('#hint-box').innerHTML = parts.map(p => `<p>${p}</p>`).join('');
-    $('#answer-input').focus({ preventScroll: true });
-}
-function giveUp() { answer(''); }
-
-function quitQuiz() {
-    if (!quiz) return returnToLanding();
-    clearTimer();
-    if (quiz.answers.length) showResult(); else returnToLanding();
+    $('#answer').focus({ preventScroll: true });
 }
 
 // ---------- 결과 ----------
-function comment(ratio) {
-    if (ratio === 1) return '완벽합니다! (Perfect Score)';
-    if (ratio >= 0.8) return '훌륭합니다! (Excellent)';
-    if (ratio >= 0.5) return '잘했습니다. (Good Job)';
-    return '조금 더 연습해 보세요. 암석 도감부터 훑어보세요. (Keep Trying)';
-}
-
-function showResult() {
+function resultView() {
     clearTimer();
     const { answers, mode } = quiz;
     const ok = answers.filter(a => a.correct).length;
+    const pct = answers.length ? Math.round((ok / answers.length) * 100) : 0;
+    const msg = pct === 100 ? '완벽해요! 🎉' : pct >= 80 ? '거의 다 왔어요!' : pct >= 50 ? '조금만 더!' : '도감부터 한 번 훑어볼까요?';
     quiz.wrongIds = [...new Set(answers.filter(a => !a.correct).map(a => a.id))];
-
-    $('#quiz-area').style.display = 'none';
-    $('#result-view').style.display = 'block';
-    $('#score-area').textContent = `Score: ${ok} / ${answers.length}`;
-    $('#analysis-area').innerHTML = `<p>${comment(answers.length ? ok / answers.length : 0)}</p>`;
-    $('#simple-result-list').innerHTML = answers.map((a, k) => {
-        const blank = !a.correct && !String(a.given).trim();
-        const cls = a.correct ? 'success' : blank ? 'warning' : 'error';
-        return `<div class="mini-badge ${cls}"><span class="mini-badge-icon">${a.correct ? '✓' : blank ? '—' : '✗'}</span><span class="mini-badge-label">Q${k + 1}</span></div>`;
-    }).join('');
-    $('#detail-list').innerHTML = `<ul>${answers.map((a, k) => {
+    const list = mode === 'exam' ? answers : answers.filter(a => !a.correct);
+    const answerText = a => mode === 'choice' || mode === 'pick' ? byId[a.given]?.name : a.given;
+    render(`
+    <section class="rk-panel rk-result-top">
+        <p class="rk-eyebrow">${MODES[mode].title} 결과</p>
+        <p class="rk-score" style="margin-top:12px">${ok}<small> / ${answers.length}</small></p>
+        <p class="rk-score-msg">${msg}</p>
+        <p class="rk-muted rk-score-sub">정답률 ${pct}%${mode !== 'exam' ? ` · 이번 최고 ${quiz.bestRun}연속 · 역대 최고 ${best[mode] || 0}연속` : ''}</p>
+        <div class="rk-result-actions">
+            ${quiz.wrongIds.length ? `<button type="button" class="rk-btn primary" data-action="retry-wrong">틀린 ${quiz.wrongIds.length}종만 다시</button>` : ''}
+            <button type="button" class="rk-btn" data-action="retry">같은 설정으로 다시</button>
+            <button type="button" class="rk-btn ghost" data-go="home">처음으로</button>
+        </div>
+    </section>
+    ${list.length ? `<h3 class="rk-section-title">${mode === 'exam' ? '채점표' : '틀린 문제'}</h3>
+    <ol class="rk-list">${list.map(a => {
         const r = byId[a.id];
-        const blank = !a.correct && !String(a.given).trim();
-        const cls = a.correct ? 'success' : blank ? 'warning' : 'error';
-        const givenText = mode === 'choice' ? byId[a.given]?.name : a.given;
-        return `<li class="detail-item rock-detail-item">
-            ${miniPhoto(a.view)}
-            <div>
-                <div class="detail-status ${cls}"><span class="detail-status-icon">${a.correct ? '✓' : blank ? '—' : '✗'}</span>Q${k + 1} · ${a.correct ? '정답' : blank ? '무응답' : '오답'}</div>
-                <div class="detail-answer-row"><span class="detail-answer-label">내가 쓴 답</span><span>${blank ? '(비어있음)' : esc(givenText)}</span></div>
-                <div class="detail-answer-row"><span class="detail-answer-label">정답</span><span><strong>${esc(r.name)}</strong> ${typeTag(r.type)} · ${esc(r.feature)}</span></div>
-            </div>
-        </li>`;
-    }).join('')}</ul>`;
-    // 실전은 채점표를 바로 펼쳐 보여 준다
-    $('#result-view').classList.toggle('expanded', mode === 'exam');
-    $('#btn-retry-wrong').classList.toggle('hidden', !quiz.wrongIds.length);
-    $('#btn-retry-wrong').textContent = `틀린 ${quiz.wrongIds.length}종만 다시`;
-
-    window.scrollTo(0, 0);
+        const blank = !String(a.given).trim();
+        return `<li class="${a.correct ? 'ok' : 'bad'}">${photo(a.view, 'rk-mini')}
+            <div class="rk-list-body"><p class="rk-name">${esc(r.name)} ${typeTag(r.type)}</p>
+            <p>${a.correct ? '✓ 정답' : blank ? '— 무응답' : `✗ 내 답: ${esc(answerText(a))}`} · ${esc(r.feature)}</p></div></li>`;
+    }).join('')}</ol>` : ''}`);
 }
 
-function toggleDetails() { $('#result-view').classList.toggle('expanded'); }
-function retrySame() { startQuiz(quiz.mode, quiz.pool, quiz.total); }
-function retryWrong() { startQuiz(quiz.mode === 'exam' ? 'type' : quiz.mode, quiz.wrongIds, quiz.wrongIds.length); }
-
 // ---------- 도감 ----------
-function openStudy() { renderStudy(); showView('study'); }
-function toggleHideNames() { hideNames = !hideNames; renderStudy(); }
-function renderStudy() {
-    $('#btn-hide-names').textContent = hideNames ? '이름 보이기' : '이름 가리기';
-    $('#btn-hide-names').classList.toggle('progress', hideNames);
-    $('#study-list').innerHTML = `<p class="rock-study-guide">${hideNames ? '카드를 누르면 이름이 보입니다. 사진만 보고 먼저 떠올려 보세요.' : '「이름 가리기」로 스스로 테스트할 수 있습니다. 사진을 누르면 크게 볼 수 있습니다.'}</p>` +
-        Object.entries(GROUPS).map(([g, info]) => `
-        <section class="rock-group">
-            <h3>▶ ${esc(info.title)}</h3>
-            <div class="rock-cards">${ROCKS.filter(r => r.group === g).map(r => `
-                <article class="collection-card rock-card${hideNames ? ' hide' : ''}" data-reveal>
-                    <button type="button" class="rock-card-photo" data-zoom="${esc(r.images[0])}"><img src="${esc(r.images[0])}" alt="" loading="lazy"></button>
-                    <div class="rock-card-body">
-                        <h3>${esc(r.name)} ${typeTag(r.type)}</h3>
-                        <p class="rock-feature">${esc(r.feature)}</p>
-                        <p class="rock-detail">${esc(r.detail)}</p>
-                        <p class="rock-vs">헷갈리는 짝: ${r.confuse.map(id => byId[id].name).join(', ')}</p>
-                    </div>
-                </article>`).join('')}</div>
-        </section>`).join('');
+function studyView(keepScroll) {
+    const filt = r => study.type === 'all' || r.type === study.type;
+    render(`
+    <div class="rk-page-head">${backBtn()}<h1>암석 도감</h1>
+        <button type="button" class="rk-btn rk-head-right" data-action="toggle-hide">${study.hide ? '이름 보이기' : '이름 가리기'}</button></div>
+    <div class="rk-seg">${['all', ...TYPES].map(t => `<button type="button" class="${study.type === t ? 'on' : ''}" data-study-type="${t}">${t === 'all' ? '전체' : t}</button>`).join('')}</div>
+    <p class="rk-muted" style="margin-top:10px">${study.hide ? '카드를 누르면 이름이 보여요. 사진만 보고 먼저 떠올려 보세요.' : '「이름 가리기」로 스스로 테스트할 수 있어요.'}</p>
+    ${Object.entries(GROUPS).map(([g, info]) => {
+        const rocks = ROCKS.filter(r => r.group === g && filt(r));
+        if (!rocks.length) return '';
+        return `<h2 class="rk-group-title">${esc(info.title)}</h2><div class="rk-cards">${rocks.map(r => `
+            <article class="rk-card${study.hide ? ' hide' : ''}">
+                <button type="button" class="rk-card-photo" data-zoom="${esc(r.images[0])}"><img src="${esc(r.images[0])}" alt="" loading="lazy"></button>
+                <div class="rk-card-body">
+                    <h3>${esc(r.name)} ${typeTag(r.type)}</h3>
+                    <p class="rk-feature">${esc(r.feature)}</p>
+                    <p class="rk-detail">${esc(r.detail)}</p>
+                    <p class="rk-vs">헷갈리는 짝: ${r.confuse.map(id => byId[id].name).join(', ')}</p>
+                </div>
+            </article>`).join('')}</div>`;
+    }).join('')}`, keepScroll);
+}
+
+// ---------- 판별 도우미 ----------
+function keyView() {
+    const nodeId = keyPath.length ? keyPath[keyPath.length - 1].next : 'start';
+    const done = keyPath.length && keyPath[keyPath.length - 1].rock;
+    const trail = keyPath.length ? `<div class="rk-trail">${keyPath.map(s => `<span>${esc(s.label)}</span>`).join('')}</div>` : '';
+    let body;
+    if (done) {
+        const r = byId[done];
+        body = `<p class="rk-eyebrow">판별 결과</p>
+            <div class="rk-key-result" style="margin-top:10px">
+                <button type="button" class="rk-card-photo" data-zoom="${esc(r.images[0])}"><img src="${esc(r.images[0])}" alt=""></button>
+                <div><p class="rk-name" style="margin-top:0">${esc(r.name)} ${typeTag(r.type)} <span class="rk-en">${esc(r.en)}</span></p>
+                <p class="rk-feature">${esc(r.feature)}</p><p class="rk-detail">${esc(r.detail)}</p>
+                <p class="rk-vs">헷갈리는 짝: ${r.confuse.map(id => byId[id].name).join(', ')}</p></div>
+            </div>
+            <div class="rk-result-actions" style="justify-content:flex-start">
+                <button type="button" class="rk-btn primary" data-action="key-reset">처음부터 다시</button>
+                <button type="button" class="rk-btn" data-action="key-back">한 단계 뒤로</button>
+            </div>`;
+    } else {
+        const node = ROCK_KEY[nodeId];
+        body = `<p class="rk-eyebrow">질문 ${keyPath.length + 1}</p>
+            <p class="rk-key-q" style="margin-top:8px">${esc(node.q)}</p>
+            ${node.hint ? `<p class="rk-muted rk-key-hint">${esc(node.hint)}</p>` : ''}
+            <div class="rk-key-opts">${node.options.map((o, k) => `<button type="button" class="rk-key-opt" data-key="${k}">${o.rock ? `<img src="${esc(byId[o.rock].images[0])}" alt="" loading="lazy">` : ''}<span>${esc(o.label)}</span></button>`).join('')}</div>
+            ${keyPath.length ? '<div class="rk-result-actions" style="justify-content:flex-start"><button type="button" class="rk-btn ghost" data-action="key-back">← 이전 질문</button></div>' : ''}`;
+    }
+    render(`
+    <div class="rk-page-head">${backBtn()}<h1>판별 도우미</h1></div>
+    <p class="rk-muted" style="margin-bottom:14px">실험지 「탐구 과정」처럼 실물 암석을 보며 질문에 답하면 이름을 좁혀 줍니다. 수행평가 때 떠올릴 순서를 연습해 보세요.</p>
+    <section class="rk-panel">${trail}${body}</section>`);
+}
+function keyChoose(k) {
+    const nodeId = keyPath.length ? keyPath[keyPath.length - 1].next : 'start';
+    keyPath.push(ROCK_KEY[nodeId].options[k]);
+    keyView();
 }
 
 // ---------- 오답 노트 ----------
-function openNotes() { renderNotes(); showView('notes'); }
-function renderNotes() {
+function notesView() {
     const rows = ROCKS.map(r => ({ r, s: stats[r.id] })).filter(x => x.s?.seen)
         .sort((a, b) => b.s.wrong / b.s.seen - a.s.wrong / a.s.seen || b.s.wrong - a.s.wrong);
     const weak = rows.filter(x => x.s.wrong);
-    $('#notes-badge').textContent = `약점 ${weak.length}종`;
-    $('#notes-list').innerHTML = rows.length ? `
-        <p class="rock-study-guide">푼 기록이 있는 ${rows.length}종을 틀린 비율이 높은 순서로 보여 줍니다. 기록은 이 브라우저에만 저장됩니다.</p>
-        ${weak.length ? `<div class="rock-result-actions">
-            <button class="btn primary" onclick="startWeak('choice')">약점만 객관식</button>
-            <button class="btn primary" onclick="startWeak('type')">약점만 주관식</button>
+    render(`
+    <div class="rk-page-head">${backBtn()}<h1>오답 노트</h1></div>
+    ${rows.length ? `
+        <p class="rk-muted">푼 기록이 있는 ${rows.length}종 중 틀린 적 있는 돌 ${weak.length}종. 틀린 비율이 높은 순서예요. 기록은 이 브라우저에만 남습니다.</p>
+        ${weak.length ? `<div class="rk-result-actions" style="justify-content:flex-start">
+            <button type="button" class="rk-btn primary" data-action="weak" data-mode="choice">약점만 객관식</button>
+            <button type="button" class="rk-btn primary" data-action="weak" data-mode="type">약점만 주관식</button>
+            <button type="button" class="rk-btn" data-action="weak" data-mode="pick">약점만 사진 찾기</button>
         </div>` : ''}
-        <ul class="rock-note-list">${rows.map(({ r, s }) => {
+        <ul class="rk-list" style="margin-top:16px">${rows.map(({ r, s }) => {
             const mix = Object.entries(s.mix || {}).sort((a, b) => b[1] - a[1]).slice(0, 2).map(([id]) => byId[id]?.name).filter(Boolean);
-            return `<li class="detail-item">
-                <button type="button" class="rock-note-photo" data-zoom="${esc(r.images[0])}"><img src="${esc(r.images[0])}" alt="" loading="lazy"></button>
-                <div class="rock-note-body">
-                    <div class="rock-answer-name">${esc(r.name)} ${typeTag(r.type)}</div>
-                    <div class="rock-bar"><div style="width:${(s.wrong / s.seen) * 100}%"></div></div>
-                    <small>틀림 ${s.wrong} / 푼 횟수 ${s.seen}${mix.length ? ` · 주로 <strong>${mix.join(', ')}</strong>${roOf(mix[mix.length - 1])} 착각` : ''}</small>
-                </div></li>`;
+            return `<li class="${s.wrong ? 'bad' : 'ok'}">
+                <button type="button" class="rk-mini cover" data-zoom="${esc(r.images[0])}"><img src="${esc(r.images[0])}" alt="" loading="lazy"></button>
+                <div class="rk-list-body"><p class="rk-name">${esc(r.name)} ${typeTag(r.type)}</p>
+                <div class="rk-bar"><div style="width:${(s.wrong / s.seen) * 100}%"></div></div>
+                <p>틀림 ${s.wrong} / 푼 횟수 ${s.seen}${mix.length ? ` · 주로 <b>${mix.join(', ')}</b>${roOf(mix[mix.length - 1])} 착각` : ''}</p></div></li>`;
         }).join('')}</ul>
-        <button class="btn secondary rock-reset" onclick="resetStats()">기록 초기화</button>`
-        : `<p class="rock-study-guide">아직 푼 문제가 없습니다. 퀴즈를 풀면 여기에 약점이 쌓입니다.</p>
-           <button class="btn primary" onclick="returnToLanding()">문제 풀러 가기</button>`;
-}
-function startWeak(mode) { const ids = weakIds(); startQuiz(mode, ids, Math.max(ids.length, 10)); }
-function resetStats() {
-    if (!confirm('오답 기록을 모두 지울까요?')) return;
-    stats = {};
-    store.set('stats', stats);
-    renderNotes();
+        <div class="rk-result-actions" style="justify-content:flex-start"><button type="button" class="rk-btn ghost" data-action="reset">기록 초기화</button></div>`
+    : `<p class="rk-muted">아직 푼 문제가 없어요. 퀴즈를 풀면 여기에 약점이 쌓여요.</p>
+       <div class="rk-result-actions" style="justify-content:flex-start"><button type="button" class="rk-btn primary" data-go="home">문제 풀러 가기</button></div>`}`);
 }
 
 // ---------- 라이트박스 ----------
@@ -444,33 +460,58 @@ function openLightbox(src, style) {
 lightbox.addEventListener('click', () => { lightbox.hidden = true; });
 
 // ---------- 이벤트 ----------
-document.addEventListener('click', e => {
-    const hidden = e.target.closest('.rock-card.hide:not(.revealed)');
+const GO = { home: () => homeView(), study: () => studyView(), notes: () => notesView(), key: () => { keyPath = []; keyView(); } };
+
+app.addEventListener('click', e => {
+    const hidden = e.target.closest('.rk-card.hide:not(.revealed)');
     if (hidden) { hidden.classList.add('revealed'); return; }
-    const zoom = e.target.closest('[data-zoom]');
-    if (zoom) return openLightbox(zoom.dataset.zoom, zoom.dataset.style);
-    if (e.target.closest('#problem-area')) return openLightbox(quiz.cur.view.src, viewStyle(quiz.cur.view));
-    const opt = e.target.closest('.rock-opt');
-    if (opt) return answer(opt.dataset.ans);
-    const sel = e.target.closest('.cnt-btn');
-    if (sel) {
-        const [key] = Object.keys(sel.dataset);
-        const raw = sel.dataset[key];
-        settings[key] = key === 'mode' || raw === 'all' ? raw : Number(raw);
-        return saveSettings();
+    const t = e.target.closest('button, [data-zoom]');
+    if (!t) return;
+    const d = t.dataset;
+    if (d.ans !== undefined) return answer(d.ans);
+    if (d.zoom !== undefined) return openLightbox(d.zoom, d.style);
+    if (d.go) return GO[d.go]();
+    if (d.set) return changeSetting(d.set, d.val);
+    if (d.studyType) { study.type = d.studyType; return studyView(true); }
+    if (d.key !== undefined) return keyChoose(Number(d.key));
+    switch (d.action) {
+        case 'start': return startQuiz(settings.mode, poolOf(settings.range));
+        case 'next': return nextQuestion();
+        case 'quit': clearTimer(); return quiz.answers.length ? resultView() : homeView();
+        case 'hint-cho': return giveHint('cho');
+        case 'hint-feat': return giveHint('feat');
+        case 'giveup': return answer('');
+        case 'retry': return startQuiz(quiz.mode, quiz.pool, quiz.total);
+        case 'retry-wrong': return startQuiz(quiz.mode === 'exam' ? 'type' : quiz.mode, quiz.wrongIds, quiz.wrongIds.length);
+        case 'toggle-hide': study.hide = !study.hide; return studyView(true);
+        case 'weak': { const ids = weakIds(); return startQuiz(d.mode, ids, Math.max(ids.length, 10)); }
+        case 'key-back': keyPath.pop(); return keyView();
+        case 'key-reset': keyPath = []; return keyView();
+        case 'reset':
+            if (confirm('오답 기록을 모두 지울까요?')) { stats = {}; store.set('stats', stats); notesView(); }
     }
 });
 
-for (const key of ['rotate', 'zoom', 'color', 'gray', 'tricky'])
-    $(`#chk-${key}`).addEventListener('change', e => { settings[key] = e.target.checked; saveSettings(); });
+app.addEventListener('change', e => {
+    const key = e.target.dataset.toggle;
+    if (!key) return;
+    settings[key] = e.target.checked;
+    store.set('settings', settings);
+    const summary = $('.rk-more summary small');
+    if (summary) summary.textContent = ['rotate', 'zoom', 'color', 'gray'].filter(k => settings[k]).map(k => ({ rotate: '회전', zoom: '확대', color: '색감', gray: '흑백' }[k])).join(' · ') || '변형 없음';
+});
 
-$('#type-area').addEventListener('submit', e => { e.preventDefault(); onNext(); });
+app.addEventListener('submit', e => {
+    if (e.target.id !== 'type-form') return;
+    e.preventDefault();
+    answer($('#answer').value);
+});
 
 document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && !lightbox.hidden) { lightbox.hidden = true; return; }
-    if (!quiz?.cur || $('#app-view').style.display !== 'block' || $('#quiz-area').style.display === 'none') return;
+    if (!quiz?.cur || !$('.rk-quiz')) return;
     if (!quiz.cur.answered && /^[1-9]$/.test(e.key) && e.target.tagName !== 'INPUT') {
-        $$('.rock-opt')[Number(e.key) - 1]?.click();
+        $$('.rk-opt, .rk-pick')[Number(e.key) - 1]?.click();
     } else if (quiz.cur.answered && e.key === 'Enter' && e.target.tagName !== 'BUTTON') {
         e.preventDefault();
         nextQuestion();
@@ -478,5 +519,4 @@ document.addEventListener('keydown', e => {
 });
 
 $('#rock-credit').textContent = CREDIT;
-renderLanding();
-showView('landing');
+homeView();
