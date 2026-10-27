@@ -29,6 +29,12 @@ A client-side analyzer for KakaoTalk chat exports (`kakaotalk.php`). Files are p
 - **Export:** ranking CSV and a shareable PNG card. Supports the PC and mobile `.txt` exports and `Date,User,Message` CSV.
 - **Check:** `node scripts/check_kakaotalk.cjs [export.txt ...]` verifies the parser and the filters against independent line counts.
 
+### 5. Rock ID Studio
+A photo quiz for the earth-science rock identification lab (`rocks.php`), covering 22 igneous, sedimentary and metamorphic rocks. Uses the shared studio layout (`style.css`, `studio-layout.css`). No scores are saved to the server; settings and the wrong-answer log stay in localStorage.
+- **Modes:** multiple choice (confusable distractors first), typed answers with initial-consonant hints, a timed exam graded at the end, rock-type classification, a study deck with hidden names, and a wrong-answer notebook that records which rocks get mixed up.
+- **Photo variation:** random rotation/flip, zoom crop that hides backgrounds and specimen labels, color jitter and grayscale, so students practice on the rock rather than the photo.
+- **Data:** `data/rocks/rocks.js`; add photos to `assets/images/rocks/` and list them in a rock's `images` array.
+
 ## Project Structure
 
 ```text
@@ -39,6 +45,7 @@ ISHS_Lab/
 ├── integral.php          # Integral practice module
 ├── vocabulary.php        # Vocabulary management module
 ├── kakaotalk.php         # KakaoTalk chat export analyzer
+├── rocks.php             # Rock identification photo quiz
 ├── data/
 │   ├── algorithms/       # Algorithm source codes and categorizations
 │   ├── math/             # Mathematics problem data

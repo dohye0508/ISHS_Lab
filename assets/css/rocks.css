@@ -1,0 +1,144 @@
+/* Rock ID Studio — style.css · studio-layout.css 위에 얹는 페이지 전용 스타일 */
+
+/* ---------- 메인: 모드·문항 수 선택 ---------- */
+.rock-options { display: flex; flex-direction: column; gap: 12px; }
+.rock-option-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.rock-option-label { flex: 0 0 64px; font-size: .9rem; font-weight: 700; color: color-mix(in srgb, var(--text) 62%, transparent); }
+.rock-options .count-selector { flex-wrap: wrap; }
+.rock-options .cnt-btn { min-width: 64px; padding: 8px 14px; }
+[data-theme="dark"] .rock-options .cnt-btn:not(.selected) { background: var(--surface); border-color: var(--border); color: var(--text); }
+.rocks-page .cnt-btn.selected { color: #fff; }
+[data-theme="dark"] .rocks-page .cnt-btn.selected { color: #1f1300; }
+.rock-sub-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: -14px; }
+.rock-sub-actions .btn { width: 100%; }
+[data-theme="dark"] .rocks-page .secondary { background: var(--surface); color: var(--text); }
+
+/* ---------- 문제집 목록 ---------- */
+.rocks-page .collection-sections { padding: 0 20px 10px; }
+.rocks-page .collection-sections h3 { font-size: 1rem; margin: 20px 0 10px; }
+.rock-collection-desc { margin: 6px 0 10px; font-size: .82rem; color: color-mix(in srgb, var(--text) 60%, transparent); line-height: 1.5; }
+.rock-preview { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+.rock-preview img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 6px; background: #111; }
+
+/* ---------- 문제 화면 ---------- */
+.rock-question { text-align: center; font-size: 1.15rem; font-weight: 700; margin: 0 0 14px; }
+.rocks-page #problem-area.rock-stage,
+[data-theme="dark"] .rocks-page #problem-area.rock-stage {
+    position: relative; overflow: hidden; padding: 0; min-height: 0;
+    width: 100%; max-width: 460px; aspect-ratio: 1 / 1; margin: 0 auto 18px;
+    background: #141414; border-radius: 12px; border: 1px solid var(--border);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .06); cursor: zoom-in;
+}
+.rock-stage img, .rock-mini img, .rock-lightbox-stage img {
+    width: 100%; height: 100%; object-fit: contain;
+    transition: transform .25s; user-select: none; -webkit-user-drag: none;
+}
+
+.rock-timer { max-width: 460px; height: 6px; margin: -8px auto 18px; border-radius: 99px; overflow: hidden; background: rgba(var(--primary-rgb), .12); }
+#timer-bar { height: 100%; width: 100%; background: var(--primary); }
+#timer-bar.low { background: var(--error); }
+
+.rock-options-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
+.rock-options-grid.kind { grid-template-columns: repeat(3, 1fr); }
+.rock-opt { display: flex; align-items: center; gap: 10px; text-align: left; font-size: 1.05rem; padding: 14px 16px; min-height: 54px; }
+.rock-opt kbd { flex: none; font: 600 .75rem/1 inherit; border: 1px solid var(--border); border-radius: 5px; padding: 3px 6px; opacity: .7; }
+.rock-options-grid.kind .rock-opt { justify-content: center; }
+.rock-options-grid.kind .rock-opt kbd { display: none; }
+.rock-opt:disabled { cursor: default; }
+.rock-opt:disabled:not(.right):not(.wrong) { opacity: .45; }
+.rocks-page .rock-opt.right { border-color: var(--success); color: var(--success); background: color-mix(in srgb, var(--success) 10%, var(--bg)); }
+.rocks-page .rock-opt.wrong { border-color: var(--error); color: var(--error); background: color-mix(in srgb, var(--error) 10%, var(--bg)); }
+
+.rock-type-form input {
+    width: 100%; box-sizing: border-box; padding: 12px; margin-bottom: 18px;
+    font: inherit; font-size: 1.3rem; font-weight: 600; color: var(--text);
+    background: white; border: 1px solid var(--border); border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .05);
+}
+[data-theme="dark"] .rock-type-form input { background: var(--surface); }
+.rock-type-form input:focus { outline: none; border-color: var(--primary); }
+.rock-type-form input:disabled { opacity: .7; }
+
+.rock-hint-box p { margin: -6px 0 16px; padding: 10px 14px; border-radius: 8px; background: rgba(var(--primary-rgb), .08); font-size: .95rem; }
+.rocks-page #hint-buttons .btn { padding: 10px 14px; margin: 0 2px; }
+.rocks-page .btn:disabled { opacity: .5; cursor: default; }
+
+.rock-feedback { margin-bottom: 20px; }
+.rock-feedback h4 { margin: 16px 0 8px; font-size: .85rem; color: color-mix(in srgb, var(--text) 60%, transparent); }
+.rock-answer-name { font-size: 1.25rem; font-weight: 800; margin-top: 8px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.rock-en { font-size: .85rem; font-weight: 500; opacity: .55; }
+.rock-feature { font-weight: 700; margin: 4px 0 0; }
+.rock-detail { margin: 4px 0 0; font-size: .92rem; line-height: 1.6; color: color-mix(in srgb, var(--text) 70%, transparent); }
+.rock-vs { margin: 6px 0 0; font-size: .8rem; color: color-mix(in srgb, var(--text) 55%, transparent); }
+
+.rock-type { display: inline-block; font-size: .72rem; font-weight: 700; padding: 1px 8px; border-radius: 99px; border: 1px solid currentColor; line-height: 1.6; }
+.rock-type.igneous { color: #c2410c; }
+.rock-type.sedimentary { color: #a16207; }
+.rock-type.metamorphic { color: #7c3aed; }
+[data-theme="dark"] .rock-type.igneous { color: #fb923c; }
+[data-theme="dark"] .rock-type.sedimentary { color: #facc15; }
+[data-theme="dark"] .rock-type.metamorphic { color: #c4b5fd; }
+
+.rock-thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
+.rock-thumb {
+    display: flex; flex-direction: column; padding: 0; overflow: hidden; text-align: left; cursor: zoom-in;
+    font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+}
+.rock-thumb img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.rock-thumb-name { font-weight: 800; padding: 6px 8px 0; font-size: .92rem; }
+.rock-thumb small { padding: 0 8px 8px; font-size: .75rem; opacity: .65; }
+
+/* ---------- 결과 ---------- */
+.rock-detail-item { display: flex; gap: 16px; align-items: flex-start; }
+.rock-detail-item > div:last-child { min-width: 0; flex: 1; }
+.rock-mini { flex: 0 0 96px; width: 96px; aspect-ratio: 1; overflow: hidden; border-radius: 8px; background: #141414; cursor: zoom-in; }
+.rock-result-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 30px 0 10px; }
+
+/* ---------- 도감 · 오답 노트 ---------- */
+.rock-study-guide { font-size: .9rem; color: color-mix(in srgb, var(--text) 62%, transparent); margin: 0 0 16px; }
+.rock-group h3 { font-size: 1rem; margin: 26px 0 12px; }
+.rock-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+.rocks-page .rock-card { padding: 0; overflow: hidden; display: flex; flex-direction: column; cursor: default; }
+.rock-card-photo { border: 0; padding: 0; background: #141414; cursor: zoom-in; }
+.rock-card-photo img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.rock-card-body { padding: 12px 14px 14px; }
+.rocks-page .rock-card-body h3 { margin: 0; font-size: 1.1rem; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.rock-card.hide:not(.revealed) { cursor: pointer; }
+.rock-card.hide:not(.revealed) .rock-card-body > * { filter: blur(7px); user-select: none; }
+.rock-card.hide:not(.revealed) .rock-card-photo { cursor: pointer; }
+.rock-badge-btn { border: 0; cursor: pointer; font: inherit; font-weight: 700; }
+
+.rock-note-list { list-style: none; padding: 0; margin: 16px 0 0; }
+.rock-note-list .detail-item { display: flex; gap: 14px; align-items: center; padding: 12px; margin-bottom: 10px; }
+.rock-note-photo { flex: 0 0 72px; padding: 0; border: 0; border-radius: 8px; overflow: hidden; background: #141414; cursor: zoom-in; }
+.rock-note-photo img { width: 72px; height: 72px; object-fit: cover; }
+.rock-note-body { flex: 1; min-width: 0; }
+.rock-note-body .rock-answer-name { margin: 0; font-size: 1.05rem; }
+.rock-note-body small { opacity: .7; }
+.rock-bar { height: 6px; border-radius: 99px; overflow: hidden; margin: 6px 0; background: rgba(var(--primary-rgb), .12); }
+.rock-bar div { height: 100%; background: var(--error); }
+.rock-reset { margin-top: 16px; color: var(--error); }
+
+.rock-credit { margin-top: 6px; font-size: .75rem; }
+
+/* ---------- 사진 크게 보기 ---------- */
+.rock-lightbox {
+    position: fixed; inset: 0; z-index: 2000; background: rgba(0, 0, 0, .9); padding: 16px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: zoom-out;
+}
+.rock-lightbox[hidden] { display: none; }
+.rock-lightbox-stage { width: min(92vw, 86vh); aspect-ratio: 1; overflow: hidden; border-radius: 10px; background: #141414; }
+.rock-lightbox p { color: #bbb; font-size: .8rem; margin: 10px 0 0; }
+
+@media (max-width: 600px) {
+    .rock-option-row { gap: 8px; }
+    .rock-option-label { flex-basis: 100%; }
+    .rock-options .count-selector { flex: 1 1 100%; }
+    .rock-options .cnt-btn { min-width: 0; flex: 1 1 0; padding: 8px 4px; white-space: nowrap; }
+    .rock-opt { font-size: 1rem; padding: 12px; }
+    .rock-cards { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .rock-card-body { padding: 10px; }
+    .rock-card-body .rock-detail { display: none; }
+    .rock-mini { flex-basis: 72px; width: 72px; }
+    .rocks-page #hint-buttons .btn { padding: 10px 10px; }
+}

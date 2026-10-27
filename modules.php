@@ -411,6 +411,17 @@ html.js .rv-drop.is-in{opacity:1;transform:none}
                     <div class="mod-cta">시작하기<span class="mod-arr">&rarr;</span></div>
                 </article>
 
+                <article class="mod-card rv-drop" tabindex="0" role="button" onclick="enterModule('rocks.php')">
+                    <div class="mod-card__head">
+                        <span class="mod-icon mod-icon--pb"><img src="assets/images/rocks.svg" alt="Rock ID Studio"></span>
+                        <span class="mod-badge mod-badge--new">NEW</span>
+                    </div>
+                    <h4 class="mod-name">Rock ID Studio</h4>
+                    <p class="mod-name-ko">암석 감별 스튜디오</p>
+                    <p class="mod-desc">암석 사진을 보고 이름을 맞히세요. 객관식·주관식·실전 모의고사.</p>
+                    <div class="mod-cta">시작하기<span class="mod-arr">&rarr;</span></div>
+                </article>
+
                 <article class="mod-card rv-drop" tabindex="0" role="button" onclick="enterModule('coding_test.php')">
                     <div class="mod-card__head">
                         <span class="mod-icon mod-icon--bm"><img src="assets/images/codingtesticon.jpg" alt="Coding Test"></span>
