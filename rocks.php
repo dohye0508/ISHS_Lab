@@ -8,6 +8,9 @@ if (!isset($_SESSION['user_id'])) {
 if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
     exit();
 }
+// 페이지는 매번 새로 받고, CSS·JS는 파일이 바뀔 때마다 주소가 바뀌게 해 캐시를 피한다
+header('Cache-Control: no-cache, no-store, must-revalidate');
+function asset($path) { return $path . '?v=' . @filemtime(__DIR__ . '/' . $path); }
 ?>
 <!DOCTYPE html>
 <html lang="ko">
@@ -20,7 +23,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
     <meta property="og:title" content="Rock ID Studio">
     <meta property="og:description" content="암석 사진을 보고 이름을 맞히는 지구과학 실험 수행평가 대비 스튜디오.">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
-    <link rel="stylesheet" href="assets/css/rocks.css?v=20261028_1">
+    <link rel="stylesheet" href="<?= asset('assets/css/rocks.css') ?>">
     <script>
         (function () {
             var theme = 'light';
@@ -53,8 +56,8 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
 
     <div class="rk-lightbox" id="lightbox" hidden><div class="rk-lightbox-stage"><img alt=""></div><p>누르면 닫힘</p></div>
 
-    <script src="data/rocks/rocks.js?v=20261028_1"></script>
-    <script src="scripts/rocks.js?v=20261028_1"></script>
+    <script src="<?= asset('data/rocks/rocks.js') ?>"></script>
+    <script src="<?= asset('scripts/rocks.js') ?>"></script>
     <script>
         const AUTH_API = 'api/user_system.php';
         async function updateAuthUI() {
