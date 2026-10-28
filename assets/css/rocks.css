@@ -302,6 +302,8 @@ main { width: 100%; max-width: 720px; margin: 0 auto; padding: 28px 16px 40px; f
 .rk-card-body h3 { font-size: 18px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .rk-card-body .rk-detail { font-size: 14px; }
 .rk-vs { font-size: 13px; color: var(--ink-3); margin-top: 6px; }
+.rk-credit { font-size: 11px; color: var(--ink-3); margin-top: 6px; }
+.rk-credit a { color: inherit; }
 .rk-card.hide:not(.revealed) { cursor: pointer; }
 .rk-card.hide:not(.revealed) .rk-card-body > * { filter: blur(7px); user-select: none; }
 

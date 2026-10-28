@@ -32,7 +32,7 @@ const MODES = {
     kind:   { title: '종류', desc: '화성암·퇴적암·변성암 중 무엇인지만 맞힙니다.' },
     exam:   { title: '실전', desc: '수행평가처럼 시간 안에 이름을 쓰고, 끝까지 푼 뒤 한 번에 채점합니다.' },
 };
-const RANGE_KEYS = ['all', ...TYPES, 'weak'];
+const RANGE_KEYS = ['all', 'core', ...TYPES, 'weak']; // core: 수업 PDF의 22종
 
 // ---------- 유틸 ----------
 const shuffle = a => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
@@ -67,6 +67,14 @@ const roOf = w => { const c = w.charCodeAt(w.length - 1) - 0xAC00; return hasBat
 
 const typeClass = t => ({ 화성암: 'igneous', 퇴적암: 'sedimentary', 변성암: 'metamorphic' }[t]);
 const typeTag = t => `<span class="rk-type ${typeClass(t)}">${t}</span>`;
+// 추가 암석 사진의 저작자·라이선스 (CC BY 계열은 표시 의무가 있다)
+const photoCredit = r => {
+    const groups = {};
+    for (const x of r.images.map(f => PHOTO_CREDITS[f]).filter(Boolean)) (groups[`${x.by} · ${x.license}`] ||= []).push(x.url);
+    const parts = Object.entries(groups).map(([who, urls]) =>
+        `${esc(who)} ${urls.map((u, i) => `<a href="${esc(u)}" target="_blank" rel="noopener">[원본${urls.length > 1 ? i + 1 : ''}]</a>`).join(' ')}`);
+    return parts.length ? `<p class="rk-credit">사진: ${parts.join(', ')}</p>` : '';
+};
 const backBtn = (label = '홈') => `<button type="button" class="rk-btn ghost" data-go="home" aria-label="처음으로">← ${label}</button>`;
 
 // ---------- 사진 변형 ----------
@@ -94,7 +102,8 @@ function record(id, correct, mixedWith) {
     store.set('stats', stats);
 }
 const weakIds = () => ROCKS.filter(r => stats[r.id]?.wrong).map(r => r.id);
-const poolOf = range => range === 'all' ? ROCKS.map(r => r.id) : range === 'weak' ? weakIds() : ROCKS.filter(r => r.type === range).map(r => r.id);
+const poolOf = range => (range === 'weak' ? weakIds()
+    : ROCKS.filter(r => range === 'all' || (range === 'core' ? !r.extra : r.type === range)).map(r => r.id));
 
 function render(html, keepScroll) {
     app.innerHTML = html;
@@ -128,7 +137,7 @@ function homeView(keepScroll) {
         </div>
         <div class="rk-field">
             <div class="rk-field-label">범위</div>
-            ${seg('range', RANGE_KEYS.map(k => [k, k === 'all' ? '전체' : k === 'weak' ? '약점' : k, poolOf(k).length, k === 'weak' && !weak]))}
+            ${seg('range', RANGE_KEYS.map(k => [k, ({ all: '전체', core: '수업', weak: '약점' })[k] || k, poolOf(k).length, k === 'weak' && !weak]))}
         </div>
         ${settings.mode === 'exam' ? `
         <div class="rk-field">
@@ -158,7 +167,7 @@ function homeView(keepScroll) {
 
     <section class="rk-tools">
         <button type="button" class="rk-tool rk-tool-hot" data-go="chart"><span>🧩</span><b>순서도 게임</b><small>판별 순서를 특징으로 나열</small></button>
-        <button type="button" class="rk-tool" data-go="study"><span>📖</span><b>암석 도감</b><small>22종 특징 · 헷갈리는 짝</small></button>
+        <button type="button" class="rk-tool" data-go="study"><span>📖</span><b>암석 도감</b><small>${ROCKS.length}종 특징 · 헷갈리는 짝</small></button>
         <button type="button" class="rk-tool" data-go="key"><span>🧭</span><b>판별 도우미</b><small>질문에 답하며 이름 찾기</small></button>
         <button type="button" class="rk-tool" data-go="notes"><span>📝</span><b>오답 노트</b><small>${weak ? `약점 ${weak}종` : '아직 기록 없음'}</small></button>
     </section>`, keepScroll);
@@ -382,6 +391,7 @@ function studyView(keepScroll) {
                     <p class="rk-feature">${esc(r.feature)}</p>
                     <p class="rk-detail">${esc(r.detail)}</p>
                     <p class="rk-vs">헷갈리는 짝: ${r.confuse.map(id => byId[id].name).join(', ')}</p>
+                    ${photoCredit(r)}
                 </div>
             </article>`).join('')}</div>`;
     }).join('')}`, keepScroll);
@@ -408,7 +418,7 @@ function leafCard(name) {
     return `<div class="rk-key-result">
         <button type="button" class="rk-card-photo" data-zoom="${esc(r.images[0])}"><img src="${esc(r.images[0])}" alt=""></button>
         <div><p class="rk-name" style="margin-top:0">${esc(name)} ${typeTag(r.type)} <span class="rk-en">${esc(r.en)}</span></p>
-        <p class="rk-feature">${esc(r.feature)}</p><p class="rk-detail">${esc(r.detail)}</p></div></div>`;
+        <p class="rk-feature">${esc(r.feature)}</p><p class="rk-detail">${esc(r.detail)}</p>${photoCredit(r)}</div></div>`;
 }
 // 경로를 질문·답으로 보여 준다. mine을 주면 단계별로 맞았는지 표시한다.
 const pathHtml = (path, mine) => `<ol class="rk-path">${path.map((s, i) => `<li class="${mine ? (mine[i] === s.t ? 'ok' : 'bad') : ''}">
@@ -482,7 +492,7 @@ function chartHome(keepScroll) {
         </div>
         <button type="button" class="rk-btn primary rk-start" data-action="chart-start">시작하기 →</button>
     </section>
-    <p class="rk-muted" style="margin-top:12px">사진 문제는 수업 사진이 있는 18종, 이름 문제와 스무고개는 순서도의 30종 전체에서 나옵니다.</p>`, keepScroll);
+    <p class="rk-muted" style="margin-top:12px">순서도의 30종 모두 사진이 있어서, 사진 문제도 30종 전체에서 나옵니다.</p>`, keepScroll);
 }
 
 function startChart(pool, total) {

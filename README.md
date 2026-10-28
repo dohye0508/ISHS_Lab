@@ -30,12 +30,12 @@ A client-side analyzer for KakaoTalk chat exports (`kakaotalk.php`). Files are p
 - **Check:** `node scripts/check_kakaotalk.cjs [export.txt ...]` verifies the parser and the filters against independent line counts.
 
 ### 5. Rock ID Studio
-A photo quiz for the earth-science rock identification lab (`rocks.php`), covering 22 igneous, sedimentary and metamorphic rocks. Self-contained page in the ISHS LAB tone; no scores are saved to the server, and settings, streaks and the wrong-answer log stay in localStorage.
-- **Modes:** multiple choice (confusable distractors first), typed answers with initial-consonant hints, photo pick (name → choose 1 of 4 photos), rock type only, and a timed exam graded at the end. Ranges: all, by type, or weak rocks only.
+A photo quiz for the earth-science rock identification lab (`rocks.php`), covering 34 rocks: the 22 from the class photo sheet plus the 12 that appear only in the lab flowchart (igneous 17, sedimentary 9, metamorphic 8). Self-contained page in the ISHS LAB tone; no scores are saved to the server, and settings, streaks and the wrong-answer log stay in localStorage.
+- **Modes:** multiple choice (confusable distractors first), typed answers with initial-consonant hints, photo pick (name → choose 1 of 4 photos), rock type only, and a timed exam graded at the end. Ranges: all, the 22 class rocks, by type, or weak rocks only.
 - **Flowchart game:** built on the lab's rock classification flowchart (questions 1-23, 30 end rocks). Given a photo or a name, list exactly the features needed, in flowchart order: order the given features, pick them out from traps, choose one step at a time (including when to stop), or a twenty-questions variant where fewer clues score more.
 - **Tools:** study deck with hidden names, an identification helper that walks the same flowchart, and a wrong-answer notebook that records which rocks get mixed up.
 - **Photo variation:** random rotation/flip, zoom crop that hides backgrounds and specimen labels, color jitter and grayscale, so students practice on the rock rather than the photo.
-- **Data:** `data/rocks/rocks.js` (rocks, `FLOW` flowchart and `FLOW_LEAVES`); add photos to `assets/images/rocks/` and list them in a rock's `images` array.
+- **Data:** `data/rocks/rocks.js` (rocks, `FLOW` flowchart and `FLOW_LEAVES`); add photos to `assets/images/rocks/` and list them in a rock's `images` array. Photos of the 12 added rocks come from Wikimedia Commons; per-photo author and license are in `PHOTO_CREDITS` and shown on the study cards.
 
 ## Project Structure
 
