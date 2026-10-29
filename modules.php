@@ -411,6 +411,7 @@ html.js .rv-drop.is-in{opacity:1;transform:none}
                     <div class="mod-cta">시작하기<span class="mod-arr">&rarr;</span></div>
                 </article>
 
+                <?php /* 암석 감별 스튜디오는 목록에서 숨김 (rocks.php 페이지는 그대로 둔다) */ if (false): ?>
                 <article class="mod-card rv-drop" tabindex="0" role="button" onclick="enterModule('rocks.php')">
                     <div class="mod-card__head">
                         <span class="mod-icon mod-icon--pb"><img src="assets/images/rocks.svg" alt="Rock ID Studio"></span>
@@ -421,6 +422,7 @@ html.js .rv-drop.is-in{opacity:1;transform:none}
                     <p class="mod-desc">암석 사진을 보고 이름을 맞히세요. 객관식·주관식·실전 모의고사.</p>
                     <div class="mod-cta">시작하기<span class="mod-arr">&rarr;</span></div>
                 </article>
+                <?php endif; ?>
 
                 <article class="mod-card rv-drop" tabindex="0" role="button" onclick="enterModule('coding_test.php')">
                     <div class="mod-card__head">
