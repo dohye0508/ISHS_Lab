@@ -87,6 +87,10 @@ async function shoot(page, name) {
         assert.deepEqual([series.rows, series.firstNo, series.lastNo, series.firstTitle], [14, '01', '14', '수열의 극한']);
         const ode = await listOf('collection-grid-ode');
         assert.deepEqual([ode.groups.length, ode.rows], [0, 2], 'single-group tab has no group header');
+        const falg = await listOf('collection-grid-falgebra');
+        assert.deepEqual([falg.groups.length, falg.rows], [2, 7], '고급대수: 11장 3세트 + 12장 4세트');
+        assert(falg.groups[0].startsWith('11장'), falg.groups[0]);
+        assert(await page.locator('#subject-tab-falgebra').isVisible(), '고급대수 tab under 기말');
         // (logic.js still fills its hidden #collection-grid with old cards; only visible previews matter)
         assert.equal(await page.locator('#collection-modal .problem-preview:visible').count(), 0, 'no math previews in the picker');
         assert.equal(await page.textContent('#collection-grid-series .collection-row .collection-row-page'), 'p.101–105', 'textbook pages shown as row meta');
@@ -169,7 +173,9 @@ async function shoot(page, name) {
             for (const c of finalCollections) for (const p of c.problems) {
                 const kind = finalGrading.answerKind(p.solution);
                 const right = kind === 'verdict' ? '\\text{' + p.solution.slice(8) + '}' : kind === 'interval' ? p.solution.slice(9) : p.solution;
-                const wrong = kind === 'verdict' ? '포기 ' : kind === 'interval' ? right.replace(/^[[(]/, m => m === '[' ? '(' : '[') : '(' + p.solution + ')+1';
+                const wrong = kind === 'verdict' ? '포기 ' : kind === 'interval' ? right.replace(/^[[(]/, m => m === '[' ? '(' : '[')
+                    : /\\begin\{[bp]matrix\}/.test(p.solution) ? p.solution.replace(/\\begin\{([bp])matrix\}/, '\\begin{$1matrix}9&') // 첫 행 열 수가 달라짐
+                    : '(' + p.solution + ')+1';
                 if (await gradeProblem(right, p.solution, false, 30000, true) !== 'CORRECT') out.push(p.id + ' right');
                 if (await gradeProblem(wrong, p.solution, false, 30000, true) === 'CORRECT') out.push(p.id + ' wrong');
             }
@@ -177,6 +183,22 @@ async function shoot(page, name) {
             return out;
         });
         assert.deepEqual(bad, []);
+
+        // 모든 기말 문항의 문제·해설이 MathJax에서 오류 없이 렌더링되는지
+        const renderErrors = await page.evaluate(async () => {
+            const box = document.createElement('div');
+            box.style.cssText = 'position:absolute;left:-10000px;width:900px';
+            document.body.appendChild(box);
+            const out = [];
+            for (const c of finalCollections) for (const p of c.problems) {
+                box.innerHTML = buildProblemHtml(p.latex) + buildProblemHtml(p.explanation);
+                await MathJax.typesetPromise([box]);
+                if (box.querySelector('mjx-merror,[data-mjx-error]')) out.push(p.id);
+            }
+            box.remove();
+            return out;
+        });
+        assert.deepEqual(renderErrors, [], 'MathJax errors in final problems');
 
         // 실제 흐름: fin_ode_01_v1 시작
         await page.evaluate(() => selectFinalCollection('fin_ode_01_v1'));
@@ -209,6 +231,11 @@ async function shoot(page, name) {
         await page.evaluate(() => renderFinalTools('verdict'));
         await page.click('#final-answer-tools [data-verdict="조건수렴"]');
         assert.equal(await page.evaluate(() => document.getElementById('math-input').value), '\\text{조건수렴}');
+        // 고급대수 행렬 답: 행렬 버튼 6개, 누르면 입력칸에 빈 행렬 틀이 들어간다
+        await page.evaluate(() => { document.getElementById('math-input').value = ''; renderFinalTools('matrix'); document.getElementById('math-input').focus(); });
+        assert.equal(await page.locator('#final-answer-tools [data-matrix]').count(), 6);
+        await page.click('#final-answer-tools [data-matrix="2x2"]');
+        assert(/matrix/.test(await page.evaluate(() => document.getElementById('math-input').value)), 'matrix template inserted');
         await page.evaluate(() => { document.getElementById('math-input').value = ''; saveAnswer(); loadCurrentProblem(); });
 
         // #math-input itself is 6px wider than a 390px viewport on midterm problems too (pre-existing),

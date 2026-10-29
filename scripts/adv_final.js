@@ -13,10 +13,14 @@ function writeStore(key, value) {
     try { localStorage.setItem(key, value); } catch (e) { /* 저장하지 못해도 선택은 이번 방문 동안 유지된다 */ }
 }
 
-const FINAL_UNIT_TAB = { series: 'series', ode: 'ode' };
+const FINAL_UNIT_TAB = { series: 'series', ode: 'ode', algebra: 'falgebra' };
 
 // 급수 14세트는 교과서 흐름대로 세 묶음으로 나눠 보여 준다. 세트 번호(id의 두 자리)로 정한다.
 function finalGroup(col) {
+    if (col.unit === 'algebra') {
+        return Number(col.id.match(/^fin_alg_(\d{2})_/)?.[1]) <= 3
+            ? '11장 · 선형사상과 선형변환' : '12장 · 행렬변환의 합성 · 교환 · 가역';
+    }
     if (col.unit !== 'series') return '';
     const n = Number(col.id.match(/^fin_ser_(\d{2})_/)?.[1]);
     if (n <= 6) return '수렴 판정 · 교과서 p.101–128';
@@ -25,9 +29,9 @@ function finalGroup(col) {
 }
 
 function renderFinalGrids() {
-    Object.keys(FINAL_UNIT_TAB).forEach(unit => {
+    Object.entries(FINAL_UNIT_TAB).forEach(([unit, tab]) => {
         const cols = (window.finalCollections || []).filter(col => col.unit === unit);
-        renderCollectionList(document.getElementById(`collection-grid-${unit}`), cols.map((col, i) => ({
+        renderCollectionList(document.getElementById(`collection-grid-${tab}`), cols.map((col, i) => ({
             group: finalGroup(col),
             card: buildCollectionCard(col, () => selectFinalCollection(col.id), i + 1)
         })));
@@ -97,7 +101,7 @@ async function startFinalGame() {
     state.subject = 'final';
     state.exam = 'final';
     const slogan = document.getElementById('slogan-text');
-    if (slogan) slogan.innerText = col.unit === 'ode' ? 'Solve the flow' : 'Converge with confidence';
+    if (slogan) slogan.innerText = { ode: 'Solve the flow', algebra: 'Explore the structure' }[col.unit] || 'Converge with confidence';
     state.problems = col.problems.map((p, idx) => ({
         id: idx + 1,
         level: p.level,
@@ -107,6 +111,7 @@ async function startFinalGame() {
         explanation: p.explanation,
         answerMode: p.answerMode,
         page: p.page,
+        source: p.source,
         tools: p.tools,
         userAnswer: ""
     }));
@@ -155,6 +160,10 @@ function renderFinalTools(tools) {
     } else if (tools === 'interval') {
         Object.entries(FINAL_INTERVAL_TEMPLATES).forEach(([label, latex]) => add(label, 'data-template', label, () => insert(latex)));
         add('∞', 'data-insert', 'infty', () => insert('\\infty'));
+    } else if (tools === 'matrix') {
+        // 고급대수: 행렬·벡터 답. 중간 대수의 insertMatrixTemplate()(adv_math.php)를 그대로 쓴다.
+        [[2, 2], [3, 3], [2, 3], [3, 2], [2, 1], [3, 1]].forEach(([r, c]) =>
+            add(c === 1 ? `${r}×1 벡터` : `${r}×${c} 행렬`, 'data-matrix', `${r}x${c}`, () => insertMatrixTemplate(r, c)));
     } else if (tools === 'value') {
         add('∞', 'data-insert', 'infty', () => insert('\\infty'));
         add('발산', 'data-verdict', '발산', () => setVerdict('발산'));

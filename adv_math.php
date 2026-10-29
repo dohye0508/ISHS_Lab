@@ -435,6 +435,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                                     <li><strong>판정</strong> 문제는 입력칸 아래 <strong>절대수렴·조건수렴·수렴·발산</strong> 버튼으로 답하세요.</li>
                                     <li><strong>수렴구간</strong>은 구간 버튼으로 <strong>[a, b)</strong> 꼴로 입력하고, 무한대는 <strong>∞</strong> 버튼을 쓰세요.</li>
                                     <li><strong>미분방정식의 해</strong>는 <strong>y=</strong> 없이 우변만 입력하세요.</li>
+                                    <li><strong>고급대수</strong>의 행렬·벡터 답은 입력칸 아래 <strong>행렬 버튼</strong>으로 입력하세요.</li>
                                     <li>값은 소수 대신 <strong>정확한 값</strong>(분수·근호·π·e)으로 입력하세요.</li>
                                 </ul>
                             </div>
@@ -496,6 +497,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                     <button type="button" id="subject-tab-proof" class="subject-tab" data-exam="midterm" onclick="switchModalSubject('proof')">증명</button>
                     <button type="button" id="subject-tab-series" class="subject-tab hidden" data-exam="final" onclick="switchModalSubject('series')">급수</button>
                     <button type="button" id="subject-tab-ode" class="subject-tab hidden" data-exam="final" onclick="switchModalSubject('ode')">미분방정식</button>
+                    <button type="button" id="subject-tab-falgebra" class="subject-tab hidden" data-exam="final" onclick="switchModalSubject('falgebra')">고급대수</button>
                 </div>
                 <div class="collection-sections">
                     <div id="collection-grid" style="display:none;"></div> <!-- logic.js compatibility -->
@@ -547,6 +549,11 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                     <div id="modal-section-ode" class="hidden">
                         <h3>▶ 미분방정식 · 교과서 IV단원 (p.156–191)</h3>
                         <div id="collection-grid-ode" class="collection-list"></div>
+                    </div>
+
+                    <div id="modal-section-falgebra" class="hidden">
+                        <h3>▶ 고급대수 · 참고자료 11·12장 (선형사상과 행렬변환)</h3>
+                        <div id="collection-grid-falgebra" class="collection-list"></div>
                     </div>
 
                     <div id="collection-footnote" style="padding: 15px; text-align: center; border-top: 1px solid var(--border); margin-top: 20px;">
@@ -662,6 +669,8 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
     <script src="data/math/proof_sources.js?v=20261006_v1"></script>
     <script src="data/math/final/ode.js?v=20261026_final"></script>
     <script src="data/math/final/series.js?v=20261026_final"></script>
+    <script src="data/math/final/algebra_11.js?v=20261029_alg"></script>
+    <script src="data/math/final/algebra_12.js?v=20261029_alg"></script>
     <script>window.STUDIO_SCORE_CONFIG = { studio: 'advanced_math' };</script>
     <script src="scripts/grader.js?v=20260922_audit"></script>
     <script src="scripts/logic.js?v=20261006_keys"></script>
@@ -846,7 +855,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
                 // 기말 정답의 verdict:/interval: 접두어는 채점용 표기라 화면에는 떼고 보여 준다.
                 const solutionTex = state.exam === 'final' && window.finalGrading
                     ? window.finalGrading.displaySolution(p.solution) : `${p.solution}${cLabel}`;
-                const pageLabel = p.page ? ` · 교과서 p.${p.page}` : '';
+                const pageLabel = p.source ? ` · ${p.source}` : p.page ? ` · 교과서 p.${p.page}` : '';
                 return `<li class="detail-item">
                     <div class="detail-status ${cls}"><span class="detail-status-icon">${icon}</span>Q${d.id} · ${label}</div>
                     <div class="detail-problem">${buildProblemHtml(p.latex)}</div>
@@ -936,10 +945,10 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'banned') {
 
         // 문제집 창은 시험(중간/기말) → 과목 2단이다. 각 과목 탭이 어느 시험 아래 있는지는
         // EXAM_OF 하나로 정하고, 시험 탭을 누르면 그 시험에서 마지막으로 보던 과목이 열린다.
-        const MODAL_SUBJECTS = ['trig', 'hyp', 'polar', 'apps', 'algebra', 'proof', 'series', 'ode'];
+        const MODAL_SUBJECTS = ['trig', 'hyp', 'polar', 'apps', 'algebra', 'proof', 'series', 'ode', 'falgebra'];
         const EXAM_OF = {
             trig: 'midterm', hyp: 'midterm', polar: 'midterm', apps: 'midterm', algebra: 'midterm', proof: 'midterm',
-            series: 'final', ode: 'final'
+            series: 'final', ode: 'final', falgebra: 'final'
         };
         const lastTabByExam = { midterm: 'trig', final: 'series' };
         let lastModalTab = 'trig'; // so the home button can reopen the modal on the same tab

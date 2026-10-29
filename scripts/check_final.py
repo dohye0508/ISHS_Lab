@@ -8,6 +8,10 @@ TARGETS maps a problem id to (kind, target):
   ode       (residual(y), x0, y0)                  -> answer solves the ODE and the initial value
   verdict   callable -> '절대수렴'|'조건수렴'|'수렴'|'발산'
   interval  (left, a, b, right), endpoints may be s.oo / -s.oo
+  matrix    SymPy Matrix                           -> answer matrix/vector must equal it entrywise
+
+The 고급대수 targets live in final_targets_alg11.py / final_targets_alg12.py next to this file; each
+defines TARGETS with the same (kind, target) entries and is merged in below.
 """
 import json, sys
 import sympy as s
@@ -559,6 +563,19 @@ TARGETS = {
     'fin_ode_02_v1_logistic_fastest_growth': ('value', _logistic_fastest_growth()),
 }
 
+import importlib.util, os
+only_files = os.environ.get('FINAL_FILES')  # same filter as check_final.cjs
+for name in ('final_targets_alg11', 'final_targets_alg12'):
+    if only_files and 'algebra_' + name[-2:] not in only_files.split(','):
+        continue
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), name + '.py')
+    if os.path.exists(path):
+        spec = importlib.util.spec_from_file_location(name, path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        assert not set(module.TARGETS) & set(TARGETS), (name, 'duplicate ids')
+        TARGETS.update(module.TARGETS)
+
 problems = payload['problems']
 ids = {p['id'] for p in problems}
 assert set(TARGETS) == ids, ('TARGETS keys != problem ids', sorted(set(TARGETS) ^ ids))
@@ -591,6 +608,20 @@ for p in problems:
                 assert grade(tex, tex, False, True) == 'CORRECT', (pid, tex, 'endpoint exact')
                 assert grade(r'\left(' + tex + r'\right)+1', tex, False, True).startswith('INCORRECT'), (pid, tex, 'endpoint wrong')
                 graded += 2
+        continue
+    if kind == 'matrix':
+        got = ns['parse_matrix_latex'](answer)
+        assert got is not None and got.shape == target.shape, (pid, answer, target.shape)
+        assert all(s.simplify(got[i, j].subs({s.Symbol('pi'): s.pi, s.Symbol('e'): s.E}) - target[i, j]) == 0
+                   for i in range(target.rows) for j in range(target.cols)), (pid, got, target)
+        other = answer.replace('bmatrix', 'pmatrix') if 'bmatrix' in answer else answer.replace('pmatrix', 'bmatrix')
+        assert grade(answer, answer, False, True) == 'CORRECT', (pid, 'exact')
+        assert grade(other, answer, False, True) == 'CORRECT', (pid, 'other brackets')
+        wrong = s.Matrix(target)
+        wrong[0, 0] += 1
+        wrong_tex = r'\begin{pmatrix}' + r'\\'.join('&'.join(s.latex(wrong[i, j]) for j in range(wrong.cols)) for i in range(wrong.rows)) + r'\end{pmatrix}'
+        assert grade(wrong_tex, answer, False, True).startswith('INCORRECT'), (pid, 'wrong entry')
+        graded += 3
         continue
 
     parsed = parse(answer)

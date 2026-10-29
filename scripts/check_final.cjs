@@ -10,7 +10,10 @@ const flag = name => args.includes(name);
 
 const context = vm.createContext({ window: {} });
 vm.runInContext(read('scripts/adv_final_grading.js'), context);
-for (const name of ['ode', 'series']) {
+// FINAL_FILES=ode,series,algebra_11 처럼 주면 그 데이터 파일만 읽는다(단원별로 따로 작업할 때).
+const onlyFiles = process.env.FINAL_FILES ? process.env.FINAL_FILES.split(',') : null;
+for (const name of ['ode', 'series', 'algebra_11', 'algebra_12']) {
+    if (onlyFiles && !onlyFiles.includes(name)) continue;
     const file = `data/math/final/${name}.js`;
     if (fs.existsSync(path.join(root, file))) vm.runInContext(read(file), context);
 }
@@ -24,10 +27,12 @@ vm.runInContext(page.slice(page.indexOf('        function escapeHtmlText'), page
 const UNITS = {
     series: { prefix: 'fin_ser_', pages: [98, 155] },
     ode: { prefix: 'fin_ode_', pages: [156, 191] },
+    // 고급대수는 교과서 쪽수 대신 참고자료 PDF의 단원과 쪽을 source로 적는다 (예: '참고자료 11장 p.5').
+    algebra: { prefix: 'fin_alg_', source: /^참고자료 1[12]장 p\.\d+$/ },
 };
 // 사용자 요청으로 난이도를 올렸다: 모든 세트가 Level 3·4·4·5·5.
 const SET_LEVELS = [3, 4, 4, 5, 5];
-const TOOLS = new Set(['verdict', 'interval', 'value', 'expr']);
+const TOOLS = new Set(['verdict', 'interval', 'value', 'expr', 'matrix']);
 const VERDICTS = new Set(['절대수렴', '조건수렴', '수렴', '발산']);
 const ids = new Set();
 
@@ -46,7 +51,7 @@ function checkText(id, field, value) {
 for (const col of collections) {
     const unit = UNITS[col.unit];
     assert(unit, `${col.id}: unknown unit ${col.unit}`);
-    assert(/^fin_(ser|ode)_\d{2}_v\d+$/.test(col.id) && col.id.startsWith(unit.prefix), `${col.id}: bad collection id`);
+    assert(/^fin_(ser|ode|alg)_\d{2}_v\d+$/.test(col.id) && col.id.startsWith(unit.prefix), `${col.id}: bad collection id`);
     assert(!ids.has(col.id), `${col.id}: duplicate id`); ids.add(col.id);
     assert(col.name && col.description, `${col.id}: name/description`);
     assert.equal(col.problems.length, SET_LEVELS.length, `${col.id}: problem count`);
@@ -59,7 +64,8 @@ for (const col of collections) {
         assert.equal(p.answerMode, 'exact', `${p.id}: answerMode`);
         assert(p.title, `${p.id}: title`);
         assert(TOOLS.has(p.tools), `${p.id}: tools ${p.tools}`);
-        assert(Number.isInteger(p.page) && p.page >= unit.pages[0] && p.page <= unit.pages[1], `${p.id}: page ${p.page}`);
+        if (unit.source) assert(unit.source.test(p.source || '') && p.page === undefined, `${p.id}: source ${p.source}`);
+        else assert(Number.isInteger(p.page) && p.page >= unit.pages[0] && p.page <= unit.pages[1], `${p.id}: page ${p.page}`);
         const kind = grading.answerKind(p.solution);
         if (kind === 'verdict') {
             const v = p.solution.slice('verdict:'.length);
@@ -71,6 +77,7 @@ for (const col of collections) {
         assert.equal(kind === 'interval', p.tools === 'interval', `${p.id}: interval answer <-> interval tools`);
         if (kind === 'interval') assert(grading.parseInterval(p.solution.slice('interval:'.length)), `${p.id}: unparsable interval`);
         if (p.tools === 'expr') assert(/x/.test(p.solution), `${p.id}: expr answer without x`);
+        assert.equal(p.tools === 'matrix', /\\begin\{[bp]matrix\}/.test(p.solution), `${p.id}: matrix answer <-> matrix tools`);
         checkText(p.id, 'latex', p.latex);
         checkText(p.id, 'explanation', p.explanation);
     }
@@ -88,7 +95,7 @@ const problems = collections.flatMap(c => c.problems.map(p => ({ ...p, collectio
 
 if (flag('--complete')) {
     const count = unit => collections.filter(c => c.unit === unit).length;
-    assert.deepEqual([count('series'), count('ode')], [14, 2], 'set counts');
+    assert.deepEqual([count('series'), count('ode'), count('algebra')], [14, 2, 7], 'set counts');
 }
 console.log(`PASS: structure (${collections.length} collections, ${problems.length} problems)`);
 if (flag('--structure-only')) process.exit(0);
